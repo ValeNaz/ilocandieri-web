@@ -10,12 +10,15 @@
  *   30 3 * * * cd /srv/ilocandieri-web && pnpm tsx scripts/retention.ts >> logs/retention.log 2>&1
  */
 import "dotenv/config";
+import { purgeOutboxOlderThan } from "../src/lib/email/outbox";
 import { runRetention } from "../src/lib/careers/admin";
 import { getSetting } from "../src/lib/settings";
 
 const dryRun = process.argv.includes("--dry-run");
 const retention = await getSetting("retention");
 const rep = await runRetention(retention, { dryRun });
+// The email log holds names/addresses: it is not an archive, always trimmed to 90 days.
+const outbox = dryRun ? null : await purgeOutboxOlderThan(90);
 const fmt = (n: number | null) => (n === null ? "non impostato, nessuna azione" : String(n));
-console.log(`[retention] ${dryRun ? "DRY RUN - " : ""}candidature ${dryRun ? "da eliminare" : "eliminate"}: ${fmt(rep.applications)}; iscrizioni eventi passati: ${fmt(rep.registrations)}`);
+console.log(`[retention] ${dryRun ? "DRY RUN - " : ""}candidature ${dryRun ? "da eliminare" : "eliminate"}: ${fmt(rep.applications)}; iscrizioni eventi passati: ${fmt(rep.registrations)}; email del registro oltre 90 giorni: ${outbox ?? "-"}`);
 process.exit(0);

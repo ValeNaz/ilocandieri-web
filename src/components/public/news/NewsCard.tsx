@@ -4,16 +4,16 @@ import Link from "next/link";
 import { Pattern } from "@/components/ui";
 import type { NewsCardData } from "@/lib/news/public";
 import { paths } from "@/lib/paths";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 const VARIANTS = ["agrumi", "maiolica", "campi"] as const;
 const variantFor = (key: string) => VARIANTS[[...key].reduce((a, c) => a + c.charCodeAt(0), 0) % VARIANTS.length]!;
 
-export function NewsCard({ news, headingLevel = 3 }: { news: NewsCardData; headingLevel?: 2 | 3 }) {
+export function NewsCard({ news, headingLevel = 3, wide = false }: { news: NewsCardData; headingLevel?: 2 | 3; wide?: boolean }) {
   const H = headingLevel === 2 ? "h2" : "h3";
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-pop has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-terracotta">
-      <div className="relative aspect-[16/10] overflow-hidden bg-paper-deep">
+    <article className={cn("group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-pop has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-terracotta", wide && "md:flex-row")}>
+      <div className={cn("relative aspect-[16/10] overflow-hidden bg-paper-deep", wide && "md:aspect-auto md:min-h-72 md:w-1/2 md:shrink-0")}>
         {news.coverUrl ? (
           <Image src={news.coverUrl} alt={news.coverAlt} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 92vw" className="object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.03]" />
         ) : (

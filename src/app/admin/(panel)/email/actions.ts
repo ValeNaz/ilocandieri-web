@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth/session";
@@ -25,6 +26,7 @@ export async function saveTemplateAction(_prev: ActionState, formData: FormData)
   if (!parsed.success) return actionError("Controlla i campi.", zodFieldErrors(parsed.error));
   await saveTemplate(parsed.data.key, parsed.data.subject, parsed.data.body);
   await audit(user.id, "email_template_saved", "email_template", parsed.data.key);
+  revalidatePath(adminPaths.emailTemplate(parsed.data.key));
   return actionOk("Modello salvato.");
 }
 

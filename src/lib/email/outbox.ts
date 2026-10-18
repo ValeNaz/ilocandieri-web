@@ -1,4 +1,4 @@
-import { and, eq, ne } from "drizzle-orm";
+import { and, eq, like, lt, ne } from "drizzle-orm";
 import { db as defaultDb, newId, schema, type Db } from "@/lib/db";
 import { sendMail } from "./sender";
 
@@ -75,4 +75,20 @@ export async function enqueueAndSend(input: EnqueueInput, db: Db = defaultDb): P
 /** Admin "Riprova": re-attempt a failed / not_configured / queued message. */
 export async function retryEmail(id: string, db: Db = defaultDb): Promise<OutboxStatus> {
   return deliver(id, db);
+}
+
+/**
+ * Privacy: outbox rows hold recipient + rendered text (names, emails, messages). Delete the ones tied to one
+ * entity id (idempotency keys are `<template>:<entityId>:...`), e.g. when a registration/application is erased.
+ */
+export async function purgeOutboxFor(entityId: string, db: Db = defaultDb): Promise<number> {
+  if (!/^[a-z0-9]{10,40}$/i.test(entityId)) return 0;
+  const rows = await db.delete(schema.emailOutbox).where(like(schema.emailOutbox.idempotencyKey, `%:${entityId}:%`)).returning({ id: schema.emailOutbox.id });
+  return rows.length;
+}
+
+/** Privacy: drop outbox rows older than `days` (default 90). The log is for troubleshooting, not an archive. */
+export async function purgeOutboxOlderThan(days = 90, db: Db = defaultDb, now = Date.now()): Promise<number> {
+  const rows = await db.delete(schema.emailOutbox).where(lt(schema.emailOutbox.createdAt, now - days * 86_400_000)).returning({ id: schema.emailOutbox.id });
+  return rows.length;
 }

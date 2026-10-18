@@ -1,5 +1,6 @@
 import { and, desc, eq, inArray, lt, or, sql, type SQL } from "drizzle-orm";
 import { db as defaultDb, schema, type Db } from "@/lib/db";
+import { purgeOutboxFor } from "@/lib/email/outbox";
 import { getStorage } from "@/lib/storage";
 import { APPLICATION_STATUSES, type ApplicationStatus } from "./constants";
 
@@ -68,6 +69,7 @@ export async function deleteApplications(ids: string[], d: Db = defaultDb): Prom
   const storage = getStorage();
   for (const r of rows) if (r.cvPath) await storage.remove("private", r.cvPath).catch(() => {});
   await d.delete(schema.applications).where(inArray(schema.applications.id, rows.map((r) => r.id)));
+  for (const r of rows) await purgeOutboxFor(r.id, d); // emails to/about the candidate hold name + address
   return rows.length;
 }
 

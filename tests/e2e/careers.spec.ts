@@ -1,19 +1,10 @@
 import { createClient } from "@libsql/client";
 import { expect, test, type Page } from "@playwright/test";
+import { login } from "./helpers";
 import { mkdirSync } from "node:fs";
 
-const email = "admin@example.test";
-const password = "e2e-Password-123!";
 const SHOTS = process.env.SHOTS_DIR;
 const pdf = Buffer.concat([Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\n"), Buffer.alloc(300, 0x20), Buffer.from("\n%%EOF")]);
-
-async function login(page: Page, next = "/admin") {
-  await page.goto(`/admin/login?next=${encodeURIComponent(next)}`);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Accedi" }).click();
-  await expect(page).toHaveURL(new RegExp(next.replace(/\//g, "\\/") + "$"));
-}
 
 async function shot(page: Page, name: string) {
   if (!SHOTS) return;
@@ -84,7 +75,7 @@ test.describe.serial("careers flow", () => {
     expect(anon.headers()["content-type"] ?? "").not.toContain("pdf");
 
     // Private storage is not reachable from the public site
-    const db = createClient({ url: "file:./data/careers-e2e.db" });
+    const db = createClient({ url: process.env.DATABASE_URL_E2E || `file:./data/${process.env.E2E_NAME || "e2e"}.db` });
     const r = await db.execute("select cv_path from applications limit 1");
     cvPath = String(r.rows[0]!.cv_path);
     db.close();
@@ -174,11 +165,7 @@ test.describe.serial("careers flow", () => {
     await page.goto("/lavora-con-noi");
     await shot(page, "lavora-mobile");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.goto(`/admin/login?next=${encodeURIComponent("/admin")}`);
-    await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(password);
-    await page.getByRole("button", { name: "Accedi" }).click();
-    await expect(page).toHaveURL(/\/admin$/);
+    await login(page);
     await shot(page, "admin-dashboard-mobile");
     await ctx.close();
   });

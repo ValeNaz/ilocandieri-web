@@ -1,7 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const email = process.env.ADMIN_EMAIL || "admin@example.test";
-const password = process.env.ADMIN_PASSWORD || "e2e-Password-123!";
+import { adminEmail as email, adminPassword as password } from "./helpers";
 
 test("unauthenticated /admin redirects to login (and keeps noindex)", async ({ page, request }) => {
   const res = await request.get("/admin/candidature", { maxRedirects: 0 });

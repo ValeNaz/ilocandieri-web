@@ -7,6 +7,7 @@ import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
+import { purgeOutboxFor } from "@/lib/email/outbox";
 import { flash } from "@/lib/flash";
 import { adminPaths } from "@/lib/paths";
 
@@ -27,6 +28,7 @@ export async function deleteMessageAction(formData: FormData): Promise<void> {
   const user = await requireAdmin();
   const { id } = input.parse(Object.fromEntries(formData));
   await db.delete(schema.contactMessages).where(eq(schema.contactMessages.id, id));
+  await purgeOutboxFor(id); // the admin notification email contains the message text
   await audit(user.id, "contact_message_deleted", "contact_message", id);
   revalidatePath(adminPaths.messages);
   await flash("success", "Messaggio eliminato.");

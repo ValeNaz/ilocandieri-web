@@ -44,7 +44,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<SP>
       <PageHeader
         title="Iscrizioni"
         description="Le richieste di partecipazione agli eventi. Le richieste «in attesa» non sono confermate finché non le approvi."
-        actions={<ButtonLink href={`${adminPaths.registrationsExport}${qs({ pagina: null })}`} variant="secondary">Scarica CSV{filtered ? " (filtrato)" : ""}</ButtonLink>}
+        actions={<ButtonLink external href={`${adminPaths.registrationsExport}${qs({ pagina: null })}`} variant="secondary">Scarica CSV{filtered ? " (filtrato)" : ""}</ButtonLink>}
       />
 
       <section aria-label="Riepilogo" className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">

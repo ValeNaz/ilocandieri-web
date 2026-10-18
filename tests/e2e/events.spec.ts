@@ -1,15 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { login } from "./helpers";
 
-const email = process.env.ADMIN_EMAIL || "admin@example.test";
-const password = process.env.ADMIN_PASSWORD || "e2e-Password-123!";
-
-async function login(page: Page) {
-  await page.goto("/admin/login");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Accedi" }).click();
-  await expect(page).toHaveURL(/\/admin$/);
-}
 
 test.describe.configure({ mode: "serial" });
 test.setTimeout(90_000);

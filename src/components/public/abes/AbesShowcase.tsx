@@ -38,6 +38,7 @@ function ProductCard({ p, index, cta, Heading }: { p: ShowcaseProduct; index: nu
             src={p.imageUrl}
             alt={p.imageAlt}
             fill
+            loading={index < 4 ? "eager" : "lazy"}
             sizes="(min-width:1024px) 22vw, (min-width:768px) 45vw, 72vw"
             className="object-contain p-3 transition-transform duration-500 ease-out-soft group-hover/card:scale-[1.04]"
           />
@@ -77,9 +78,9 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
   const CardH = headingLevel === 2 ? "h3" : "h4";
   const cols = products.length === 3 || products.length === 6 ? "lg:grid-cols-3" : "lg:grid-cols-4";
   return (
-    <section aria-labelledby="abes-showcase-title" className="relative isolate overflow-hidden bg-olive-deep py-16 text-paper on-dark sm:py-24">
+    <section aria-labelledby="abes-showcase-title" className="relative isolate overflow-hidden bg-olive-deep py-12 text-paper on-dark sm:py-24">
       {/* Decorative: oversized outlined wordmark, purely ornamental */}
-      <span aria-hidden="true" className="pointer-events-none absolute -right-6 -top-10 -z-10 select-none font-display text-[clamp(8rem,26vw,22rem)] font-semibold leading-none tracking-tight text-transparent [-webkit-text-stroke:1.5px_rgb(169_179_138/0.16)]">
+      <span aria-hidden="true" className="pointer-events-none absolute right-4 top-0 -z-10 select-none font-display text-[clamp(3.5rem,9vw,6rem)] font-semibold leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_rgb(169_179_138/0.14)] sm:right-8">
         ABES
       </span>
       <Container>
@@ -100,7 +101,7 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
         </div>
 
         {products.length > 0 ? (
-          <div className="mt-12 sm:mt-16">
+          <div className="mt-8 sm:mt-16">
             <p className="mb-3 text-sm text-sage md:hidden" aria-hidden="true">Scorri per vedere tutti i prodotti →</p>
             <ul
               role="list"

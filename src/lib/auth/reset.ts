@@ -23,13 +23,18 @@ export async function requestPasswordReset(emailRaw: string): Promise<void> {
     expiresAt: Date.now() + RESET_TTL_MS,
   });
   const link = `${getSiteUrl()}${adminPaths.reset(token)}`;
-  const res = await sendTemplatedEmail({
+  // Delivery runs in the background: awaiting SMTP only for existing accounts would make the response time
+  // reveal whether the address is registered (user enumeration by timing).
+  void sendTemplatedEmail({
     template: "password_reset",
     to: user.email,
     idempotencyKey: `password_reset:${resetId}`,
     ctx: { utente: { nome: user.name || user.email }, link },
-  });
-  if (!isProd() && res.status !== "sent") console.warn(`[dev] Password reset link (email ${res.status}): ${link}`);
+  })
+    .then((res) => {
+      if (!isProd() && res.status !== "sent") console.warn(`[dev] Password reset link (email ${res.status}): ${link}`);
+    })
+    .catch((e) => console.error("[auth] reset email failed", e instanceof Error ? e.message : "unknown"));
 }
 
 export async function isResetTokenValid(token: string): Promise<boolean> {
@@ -57,5 +62,7 @@ export async function resetPasswordWithToken(token: string, newPassword: string)
   if (!userId) return { ok: false, error: "Il link non è valido o è scaduto. Richiedine uno nuovo." };
   await db.update(schema.users).set({ passwordHash: await hashPassword(newPassword) }).where(eq(schema.users.id, userId));
   await destroyUserSessions(userId);
+  // Any other outstanding reset link of this user dies with the password it was meant to replace.
+  await db.update(schema.passwordResets).set({ usedAt: Date.now() }).where(and(eq(schema.passwordResets.userId, userId), isNull(schema.passwordResets.usedAt)));
   return { ok: true };
 }

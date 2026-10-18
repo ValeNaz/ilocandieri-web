@@ -18,4 +18,4 @@ Template default registrati in `src/lib/careers/emails.ts`; l'elenco admin unisc
 Con SMTP assente le email restano `not_configured` e si rimandano da Admin > Email > Registro.
 
 ## Test
-`pnpm test` (unit) e `pnpm playwright test -c playwright.careers.config.ts` (e2e isolato: porta 3205, `data/careers-e2e.db`, `storage-careers-e2e`).
+`pnpm test` (unit) e `pnpm test:e2e` (config unica `playwright.config.ts`: DB `data/e2e.db`, storage `data/e2e-storage`, dist `.next-e2e`).

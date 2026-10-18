@@ -1,16 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
+import { login } from "./helpers";
 
-const email = "admin@abes-e2e.test";
-const password = "e2e-Password-123!";
 const PRODUCT_HREF = /^https:\/\/abes\.bio\/products\/[a-z0-9_-]+$/;
-
-async function login(page: Page) {
-  await page.goto("/admin/login");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Accedi" }).click();
-  await expect(page).toHaveURL(/\/admin$/);
-}
 
 const homeLinks = (page: Page) => page.locator('a[data-abes-product]');
 async function hrefs(page: Page) {

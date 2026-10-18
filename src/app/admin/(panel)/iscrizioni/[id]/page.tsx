@@ -8,7 +8,7 @@ import { formatAnswerValue } from "@/lib/events/forms";
 import { seatsRemaining } from "@/lib/events/state";
 import { adminPaths } from "@/lib/paths";
 import { formatDateTime } from "@/lib/utils";
-import { approveRegistrationAction, cancelRegistrationAction, rejectRegistrationAction, saveRegistrationNoteAction } from "../actions";
+import { approveRegistrationAction, cancelRegistrationAction, deleteRegistrationAction, rejectRegistrationAction, saveRegistrationNoteAction } from "../actions";
 
 export const metadata = { title: "Dettaglio iscrizione" };
 
@@ -88,6 +88,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <div className="mt-4"><ConfirmDialog triggerLabel="Annulla iscrizione" triggerVariant="secondary" title="Annullare questa iscrizione?" description="I posti vengono liberati e l'iscritto riceve una email di annullamento." confirmLabel="Annulla iscrizione" cancelLabel="Indietro" action={cancelRegistrationAction} fields={f} /></div>
           </Card>
         )}
+
+        <Card tone="deep" className="p-6">
+          <h2 className="font-display text-xl font-medium">Eliminare i dati</h2>
+          <p className="mt-1 text-sm text-ink-soft">Cancella definitivamente questa iscrizione e le email collegate (per esempio su richiesta dell&apos;interessato). Non si può annullare.</p>
+          <div className="mt-4"><ConfirmDialog triggerLabel="Elimina definitivamente" triggerVariant="secondary" title="Eliminare definitivamente questa iscrizione?" description="I dati della persona vengono cancellati; se occupava posti, tornano disponibili. Nessuna email viene inviata." confirmLabel="Elimina" cancelLabel="Indietro" action={deleteRegistrationAction} fields={f} /></div>
+        </Card>
       </div>
     </div>
   );

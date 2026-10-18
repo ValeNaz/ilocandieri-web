@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { requireAdmin } from "@/lib/auth/session";
-import { approve, cancel, reject, setAdminNote } from "@/lib/events/registrations";
+import { approve, cancel, deleteRegistration, reject, setAdminNote } from "@/lib/events/registrations";
 import { flash } from "@/lib/flash";
 import { adminPaths } from "@/lib/paths";
 
@@ -57,4 +57,16 @@ export async function saveRegistrationNoteAction(formData: FormData) {
   if (ok) await audit(user.id, "registration_note_saved", "registration", p.data.id);
   await flash(ok ? "success" : "error", ok ? "Nota salvata." : "Iscrizione non trovata.");
   redirect(adminPaths.registration(p.data.id));
+}
+
+/** GDPR erasure of a single registration (row + related emails). Seats are released. */
+export async function deleteRegistrationAction(formData: FormData) {
+  const user = await requireAdmin();
+  const p = schemaIn.safeParse(Object.fromEntries(formData));
+  if (!p.success) redirect(adminPaths.registrations);
+  const ok = await deleteRegistration(p.data.id);
+  if (ok) await audit(user.id, "registration_deleted", "registration", p.data.id);
+  await flash(ok ? "success" : "error", ok ? "Iscrizione eliminata definitivamente." : "Iscrizione non trovata.");
+  revalidatePath(adminPaths.registrations);
+  redirect(adminPaths.registrations);
 }

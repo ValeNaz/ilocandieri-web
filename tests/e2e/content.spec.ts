@@ -1,15 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
+import { login } from "./helpers";
 
-const email = process.env.ADMIN_EMAIL || "admin@example.test";
-const password = process.env.ADMIN_PASSWORD || "e2e-Password-123!";
-
-async function login(page: Page, next = "/admin") {
-  await page.goto(next);
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(password);
-  await page.getByRole("button", { name: "Accedi" }).click();
-  await expect(page).toHaveURL(new RegExp(next.replace(/\//g, "\\/") + "$"));
-}
 
 async function open(card: ReturnType<typeof blockCard>) {
   if (!(await card.evaluate((el) => (el as HTMLDetailsElement).open))) await card.locator("summary").click();

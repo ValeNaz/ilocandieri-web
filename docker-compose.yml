@@ -1,0 +1,21 @@
+# I Locandieri - docker compose. Prepara .env (cp .env.example .env) prima di avviare.
+# Le cartelle ./data ./storage ./backups devono essere scrivibili dall'utente 1000 (utente "node" del container):
+#   mkdir -p data storage backups && sudo chown -R 1000:1000 data storage backups
+services:
+  app:
+    build: .
+    image: ilocandieri-web:latest
+    container_name: ilocandieri-web
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: file:/app/data/app.db
+      STORAGE_DIR: /app/storage
+      NODE_ENV: production
+    ports:
+      # Esposto solo in locale: davanti ci va il reverse proxy HTTPS (vedi docs/DEPLOY.md).
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./data:/app/data
+      - ./storage:/app/storage
+      - ./backups:/app/backups

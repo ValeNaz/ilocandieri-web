@@ -17,7 +17,7 @@ export function EventCard({ event, headingLevel = 3 }: { event: EventCardData; h
   const { day, month } = eventDayBadge(event.startsAt);
   return (
     <article className={cn("group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-pop focus-within:-translate-y-1 focus-within:shadow-pop", event.isPast && "bg-card/80")}>
-      <div className="relative aspect-[16/10] overflow-hidden bg-paper-deep">
+      <div className="relative aspect-[16/9] overflow-hidden bg-paper-deep sm:aspect-[16/10]">
         {event.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- media is served by our own /media route
           <img src={event.coverUrl} alt={event.coverAlt} loading="lazy" decoding="async" className={cn("size-full object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.03]", event.isPast && "saturate-[.6]")} />

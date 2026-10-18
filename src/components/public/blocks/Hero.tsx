@@ -11,10 +11,10 @@ export function HeroBlock({ data, images, level, variant = "agrumi" }: { data: B
     return (
       <section id={data.slot} className="relative overflow-hidden">
         <div aria-hidden="true" className="absolute -right-40 -top-40 size-[34rem] rounded-full bg-paper-deep" />
-        <Container className="relative grid items-center gap-12 pb-16 pt-10 sm:pb-24 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-20">
+        <Container className="relative grid items-center gap-8 pb-12 pt-8 sm:pb-24 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-20">
           <div className="lg:col-span-7">
             <OptionalEyebrow text={data.eyebrow} className="text-terracotta-deep" />
-            <BlockHeading level={level} className="reveal text-[clamp(2.4rem,6.4vw,4.9rem)] font-medium leading-[1.03]">{data.title}</BlockHeading>
+            <BlockHeading level={level} className="reveal text-[clamp(2.2rem,6.4vw,4.9rem)] font-medium leading-[1.03]">{data.title}</BlockHeading>
             <div className="reveal mt-7 max-w-xl space-y-4 text-lg leading-relaxed text-ink-soft [animation-delay:120ms]">
               <Paragraphs text={data.text} />
             </div>
@@ -23,7 +23,7 @@ export function HeroBlock({ data, images, level, variant = "agrumi" }: { data: B
               <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" />
             </div>
           </div>
-          <div className="reveal relative mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none [animation-delay:160ms]">
+          <div className="reveal relative mx-auto w-full max-w-[15rem] sm:max-w-md lg:col-span-5 lg:max-w-none [animation-delay:160ms]">
             <div aria-hidden="true" className="absolute -bottom-5 -left-5 size-28 rounded-full border-2 border-arancio sm:size-36" />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[999px_999px_2rem_2rem] shadow-pop">
               <MediaImage image={image} fallback={variant} priority className="absolute inset-0 size-full" />

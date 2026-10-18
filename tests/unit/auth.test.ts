@@ -35,7 +35,7 @@ describe("password reset", () => {
     expect(sendMail).not.toHaveBeenCalled();
 
     await requestPasswordReset("Reset@X.it");
-    expect(sendMail).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(sendMail).toHaveBeenCalledTimes(1)); // delivery is deferred (anti-enumeration)
     const token = /token=([^\s&]+)/.exec(sendMail.mock.calls[0]![0].text)![1]!;
     expect(await isResetTokenValid(token)).toBe(true);
 
@@ -45,6 +45,34 @@ describe("password reset", () => {
     const [u] = await db.select().from(schema.users).where(eq(schema.users.id, id));
     expect(await verifyPassword(u!.passwordHash, "brand-new-password")).toBe(true);
     expect(await db.select().from(schema.sessions).where(eq(schema.sessions.userId, id))).toHaveLength(0);
+    setMailTransport(null);
+  });
+});
+
+describe("password reset hardening", () => {
+  it("does not wait for SMTP: response time must not reveal whether the account exists", async () => {
+    await db.insert(schema.users).values({ id: newId(), email: "timing@x.it", name: "T", passwordHash: await hashPassword("old-password-1") });
+    let release!: () => void;
+    const gate = new Promise<void>((r) => (release = r));
+    const sendMail = vi.fn().mockImplementation(() => gate);
+    setMailTransport({ sendMail });
+    const outcome = await Promise.race([requestPasswordReset("timing@x.it").then(() => "returned"), new Promise((r) => setTimeout(() => r("blocked"), 1500))]);
+    release();
+    setMailTransport(null);
+    expect(outcome).toBe("returned");
+  });
+
+  it("using one reset link invalidates the other outstanding links of the same user", async () => {
+    const id = newId();
+    await db.insert(schema.users).values({ id, email: "twice@x.it", name: "T", passwordHash: await hashPassword("old-password-1") });
+    const sendMail = vi.fn().mockResolvedValue({});
+    setMailTransport({ sendMail });
+    await requestPasswordReset("twice@x.it");
+    await requestPasswordReset("twice@x.it");
+    await vi.waitFor(() => expect(sendMail).toHaveBeenCalledTimes(2));
+    const [t1, t2] = sendMail.mock.calls.map((c) => /token=([^\s&]+)/.exec(c[0].text)![1]!);
+    expect((await resetPasswordWithToken(t1!, "brand-new-password")).ok).toBe(true);
+    expect(await isResetTokenValid(t2!)).toBe(false);
     setMailTransport(null);
   });
 });

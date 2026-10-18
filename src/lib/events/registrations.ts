@@ -1,5 +1,6 @@
 import { and, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { db as defaultDb, newId, schema, type Db } from "@/lib/db";
+import { purgeOutboxFor } from "@/lib/email/outbox";
 import { sendRegistrationEmails } from "./emails";
 import { buildAnswers, ensureFormVersion, parseSubmission } from "./forms";
 import { messageFor, stateMessage } from "./messages";
@@ -267,6 +268,23 @@ export async function recount(eventId: string, d: Db = defaultDb) {
     await tx.update(E).set({ seatsConfirmed: confirmed, seatsHeld: held }).where(eq(E.id, eventId));
     return { seatsConfirmed: confirmed, seatsHeld: held, previous: { seatsConfirmed: event.seatsConfirmed, seatsHeld: event.seatsHeld }, pendingSeats: pending };
   }, d);
+}
+
+/**
+ * GDPR erasure of ONE registration: frees its seats (if it still held any) and removes the row plus the
+ * outbox emails addressed to the person (they contain name/email). Returns false when it does not exist.
+ */
+export async function deleteRegistration(registrationId: string, d: Db = defaultDb): Promise<boolean> {
+  const done = await runTx<boolean>(async (tx) => {
+    const [reg] = await tx.select().from(R).where(eq(R.id, registrationId));
+    if (!reg) return false;
+    const [event] = await tx.select().from(E).where(eq(E.id, reg.eventId));
+    if (event) await release(tx, event, reg);
+    await tx.delete(R).where(eq(R.id, reg.id));
+    return true;
+  }, d);
+  if (done) await purgeOutboxFor(registrationId, d);
+  return done;
 }
 
 export async function setAdminNote(registrationId: string, note: string, d: Db = defaultDb) {

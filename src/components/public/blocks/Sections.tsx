@@ -13,7 +13,7 @@ export function IntroBlock({ data, images, level, variant = "maiolica" }: { data
     <Section id={data.slot} tone={data.tone === "sage" ? "sage" : "paper"}>
       <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="relative lg:col-span-5">
-          <MediaImage image={image} fallback={variant} className="aspect-[5/4] w-full rounded-card shadow-card lg:aspect-[4/5]" />
+          <MediaImage image={image} fallback={variant} className="aspect-[16/9] w-full rounded-card shadow-card sm:aspect-[5/4] lg:aspect-[4/5]" />
         </div>
         <div className="lg:col-span-7">
           <OptionalEyebrow text={data.eyebrow} className="text-terracotta-deep" />
@@ -49,7 +49,7 @@ export function FeatureBlock({ data, images, level, variant = "agrumi" }: { data
           </div>
         </div>
         {data.items.length > 0 && (
-          <ul className={cn("mt-14 grid gap-6", data.items.length > 1 && "md:grid-cols-2")}>
+          <ul className={cn("mt-10 grid gap-6 sm:mt-14", data.items.length > 1 && "md:grid-cols-2")}>
             {data.items.map((it, i) => {
               const img = pickImage(images, it.imageId);
               return (
@@ -85,13 +85,13 @@ export function PillarsBlock({ data, level }: { data: BlockDataOf<"pillars">; le
           </div>
           {data.intro && <p className="text-lg leading-relaxed text-ink-soft lg:col-span-5">{data.intro}</p>}
         </div>
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-5 lg:grid-cols-4">
           {data.items.map((it, i) => (
             <li key={i}>
-              <Card className={cn("h-full border-t-4 p-7", ACCENTS[i % ACCENTS.length])}>
+              <Card className={cn("h-full border-t-4 p-4 sm:p-7", ACCENTS[i % ACCENTS.length])}>
                 <p aria-hidden="true" className="font-display text-sm font-semibold tracking-widest text-terracotta-deep">{String(i + 1).padStart(2, "0")}</p>
-                <h3 className="mt-3 font-display text-2xl font-medium leading-tight">{it.title}</h3>
-                <p className="mt-3 text-ink-soft">{it.text}</p>
+                <h3 className="mt-2 font-display text-[1.15rem] font-medium leading-tight sm:mt-3 sm:text-2xl">{it.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft sm:mt-3 sm:text-base">{it.text}</p>
               </Card>
             </li>
           ))}
@@ -127,7 +127,7 @@ export function ValuesBlock({ data, level }: { data: BlockDataOf<"values">; leve
 /** Places: dark olive section with image cards. */
 export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places">; images: ImageMap; level: HeadingLevel }) {
   return (
-    <section id={data.slot} className="bg-olive-deep py-16 text-paper on-dark sm:py-24">
+    <section id={data.slot} className="bg-olive-deep py-12 text-paper on-dark sm:py-24">
       <Container>
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
@@ -136,7 +136,7 @@ export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places
           </div>
           {data.text && <p className="text-lg leading-relaxed text-paper/85 lg:col-span-5">{data.text}</p>}
         </div>
-        <ul className="mt-12 grid gap-6 md:grid-cols-2">
+        <ul className="mt-8 grid gap-6 sm:mt-12 md:grid-cols-2">
           {data.items.map((it, i) => (
             <li key={i} className="overflow-hidden rounded-card bg-paper text-ink">
               <MediaImage image={pickImage(images, it.imageId)} fallback={i % 2 === 0 ? "agrumi" : "campi"} className="aspect-[16/10] w-full" />
@@ -156,7 +156,7 @@ export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places
 /** Closing call to action. */
 export function CtaBlock({ data, level }: { data: BlockDataOf<"cta">; level: HeadingLevel }) {
   return (
-    <section id={data.slot} className="py-16 sm:py-24">
+    <section id={data.slot} className="py-12 sm:py-24">
       <Container>
         <div className="relative isolate overflow-hidden rounded-[2rem] bg-ink px-7 py-14 text-paper on-dark sm:px-14 sm:py-20">
           <div aria-hidden="true" className="absolute -right-24 -top-24 -z-10 size-72 rounded-full bg-terracotta/80 sm:size-96" />

@@ -97,4 +97,4 @@ Blocchi di pagina modificabili da admin (`page_blocks`). Codice: `src/lib/conten
 - **Testi legali**: rich_text con segnaposto `{{org.*}}`, `{{retention.*}}`, `{{site.url}}`; avviso pubblico «bozza» finché `draftNotice` è attivo.
 - **Cookie/analytics**: nessun banner e nessuno script finché `settings.analytics.gaMeasurementId` è vuoto; se valido, `ConsentManager` (layout pubblico) carica GA solo dopo «Accetta». Verifica Search Console = meta tag via `generateMetadata` del layout pubblico.
 - **Contatti**: `submitContact()` (`src/lib/content/contact.ts`) = antispam + rate limit + salvataggio + email `admin_new_contact`.
-- E2E in parallelo: `E2E_NAME=<nome> E2E_PORT=<porta> pnpm test:e2e --output=test-results-<nome>` (DB e dist dir separati).
+- E2E in parallelo: `E2E_NAME=<nome> E2E_PORT=<porta> pnpm test:e2e` (DB e dist dir separati).

@@ -51,7 +51,7 @@ export async function EventsBlock({ data, level }: { data: BlockDataOf<"events_h
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         {events.length > 0 ? (
-          <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-6 sm:mt-12 md:grid-cols-2 lg:grid-cols-3">
             {events.slice(0, data.limit).map((e) => <li key={e.id}><EventCard event={e} headingLevel={3} /></li>)}
           </ul>
         ) : (
@@ -71,8 +71,8 @@ export async function NewsBlock({ data, level }: { data: BlockDataOf<"news_highl
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         {news.length > 0 ? (
-          <ul className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {news.slice(0, data.limit).map((n) => <li key={n.id}><NewsCard news={n} headingLevel={3} /></li>)}
+          <ul className={news.length === 1 ? "mt-8 max-w-4xl sm:mt-12" : "mt-8 grid gap-6 sm:mt-12 md:grid-cols-2 lg:grid-cols-3"}>
+            {news.slice(0, data.limit).map((n) => <li key={n.id}><NewsCard news={n} headingLevel={3} wide={news.length === 1} /></li>)}
           </ul>
         ) : (
           <p className="mt-10 rounded-card border border-dashed border-line-strong bg-card/60 px-6 py-8 text-ink-soft">{data.emptyMessage}</p>

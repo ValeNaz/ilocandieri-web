@@ -16,7 +16,7 @@ const tones: Record<Tone, string> = {
 
 export function Section({ tone = "paper", className, children, ...rest }: HTMLAttributes<HTMLElement> & { tone?: Tone }) {
   return (
-    <section className={cn("py-16 sm:py-24", tones[tone], className)} {...rest}>
+    <section className={cn("py-12 sm:py-24", tones[tone], className)} {...rest}>
       {children}
     </section>
   );
