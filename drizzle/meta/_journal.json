@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792356893146,
+      "tag": "0000_parched_lockjaw",
+      "breakpoints": true
+    }
+  ]
+}
