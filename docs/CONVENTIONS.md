@@ -75,3 +75,26 @@ Le pagine pubbliche (`src/app/(public)/**/page.tsx`) e admin (`src/app/admin/(pa
 
 ## Sicurezza (riepilogo)
 Cookie sessione `il_session` (httpOnly, SameSite=Lax, Secure in prod), sessioni in DB (hash SHA-256), scadenza scorrevole 7 gg; login con rate limit (IP + email); reset password via token monouso 1h (hash in DB) con email in outbox; header di sicurezza + CSP in `next.config.ts` (immagini consentite da `self`, `data:`, `blob:`, `cdn.shopify.com`; aggiungere domini esterni li').
+
+## Contenuti (modulo CONTENT)
+Blocchi di pagina modificabili da admin (`page_blocks`). Codice: `src/lib/content/*` (tipi/zod/lettura), `src/components/public/blocks/*` (renderer), editor generico in `src/components/admin/content/*`.
+- **Leggere i blocchi di una pagina** (qualsiasi `PageKey`: home, chi-siamo, shop, eventi, news, lavora-con-noi, contatti, privacy, cookie):
+  ```tsx
+  import { getPageBlocks, findBlock, messageText } from "@/lib/content/queries";
+  import { PageBlocks, BlockView } from "@/components/public/blocks";
+  const content = await getPageBlocks("eventi");          // { page, blocks (solo visibili, validati), images }
+  const hero = findBlock(content, "hero");                 // per slot (e tipo opzionale)
+  <BlockView block={hero!} images={content.images} level={1} />   // singolo blocco; level 1 = <h1>
+  <PageBlocks content={content} except={["hero"]} />      // tutti gli altri (i blocchi `message` non vengono mai resi)
+  const closed = messageText(content, "state_closed");    // microcopy dal dossier (editabile in admin)
+  ```
+- **Slot seminati** (`data.slot`): eventi = `hero`, `upcoming`, `past` (section_heading) + messaggi `state_open|limited|reserved|approval|confirmed|pending|full|closed|past` (campo `buttonLabel` per i pulsanti); news = `hero`, `list`, messaggi `empty`, `read_label`, `all_label`; lavora-con-noi = `hero`, `collab`, `form` + messaggi `form_submit`, `confirmation`, `no_openings`. Se un blocco manca (nascosto/non valido) usare un testo di fallback.
+- **Pagine/Home**: `<PageView pageKey="..."/>` rende la pagina; il primo blocco ha l'h1. Blocchi non validi vengono saltati (warning in log), mai errore 500.
+- **Tipi di blocco**: hero, intro, feature, pillars, values, places, abes_showcase, events_highlight, news_highlight, section_heading, cta, rich_text, contact, message. Schema zod in `blocks.ts` (`blockSchemas`, `BLOCK_DEFS` = campi dell'editor). Nuovo tipo = schema + definizione + case in `BlockView`.
+- **CTA**: `{label, href}`; href ammessi: pagine interne note (`paths`), `/eventi|news/<slug>`, `#ancora`, `https://`, `mailto:`, `tel:` (`isSafeHref`).
+- **Immagini**: id di `media` (`imageId`); senza immagine si usa `<Pattern>`. `listMediaOptions()`/`<MediaPicker>` per i selettori admin; `getMediaUsage(id)` impedisce di eliminare media in uso (blocchi, OG, news, eventi).
+- **Admin**: `/admin/home` e `/admin/pagine/[key]` (stesso `PageEditor`: modifica, nascondi, su/giù, SEO+OG per pagina). Salvataggi admin con `useSafeForm` (non azzera i campi in caso di errore).
+- **Testi legali**: rich_text con segnaposto `{{org.*}}`, `{{retention.*}}`, `{{site.url}}`; avviso pubblico «bozza» finché `draftNotice` è attivo.
+- **Cookie/analytics**: nessun banner e nessuno script finché `settings.analytics.gaMeasurementId` è vuoto; se valido, `ConsentManager` (layout pubblico) carica GA solo dopo «Accetta». Verifica Search Console = meta tag via `generateMetadata` del layout pubblico.
+- **Contatti**: `submitContact()` (`src/lib/content/contact.ts`) = antispam + rate limit + salvataggio + email `admin_new_contact`.
+- E2E in parallelo: `E2E_NAME=<nome> E2E_PORT=<porta> pnpm test:e2e --output=test-results-<nome>` (DB e dist dir separati).

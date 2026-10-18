@@ -23,6 +23,7 @@ const PAIRS: [string, string, number][] = [
   ["ink", "terracotta-soft", 4.5], ["ink", "sage-soft", 4.5], ["olive-deep", "sage-soft", 4.5], ["white", "olive", 4.5],
   ["paper", "ink", 4.5], ["sage", "ink", 4.5], ["arancio", "ink", 3], ["white", "danger", 4.5], ["danger", "danger-soft", 4.5], ["danger", "card", 4.5],
   ["success", "success-soft", 4.5], ["warning", "warning-soft", 4.5], ["ink", "success-soft", 4.5], ["ink", "danger-soft", 4.5],
+  ["paper", "olive-deep", 4.5], ["sage", "olive-deep", 4.5], ["ink", "paper", 4.5], ["terracotta-deep", "card", 4.5], ["terracotta-deep", "paper-deep", 4.5], ["terracotta-deep", "sage-soft", 4.5], // CONTENT module blocks
   ["line-strong", "paper", 3], ["line-strong", "card", 3], // UI component boundaries (WCAG 1.4.11)
 ];
 

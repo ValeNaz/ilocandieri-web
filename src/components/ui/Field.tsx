@@ -56,7 +56,7 @@ export function Select({ label, hint, error, required, className, id, name, chil
   );
 }
 
-export function Checkbox({ label, hint, error, className, id, name, ...rest }: Omit<FieldMeta, "required"> & { label: ReactNode } & InputHTMLAttributes<HTMLInputElement> & { name: string }) {
+export function Checkbox({ label, hint, error, className, id, name, ...rest }: Omit<FieldMeta, "required" | "label"> & { label: ReactNode } & InputHTMLAttributes<HTMLInputElement> & { name: string }) {
   const fid = id ?? name;
   const errId = error ? `${fid}-err` : undefined;
   const hintId = hint ? `${fid}-hint` : undefined;

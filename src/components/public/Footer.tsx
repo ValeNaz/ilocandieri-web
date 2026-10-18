@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { CookiePreferencesButton } from "@/components/public/cookies/ConsentManager";
+import { safeGaId } from "@/lib/content/analytics";
 import { legalNav, publicNav } from "@/lib/nav";
 import { getSetting } from "@/lib/settings";
 import { Wordmark } from "./Wordmark";
 
 export async function Footer() {
-  const [org, footer] = await Promise.all([getSetting("org"), getSetting("footer")]);
+  const [org, footer, analytics] = await Promise.all([getSetting("org"), getSetting("footer"), getSetting("analytics")]);
+  const hasConsent = Boolean(safeGaId(analytics.gaMeasurementId));
   const social = Object.entries(org.social).filter(([, v]) => v) as [string, string][];
   return (
     <footer className="mt-24 bg-ink text-paper on-dark">
@@ -48,6 +51,7 @@ export async function Footer() {
             {legalNav.map((i) => (
               <li key={i.href}><Link href={i.href} className="underline underline-offset-4 hover:text-arancio">{i.label}</Link></li>
             ))}
+            {hasConsent && <li><CookiePreferencesButton className="underline underline-offset-4 hover:text-arancio" /></li>}
           </ul>
         </div>
       </div>

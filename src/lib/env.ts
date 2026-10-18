@@ -10,7 +10,7 @@ export function getAppSecret(): string {
 }
 
 export function getSiteUrl(): string {
-  return (process.env.SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  return (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 }
 
 export const isProd = () => process.env.NODE_ENV === "production";

@@ -10,7 +10,7 @@ export const FLASH_COOKIE = "il_flash";
  * Messages must never contain personal data.
  */
 export async function flash(type: FlashType, message: string): Promise<void> {
-  (await cookies()).set(FLASH_COOKIE, encodeURIComponent(JSON.stringify({ type, message })), {
+  (await cookies()).set(FLASH_COOKIE, JSON.stringify({ type, message }) /* Next already URI-encodes cookie values; the Toast decodes once */, {
     path: "/",
     maxAge: 30,
     sameSite: "lax",

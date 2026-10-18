@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { PlaceholderPage } from "@/components/public/PlaceholderPage";
+import { PageView } from "@/components/public/blocks/PageView";
+import { paths } from "@/lib/paths";
 import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return pageMetadata("contatti", "/contatti");
+  return pageMetadata("contatti", paths.contacts);
 }
 
 export default function Page() {
-  return <PlaceholderPage title="Contatti" />;
+  return <PageView pageKey="contatti" />;
 }
