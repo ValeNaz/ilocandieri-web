@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ApplicationForm } from "@/components/public/careers/ApplicationForm";
-import { Card, Container, Eyebrow, Heading, Pattern, Section } from "@/components/ui";
+import { Card, Container, Eyebrow, Heading, Pattern, Section, buttonClasses } from "@/components/ui";
 import { APPLICATION_AREAS, CAREERS_FALLBACK_COPY as copy, CONFIRMATION_MESSAGE, NO_OPENINGS_MESSAGE } from "@/lib/careers/constants";
 import { listPublicOpenings } from "@/lib/careers/admin";
 import { FORM_SCOPE } from "@/lib/careers/submit";
@@ -53,7 +53,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
             <Heading as="h1" size="display" className="max-w-3xl">{copy.hero.title}</Heading>
             <p className="mt-6 max-w-2xl text-lg text-ink-soft">{copy.hero.text}</p>
             <p className="mt-8">
-              <a href="#candidatura" className="inline-flex min-h-11 items-center rounded-full bg-terracotta px-6 text-[0.95rem] font-medium text-white shadow-[0_8px_20px_-10px_rgb(178_61_20/0.7)] transition-colors hover:bg-terracotta-deep">
+              <a href="#candidatura" className={buttonClasses("primary", "md")}>
                 {cta}
               </a>
             </p>
@@ -78,13 +78,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
         <Container>
           <Heading id="posizioni" size="lg" className="mb-6">Posizioni aperte</Heading>
           {openings.length === 0 ? (
-            <p className="rounded-card border border-dashed border-line-strong bg-card/60 px-6 py-6 text-ink-soft">{noOpenings}</p>
+            <p className="rounded-[1.5rem] border-[3px] border-dashed border-ink/50 bg-card px-6 py-6 text-ink">{noOpenings}</p>
           ) : (
             <ul className="grid gap-5 md:grid-cols-2">
               {openings.map((o) => (
                 <li key={o.id}>
-                  <Card className="h-full p-6">
-                    <h3 className="font-display text-2xl font-medium">{o.title}</h3>
+                  <Card tone="label" className="h-full p-6">
+                    <h3 className="font-display text-2xl font-extrabold">{o.title}</h3>
                     {o.description && <p className="mt-3 whitespace-pre-line text-ink-soft">{o.description}</p>}
                     <a href={`?posizione=${encodeURIComponent(o.slug)}#candidatura`} className="mt-5 inline-block font-medium text-terracotta-deep underline">
                       Candidati per questa posizione<span className="sr-only">: {o.title}</span>
@@ -103,7 +103,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
             <Heading id="modulo" size="xl">{formTitle}</Heading>
             <p className="mt-5 text-lg text-ink-soft">{formText}</p>
           </div>
-          <Card className="p-6 sm:p-9">
+          <Card tone="label" className="p-6 sm:p-9">
             <ApplicationForm
               areas={APPLICATION_AREAS}
               openings={openings.map((o) => ({ id: o.id, title: o.title }))}

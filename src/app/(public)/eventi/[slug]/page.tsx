@@ -86,9 +86,9 @@ export default async function EventPage({ params }: Params) {
   return (
     <article>
       <JsonLd data={jsonLd} />
-      <Section className="pb-8 sm:pb-12">
+      <Section tone="cobalto" className="pb-14 sm:pb-20">
         <Container>
-          <Link href={paths.events} className="mb-8 inline-flex min-h-11 items-center gap-2 text-[0.95rem] font-medium text-terracotta-deep hover:underline">
+          <Link href={paths.events} className="mb-8 inline-flex min-h-11 items-center gap-2 text-[0.95rem] font-bold text-limone hover:underline">
             <span aria-hidden="true">←</span> Tutti gli eventi
           </Link>
           <div className="flex flex-wrap items-center gap-2">
@@ -99,24 +99,24 @@ export default async function EventPage({ params }: Params) {
             {state === "closed" && !p.isPast && <Badge>Iscrizioni terminate</Badge>}
           </div>
           <Heading as="h1" size="display" className="mt-5 max-w-4xl">{e.title}</Heading>
-          {e.summary && <p className="mt-6 max-w-2xl text-xl leading-relaxed text-ink-soft">{e.summary}</p>}
+          {e.summary && <p className="mt-6 max-w-2xl text-xl leading-relaxed">{e.summary}</p>}
         </Container>
       </Section>
 
       <Container className="pb-20 sm:pb-28">
-        <div className="relative mb-10 aspect-[16/8] max-h-[30rem] w-full overflow-hidden rounded-card bg-paper-deep shadow-card">
+        <div className="relative -mt-10 mb-12 aspect-[16/8] max-h-[30rem] w-full overflow-hidden rounded-[1.75rem] border-[3px] border-ink bg-paper-deep shadow-[0.6rem_0.6rem_0_0_var(--color-limone)] sm:-mt-14">
           {p.coverUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- media is served by our own /media route
             <img src={p.coverUrl} alt={p.coverAlt} className={`absolute inset-0 size-full object-cover ${p.isPast ? "saturate-[.7]" : ""}`} />
           ) : (
-            <Pattern variant="maiolica" className="absolute inset-0 size-full" />
+            <Pattern variant="agrumi" className="absolute inset-0 size-full" />
           )}
         </div>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-14">
           <aside className="lg:order-2" aria-label="Informazioni sull'evento">
             <div className="space-y-5 lg:sticky lg:top-28">
-              <Card className="p-6 sm:p-7">
+              <Card tone="label" className="p-6 sm:p-7">
                 <dl className="divide-y divide-line">
                   <InfoRow label="Quando">{formatEventWhen(e.startsAt, e.endsAt)}</InfoRow>
                   {e.location && <InfoRow label="Dove">{e.location}</InfoRow>}
@@ -159,9 +159,9 @@ export default async function EventPage({ params }: Params) {
             {e.ctaType === "registration" && (
               <section id="iscrizione" aria-labelledby="iscrizione-titolo" className={body ? "mt-14 scroll-mt-28" : "scroll-mt-28"}>
                 <Eyebrow className="text-terracotta-deep">Partecipa</Eyebrow>
-                <h2 id="iscrizione-titolo" className="mb-6 text-[clamp(1.6rem,3vw,2.25rem)] font-medium">Iscrizione</h2>
+                <h2 id="iscrizione-titolo" className="mb-6 text-[clamp(1.8rem,3.4vw,2.6rem)] font-extrabold">Iscrizione</h2>
                 {showForm && version && modeCopy && mode ? (
-                  <Card className="p-6 sm:p-9">
+                  <Card tone="label" className="p-6 sm:p-9">
                     <RegistrationForm
                       slug={e.slug}
                       eventId={e.id}

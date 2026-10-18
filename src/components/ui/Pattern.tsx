@@ -9,8 +9,8 @@ type Variant = "agrumi" | "maiolica" | "campi";
 export function Pattern({ variant = "agrumi", className }: { variant?: Variant; className?: string }) {
   const bg: Record<Variant, string> = {
     agrumi: "bg-terracotta",
-    maiolica: "bg-olive",
-    campi: "bg-paper-deep",
+    maiolica: "bg-cobalto",
+    campi: "bg-olive-deep",
   };
   return (
     <div aria-hidden="true" className={cn("relative isolate overflow-hidden", bg[variant], className)}>
@@ -18,13 +18,13 @@ export function Pattern({ variant = "agrumi", className }: { variant?: Variant; 
         <svg className="absolute inset-0 size-full" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
           <defs>
             <pattern id="p-agrumi" width="100" height="100" patternUnits="userSpaceOnUse">
-              <circle cx="50" cy="50" r="34" fill="#e8802f" />
-              <circle cx="50" cy="50" r="28" fill="none" stroke="#fbf6ec" strokeOpacity=".55" strokeWidth="2" />
+              <circle cx="50" cy="50" r="34" fill="var(--color-arancio)" />
+              <circle cx="50" cy="50" r="28" fill="none" stroke="var(--color-paper)" strokeOpacity=".7" strokeWidth="2" />
               {Array.from({ length: 8 }).map((_, i) => (
-                <line key={i} x1="50" y1="50" x2={50 + 28 * Math.cos((i * Math.PI) / 4)} y2={50 + 28 * Math.sin((i * Math.PI) / 4)} stroke="#fbf6ec" strokeOpacity=".55" strokeWidth="2" />
+                <line key={i} x1="50" y1="50" x2={50 + 28 * Math.cos((i * Math.PI) / 4)} y2={50 + 28 * Math.sin((i * Math.PI) / 4)} stroke="var(--color-paper)" strokeOpacity=".7" strokeWidth="2" />
               ))}
-              <circle cx="0" cy="0" r="12" fill="#8a2d0c" /><circle cx="100" cy="100" r="12" fill="#8a2d0c" />
-              <circle cx="100" cy="0" r="12" fill="#8a2d0c" /><circle cx="0" cy="100" r="12" fill="#8a2d0c" />
+              <circle cx="0" cy="0" r="12" fill="var(--color-limone)" /><circle cx="100" cy="100" r="12" fill="var(--color-limone)" />
+              <circle cx="100" cy="0" r="12" fill="var(--color-limone)" /><circle cx="0" cy="100" r="12" fill="var(--color-limone)" />
             </pattern>
           </defs>
           <rect width="200" height="200" fill="url(#p-agrumi)" />
@@ -34,9 +34,9 @@ export function Pattern({ variant = "agrumi", className }: { variant?: Variant; 
         <svg className="absolute inset-0 size-full" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
           <defs>
             <pattern id="p-maiolica" width="80" height="80" patternUnits="userSpaceOnUse">
-              <path d="M0 40 Q20 0 40 40 T80 40" fill="none" stroke="#a9b38a" strokeWidth="3" />
-              <path d="M0 80 Q20 40 40 80 T80 80" fill="none" stroke="#a9b38a" strokeOpacity=".55" strokeWidth="3" />
-              <circle cx="40" cy="20" r="5" fill="#e8802f" />
+              <path d="M0 40 Q20 0 40 40 T80 40" fill="none" stroke="var(--color-paper)" strokeWidth="3" />
+              <path d="M0 80 Q20 40 40 80 T80 80" fill="none" stroke="var(--color-paper)" strokeOpacity=".55" strokeWidth="3" />
+              <circle cx="40" cy="20" r="5" fill="var(--color-limone)" />
             </pattern>
           </defs>
           <rect width="200" height="200" fill="url(#p-maiolica)" />
@@ -45,7 +45,7 @@ export function Pattern({ variant = "agrumi", className }: { variant?: Variant; 
       {variant === "campi" && (
         <svg className="absolute inset-0 size-full" viewBox="0 0 200 200" preserveAspectRatio="none">
           {Array.from({ length: 9 }).map((_, i) => (
-            <path key={i} d={`M0 ${30 + i * 20} C 50 ${10 + i * 20}, 120 ${50 + i * 20}, 200 ${24 + i * 20}`} fill="none" stroke={i % 3 === 0 ? "#e8802f" : "#a9b38a"} strokeWidth="2.5" />
+            <path key={i} d={`M0 ${30 + i * 20} C 50 ${10 + i * 20}, 120 ${50 + i * 20}, 200 ${24 + i * 20}`} fill="none" stroke={i % 3 === 0 ? "var(--color-limone)" : "var(--color-sage)"} strokeWidth="2.5" />
           ))}
         </svg>
       )}

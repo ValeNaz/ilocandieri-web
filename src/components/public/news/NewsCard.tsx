@@ -1,35 +1,37 @@
 // INTERFACE CONTRACT (owner: ABES+NEWS agent). Props must stay stable.
 import Image from "next/image";
 import Link from "next/link";
-import { Pattern } from "@/components/ui";
 import type { NewsCardData } from "@/lib/news/public";
 import { paths } from "@/lib/paths";
 import { cn, formatDate } from "@/lib/utils";
+import { PosterArt, type PosterTone } from "../art/poster";
+import { FIELD } from "../blocks/shared";
 
-const VARIANTS = ["agrumi", "maiolica", "campi"] as const;
-const variantFor = (key: string) => VARIANTS[[...key].reduce((a, c) => a + c.charCodeAt(0), 0) % VARIANTS.length]!;
+const TONES: PosterTone[] = ["terracotta", "cobalto", "olive", "limone"];
+const toneFor = (key: string): PosterTone => TONES[[...key].reduce((a, c) => a + c.charCodeAt(0), 0) % TONES.length]!;
 
 export function NewsCard({ news, headingLevel = 3, wide = false }: { news: NewsCardData; headingLevel?: 2 | 3; wide?: boolean }) {
   const H = headingLevel === 2 ? "h2" : "h3";
+  const tone = toneFor(news.slug);
   return (
-    <article className={cn("group relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-card shadow-card transition-[transform,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-pop has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-terracotta", wide && "md:flex-row")}>
-      <div className={cn("relative aspect-[16/10] overflow-hidden bg-paper-deep", wide && "md:aspect-auto md:min-h-72 md:w-1/2 md:shrink-0")}>
+    <article className={cn("group relative flex h-full flex-col overflow-hidden rounded-[1.4rem] border-[3px] border-ink bg-paper text-ink transition-[transform,box-shadow] duration-300 ease-out-expo hover:-translate-y-1.5 hover:shadow-[0.5rem_0.5rem_0_0_var(--color-ink)] has-[a:focus-visible]:outline-4 has-[a:focus-visible]:outline-offset-4 has-[a:focus-visible]:outline-cobalto", wide && "md:flex-row")}>
+      <div className={cn("relative aspect-[16/10] overflow-hidden border-b-[3px] border-ink", !news.coverUrl && FIELD[tone], wide && "md:aspect-auto md:min-h-72 md:w-1/2 md:shrink-0 md:border-b-0 md:border-r-[3px]")}>
         {news.coverUrl ? (
-          <Image src={news.coverUrl} alt={news.coverAlt} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 92vw" className="object-cover transition-transform duration-500 ease-out-soft group-hover:scale-[1.03]" />
+          <Image src={news.coverUrl} alt={news.coverAlt} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 92vw" className="object-cover transition-transform duration-500 ease-out-expo group-hover:scale-[1.04]" />
         ) : (
-          <Pattern variant={variantFor(news.slug)} className="size-full" />
+          <PosterArt tone={tone} className="absolute -bottom-10 -right-10 w-3/4 transition-transform duration-700 ease-out-expo group-hover:rotate-12" />
         )}
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
-        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-soft">
-          {news.categoryName && <span className="font-semibold uppercase tracking-[0.14em] text-terracotta-deep">{news.categoryName}</span>}
-          <time dateTime={new Date(news.publishedAt).toISOString()}>{formatDate(news.publishedAt)}</time>
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          {news.categoryName && <span className="font-stencil font-bold uppercase tracking-[0.16em] text-terracotta-deep">{news.categoryName}</span>}
+          <time dateTime={new Date(news.publishedAt).toISOString()} className="text-ink-soft">{formatDate(news.publishedAt)}</time>
         </p>
-        <H className="font-display text-[1.45rem] font-medium leading-snug">
+        <H className="text-[1.45rem] font-extrabold leading-snug sm:text-[1.65rem]">
           <Link href={paths.newsItem(news.slug)} className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none">{news.title}</Link>
         </H>
         {news.excerpt && <p className="line-clamp-3 text-ink-soft">{news.excerpt}</p>}
-        <span aria-hidden="true" className="mt-auto pt-2 text-[0.95rem] font-semibold text-terracotta-deep">Leggi la notizia →</span>
+        <span aria-hidden="true" className="mt-auto pt-2 text-[0.95rem] font-bold text-cobalto"><span className="marker group-hover:[background-size:100%_44%]">Leggi la notizia</span> →</span>
       </div>
     </article>
   );

@@ -2,21 +2,23 @@ import Link from "next/link";
 import type { ButtonHTMLAttributes, ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "olive" | "light";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "olive" | "light" | "limone";
 export type ButtonSize = "sm" | "md" | "lg";
 
+// "Sticker" buttons: flat color, 2px ink outline, hard offset shadow that collapses when pressed.
 const base =
-  "group/btn inline-flex items-center justify-center gap-2 rounded-full font-medium leading-none whitespace-nowrap select-none " +
-  "transition-[background-color,color,box-shadow,transform,border-color] duration-200 ease-out-soft " +
-  "active:translate-y-px disabled:pointer-events-none disabled:opacity-55 aria-disabled:pointer-events-none aria-disabled:opacity-55";
+  "group/btn inline-flex items-center justify-center gap-2 rounded-full border-2 font-semibold leading-none whitespace-nowrap select-none " +
+  "transition-[background-color,color,box-shadow,transform,border-color] duration-200 ease-out-expo " +
+  "disabled:pointer-events-none disabled:opacity-55 aria-disabled:pointer-events-none aria-disabled:opacity-55";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-terracotta text-white hover:bg-terracotta-deep shadow-[0_8px_20px_-10px_rgb(178_61_20/0.7)]",
-  secondary: "border border-ink/80 text-ink hover:bg-ink hover:text-paper",
-  ghost: "text-ink hover:bg-paper-deep",
-  danger: "bg-danger text-white hover:bg-[#7f1c19]",
-  olive: "bg-olive text-white hover:bg-olive-deep",
-  light: "bg-paper text-ink hover:bg-white",
+  primary: "border-ink bg-terracotta text-white hover:bg-terracotta-deep",
+  secondary: "border-ink bg-transparent text-ink hover:bg-ink hover:text-paper",
+  ghost: "border-transparent text-ink hover:bg-paper-deep",
+  danger: "border-danger bg-danger text-white hover:bg-ink hover:border-ink",
+  olive: "border-ink bg-olive text-white hover:bg-olive-deep",
+  light: "border-paper bg-paper text-ink hover:bg-limone hover:border-limone",
+  limone: "border-ink bg-limone text-ink hover:bg-paper",
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -25,8 +27,13 @@ const sizes: Record<ButtonSize, string> = {
   lg: "min-h-13 px-8 text-base",
 };
 
+// Hard shadow only on the filled, "sticker" variants and only from md up (dense admin tables stay calm).
+const lifted: ButtonVariant[] = ["primary", "limone", "olive"];
+const liftedClasses =
+  "shadow-[3px_3px_0_0_var(--color-ink)] hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_0_var(--color-ink)] active:translate-x-px active:translate-y-px active:shadow-[1px_1px_0_0_var(--color-ink)]";
+
 export function buttonClasses(variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) {
-  return cn(base, variants[variant], sizes[size], className);
+  return cn(base, variants[variant], sizes[size], size !== "sm" && lifted.includes(variant) && liftedClasses, className);
 }
 
 type Common = { variant?: ButtonVariant; size?: ButtonSize; pending?: boolean; children?: ReactNode };

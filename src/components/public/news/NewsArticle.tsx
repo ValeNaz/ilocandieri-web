@@ -21,12 +21,12 @@ export function NewsArticle({ article, related = [], shareUrl }: { article: News
             <div className="max-w-3xl">
               <p className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                 {article.categoryName && (
-                  <Link href={`${paths.news}?categoria=${article.categorySlug}`} className="font-semibold uppercase tracking-[0.16em] text-terracotta-deep hover:underline">{article.categoryName}</Link>
+                  <Link href={`${paths.news}?categoria=${article.categorySlug}`} className="font-stencil font-bold uppercase tracking-[0.16em] text-terracotta-deep hover:underline">{article.categoryName}</Link>
                 )}
                 <time dateTime={new Date(article.publishedAt).toISOString()} className="text-ink-soft">{formatDate(article.publishedAt)}</time>
               </p>
-              <h1 className="text-[clamp(2.2rem,5.5vw,4rem)] font-medium leading-[1.04]">{article.title}</h1>
-              {article.excerpt && <p className="mt-6 font-display text-[clamp(1.2rem,2.2vw,1.55rem)] leading-snug text-ink-soft">{article.excerpt}</p>}
+              <h1 className="text-[clamp(2.2rem,5.4vw,4.2rem)] font-extrabold leading-[1.02] tracking-[-0.025em]">{article.title}</h1>
+              {article.excerpt && <p className="mt-6 font-display text-[clamp(1.2rem,2.2vw,1.55rem)] font-semibold leading-snug text-ink-soft">{article.excerpt}</p>}
             </div>
           </Container>
         </header>
@@ -34,11 +34,11 @@ export function NewsArticle({ article, related = [], shareUrl }: { article: News
         <Container>
           <figure className="mx-auto mb-12 mt-10 max-w-5xl sm:mb-16 sm:mt-12">
             {article.coverUrl ? (
-              <div className="relative aspect-[16/9] overflow-hidden rounded-card shadow-card">
+              <div className="relative aspect-[16/9] overflow-hidden rounded-[1.75rem] border-[3px] border-ink shadow-[0.6rem_0.6rem_0_0_var(--color-limone)]">
                 <Image src={article.coverUrl} alt={article.coverAlt} fill priority sizes="(min-width:1024px) 64rem, 100vw" className="object-cover" />
               </div>
             ) : (
-              <Pattern variant="agrumi" className="aspect-[16/6] w-full rounded-card" />
+              <Pattern variant="agrumi" className="aspect-[16/6] w-full rounded-[1.75rem] border-[3px] border-ink" />
             )}
           </figure>
 
@@ -51,12 +51,12 @@ export function NewsArticle({ article, related = [], shareUrl }: { article: News
 
             {article.gallery.length > 0 && (
               <section aria-labelledby="galleria" className="mt-14">
-                <h2 id="galleria" className="mb-5 text-2xl">Galleria</h2>
+                <h2 id="galleria" className="mb-5 text-3xl font-extrabold">Galleria</h2>
                 <ul className="grid gap-4 sm:grid-cols-2">
                   {article.gallery.map((g, i) => (
                     <li key={g.id} className={i === 0 && article.gallery.length % 2 === 1 ? "sm:col-span-2" : ""}>
                       <figure>
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-paper-deep">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.25rem] border-[3px] border-ink bg-paper-deep">
                           <Image src={g.url} alt={g.alt} fill sizes="(min-width:768px) 36rem, 100vw" className="object-cover" />
                         </div>
                         {(g.alt || g.credit) && (
@@ -80,10 +80,10 @@ export function NewsArticle({ article, related = [], shareUrl }: { article: News
       </article>
 
       {related.length > 0 && (
-        <Section tone="deep" aria-labelledby="correlati">
+        <Section tone="kraft" aria-labelledby="correlati">
           <Container>
-            <Eyebrow className="text-terracotta-deep">Continua a leggere</Eyebrow>
-            <h2 id="correlati" className="mb-10 text-[clamp(1.8rem,3.5vw,2.6rem)] font-medium">Altre storie</h2>
+            <Eyebrow>Continua a leggere</Eyebrow>
+            <h2 id="correlati" className="mb-10 text-[clamp(2rem,4vw,3rem)] font-extrabold">Altre storie</h2>
             <ul className="grid gap-6 md:grid-cols-3">
               {related.map((r) => <li key={r.id}><NewsCard news={r} headingLevel={3} /></li>)}
             </ul>

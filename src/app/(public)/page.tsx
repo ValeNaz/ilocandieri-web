@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { PageView } from "@/components/public/blocks/PageView";
+import { PageBlocks } from "@/components/public/blocks";
+import { JourneyRail } from "@/components/public/JourneyRail";
 import { JsonLd } from "@/components/public/JsonLd";
+import { getPageBlocks } from "@/lib/content/queries";
 import { getSiteUrl } from "@/lib/env";
 import { pageMetadata } from "@/lib/seo";
 import { getSetting } from "@/lib/settings";
@@ -10,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const org = await getSetting("org");
+  const [org, content] = await Promise.all([getSetting("org"), getPageBlocks("home")]);
   const url = getSiteUrl();
   const sameAs = Object.values(org.social).filter(Boolean);
   const ld: Record<string, unknown> = {
@@ -26,7 +28,8 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={ld} />
-      <PageView pageKey="home" />
+      <JourneyRail />
+      <PageBlocks content={content} />
     </>
   );
 }

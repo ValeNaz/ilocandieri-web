@@ -6,20 +6,17 @@ import { AbesBlock, EventsBlock, NewsBlock } from "./Dynamic";
 import { HeroBlock } from "./Hero";
 import { RichTextBlock } from "./RichText";
 import { CtaBlock, FeatureBlock, SectionHeadingBlock, IntroBlock, PillarsBlock, PlacesBlock, ValuesBlock } from "./Sections";
-import type { HeadingLevel, PatternVariant } from "./shared";
-
-const VARIANTS: PatternVariant[] = ["agrumi", "maiolica", "campi"];
+import type { HeadingLevel } from "./shared";
 
 /**
  * Render ONE block. `level` is the heading level of the block's main title (1 for the first block of a page, else 2).
  * `message` blocks are system microcopy and never render as sections.
  */
-export function BlockView({ block, images, level = 2 }: { block: ParsedBlock; images: ImageMap; level?: HeadingLevel }): ReactNode {
-  const variant = VARIANTS[(block.position + (block.id.charCodeAt(0) || 0)) % VARIANTS.length];
+export function BlockView({ block, images, level = 2, pageKey, index = 0 }: { block: ParsedBlock; images: ImageMap; level?: HeadingLevel; pageKey?: string; index?: number }): ReactNode {
   switch (block.type) {
-    case "hero": return <HeroBlock data={block.data} images={images} level={level} variant={variant} />;
-    case "intro": return <IntroBlock data={block.data} images={images} level={level} variant={variant} />;
-    case "feature": return <FeatureBlock data={block.data} images={images} level={level} variant={variant} />;
+    case "hero": return <HeroBlock data={block.data} images={images} level={level} pageKey={pageKey} />;
+    case "intro": return <IntroBlock data={block.data} images={images} level={level} />;
+    case "feature": return <FeatureBlock data={block.data} images={images} level={level} index={index} />;
     case "pillars": return <PillarsBlock data={block.data} level={level} />;
     case "values": return <ValuesBlock data={block.data} level={level} />;
     case "places": return <PlacesBlock data={block.data} images={images} level={level} />;
@@ -38,12 +35,12 @@ export function BlockView({ block, images, level = 2 }: { block: ParsedBlock; im
  * Render all visible blocks of a page. The first renderable block gets the <h1>.
  * `only` / `except` filter by slot (so a module can render the hero itself and the rest elsewhere).
  */
-export function PageBlocks({ content, only, except, firstIsH1 = true }: { content: Pick<PageContent, "blocks" | "images">; only?: string[]; except?: string[]; firstIsH1?: boolean }) {
+export function PageBlocks({ content, only, except, firstIsH1 = true }: { content: Pick<PageContent, "blocks" | "images" | "page">; only?: string[]; except?: string[]; firstIsH1?: boolean }) {
   const blocks = content.blocks.filter((b) => b.type !== "message" && (!only || (b.data.slot && only.includes(b.data.slot))) && (!except || !(b.data.slot && except.includes(b.data.slot))));
   return (
     <>
       {blocks.map((b, i) => (
-        <BlockView key={b.id} block={b} images={content.images} level={firstIsH1 && i === 0 ? 1 : 2} />
+        <BlockView key={b.id} block={b} images={content.images} level={firstIsH1 && i === 0 ? 1 : 2} pageKey={content.page?.key} index={i} />
       ))}
     </>
   );

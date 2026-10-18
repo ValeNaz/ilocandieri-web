@@ -1,16 +1,16 @@
-import { Container, Section } from "@/components/ui";
+import { Card, Container, Section } from "@/components/ui";
 import { ContactForm } from "@/components/public/contact/ContactForm";
 import type { BlockDataOf } from "@/lib/content/blocks";
 import { getSetting } from "@/lib/settings";
 import { FORM_TOKEN_FIELD } from "@/lib/security";
 import { issueContactToken } from "@/lib/content/contact";
 import { whatsappUrl } from "@/lib/content/contact-info";
-import { BlockHeading, OptionalEyebrow, Paragraphs, type HeadingLevel } from "./shared";
+import { BlockHeading, OptionalEyebrow, Paragraphs, TITLE, type HeadingLevel } from "./shared";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="border-t border-line py-4 first:border-t-0 first:pt-0">
-      <dt className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-soft">{label}</dt>
+    <div className="border-t-2 border-paper/30 py-4 first:border-t-0 first:pt-0">
+      <dt className="font-stencil text-sm font-bold uppercase tracking-[0.18em] text-limone">{label}</dt>
       <dd className="mt-1 text-lg">{children}</dd>
     </div>
   );
@@ -22,14 +22,14 @@ export async function ContactBlock({ data, level }: { data: BlockDataOf<"contact
   const wa = whatsappUrl(org.whatsapp);
   const token = issueContactToken();
   const maps = org.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(org.address)}` : null;
-  const link = "font-medium text-terracotta-deep underline decoration-terracotta-deep/40 hover:decoration-terracotta-deep";
+  const link = "font-semibold text-limone underline decoration-2 underline-offset-4 decoration-limone/50 hover:decoration-limone";
   return (
-    <Section id={data.slot} className="py-12 sm:py-20">
+    <Section id={data.slot} className="bg-cobalto py-16 text-paper on-dark sm:py-28">
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
-          <OptionalEyebrow text={data.eyebrow} className="text-terracotta-deep" />
-          <BlockHeading level={level} className="text-[clamp(2.2rem,5.4vw,4rem)] font-medium leading-[1.04]">{data.title}</BlockHeading>
-          <div className="mt-6 space-y-4 text-lg leading-relaxed text-ink-soft"><Paragraphs text={data.text} /></div>
+          <OptionalEyebrow text={data.eyebrow} />
+          <BlockHeading level={level} className={TITLE.section}>{data.title}</BlockHeading>
+          <div className="mt-6 space-y-4 text-lg leading-relaxed"><Paragraphs text={data.text} /></div>
 
           <h2 className="sr-only">Recapiti</h2>
           <dl className="mt-10">
@@ -54,10 +54,10 @@ export async function ContactBlock({ data, level }: { data: BlockDataOf<"contact
         </div>
 
         <div className="lg:col-span-7">
-          <div className="rounded-card border border-line bg-card p-6 shadow-card sm:p-9">
-            <h2 className="font-display text-2xl font-medium sm:text-3xl">{data.formTitle}</h2>
+          <Card tone="label" className="p-6 text-ink sm:p-9">
+            <h2 className="font-display text-2xl font-extrabold sm:text-3xl">{data.formTitle}</h2>
             <ContactForm tokenField={FORM_TOKEN_FIELD} token={token} />
-          </div>
+          </Card>
         </div>
       </Container>
     </Section>
