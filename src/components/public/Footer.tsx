@@ -10,51 +10,48 @@ export async function Footer() {
   const hasConsent = Boolean(safeGaId(analytics.gaMeasurementId));
   const social = Object.entries(org.social).filter(([, v]) => v) as [string, string][];
   return (
-    <footer className="relative overflow-hidden bg-ink text-paper on-dark">
-      <div className="relative mx-auto grid max-w-[88rem] gap-12 px-5 pb-12 pt-20 sm:px-8 md:grid-cols-[1.5fr_1fr_1fr]">
+    <footer className="border-t border-line bg-paper-deep text-ink">
+      <div className="mx-auto grid max-w-[88rem] gap-12 px-5 pb-12 pt-16 sm:px-8 md:grid-cols-[1.5fr_1fr_1fr]">
         <div>
-          <Wordmark className="text-paper [--mark-line:var(--color-ink)]" />
-          <p className="mt-6 max-w-sm font-display text-2xl font-bold leading-snug text-paper">{footer.line}</p>
+          <Wordmark />
+          <p className="mt-5 max-w-sm text-lg leading-snug text-ink-soft">{footer.line}</p>
         </div>
 
         <nav aria-label="Navigazione nel footer">
-          <h2 className="font-stencil text-sm font-bold uppercase tracking-[0.2em] text-limone">Il sito</h2>
-          <ul className="mt-4 space-y-2.5">
+          <h2 className="text-sm font-semibold text-ink">Il sito</h2>
+          <ul className="mt-4 space-y-2 text-ink-soft">
             {publicNav.map((i) => (
-              <li key={i.href}><Link href={i.href} className="hover:text-limone">{i.label}</Link></li>
+              <li key={i.href}><Link href={i.href} className="hover:text-ink">{i.label}</Link></li>
             ))}
           </ul>
         </nav>
 
         <div>
-          <h2 className="font-stencil text-sm font-bold uppercase tracking-[0.2em] text-limone">Contatti</h2>
-          <address className="mt-4 space-y-2.5 not-italic text-paper/90">
-            <p className="font-medium text-paper">{org.name}</p>
+          <h2 className="text-sm font-semibold text-ink">Contatti</h2>
+          <address className="mt-4 space-y-2 not-italic text-ink-soft">
+            <p className="font-medium text-ink">{org.name}</p>
             {org.address && <p>{org.address}</p>}
-            {org.phone && <p><a className="hover:text-limone" href={`tel:${org.phone.replace(/\s+/g, "")}`}>{org.phone}</a></p>}
-            {org.email && <p><a className="break-all hover:text-limone" href={`mailto:${org.email}`}>{org.email}</a></p>}
-            {org.vatId && <p className="text-sm text-paper/70">P.IVA {org.vatId}</p>}
+            {org.phone && <p><a className="hover:text-ink" href={`tel:${org.phone.replace(/\s+/g, "")}`}>{org.phone}</a></p>}
+            {org.email && <p><a className="break-all hover:text-ink" href={`mailto:${org.email}`}>{org.email}</a></p>}
+            {org.vatId && <p className="text-sm">P.IVA {org.vatId}</p>}
           </address>
           {social.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
               {social.map(([k, url]) => (
-                <li key={k}><a className="capitalize underline hover:text-limone" href={url} target="_blank" rel="noopener noreferrer">{k}<span className="sr-only"> (nuova scheda)</span></a></li>
+                <li key={k}><a className="capitalize underline hover:text-ink" href={url} target="_blank" rel="noopener noreferrer">{k}<span className="sr-only"> (nuova scheda)</span></a></li>
               ))}
             </ul>
           )}
         </div>
       </div>
-      <svg aria-hidden="true" viewBox="0 0 1000 124" preserveAspectRatio="xMidYMax meet" className="pointer-events-none block w-full select-none px-4">
-        <text x="0" y="118" textLength="1000" lengthAdjust="spacingAndGlyphs" fontFamily="var(--font-hepta), serif" fontWeight="800" fontSize="158" className="fill-terracotta-deep">I LOCANDIERI</text>
-      </svg>
-      <div className="relative border-t-[3px] border-paper/20 bg-ink">
-        <div className="mx-auto flex max-w-[88rem] flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-paper/80 sm:px-8">
+      <div className="border-t border-line">
+        <div className="mx-auto flex max-w-[88rem] flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-ink-soft sm:px-8">
           <p>© {new Date().getFullYear()} {org.name}</p>
           <ul className="flex gap-5">
             {legalNav.map((i) => (
-              <li key={i.href}><Link href={i.href} className="underline underline-offset-4 hover:text-limone">{i.label}</Link></li>
+              <li key={i.href}><Link href={i.href} className="underline underline-offset-4 hover:text-ink">{i.label}</Link></li>
             ))}
-            {hasConsent && <li><CookiePreferencesButton className="underline underline-offset-4 hover:text-limone" /></li>}
+            {hasConsent && <li><CookiePreferencesButton className="underline underline-offset-4 hover:text-ink" /></li>}
           </ul>
         </div>
       </div>

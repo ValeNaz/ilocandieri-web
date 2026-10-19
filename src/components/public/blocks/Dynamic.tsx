@@ -9,19 +9,19 @@ import { getHomeNews } from "@/lib/news/public";
 import { paths } from "@/lib/paths";
 import { BlockHeading, CtaLink, OptionalEyebrow, TITLE, type HeadingLevel } from "./shared";
 
-function SectionHead({ eyebrow, title, text, level, tint = "text-terracotta-deep" }: { eyebrow: string; title: string; text: string; level: HeadingLevel; tint?: string }) {
+function SectionHead({ eyebrow, title, text, level }: { eyebrow: string; title: string; text: string; level: HeadingLevel }) {
   return (
-    <div className="rise grid gap-6 lg:grid-cols-12 lg:items-end">
-      <div className="lg:col-span-8">
-        <OptionalEyebrow text={eyebrow} className={tint} />
+    <div className="rise grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-16">
+      <div className="lg:col-span-7">
+        <OptionalEyebrow text={eyebrow} />
         <BlockHeading level={level} className={TITLE.scene}>{title}</BlockHeading>
       </div>
-      {text && <p className="text-lg leading-relaxed lg:col-span-4">{text}</p>}
+      {text && <p className="text-lg leading-relaxed text-ink-soft lg:col-span-5">{text}</p>}
     </div>
   );
 }
 
-const EMPTY = "mt-10 rounded-[1.5rem] border-[3px] border-dashed border-ink/60 bg-card px-6 py-8 text-ink";
+const EMPTY = "mt-10 rounded-card border border-dashed border-line-strong/60 bg-card px-6 py-8 text-ink-soft";
 
 /** ABES showcase. Falls back to an editorial block + link to the catalogue when there are no products (never fake cards). */
 export async function AbesBlock({ data, level }: { data: BlockDataOf<"abes_showcase">; level: HeadingLevel }) {
@@ -32,9 +32,9 @@ export async function AbesBlock({ data, level }: { data: BlockDataOf<"abes_showc
     );
   }
   return (
-    <Section id={data.slot} className="bg-limone text-ink">
+    <Section id={data.slot} tone="deep">
       <Container>
-        <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} tint="text-ink" />
+        <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         <div className="mt-10"><ButtonLink href={paths.abesShop} size="lg">{data.ctaLabel}</ButtonLink></div>
       </Container>
     </Section>
@@ -45,11 +45,11 @@ export async function EventsBlock({ data, level }: { data: BlockDataOf<"events_h
   const events = await getHomeEvents(data.limit);
   if (events.length === 0 && !data.emptyMessage) return null;
   return (
-    <Section id={data.slot} className="py-20 sm:py-32">
+    <Section id={data.slot}>
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         {events.length > 0 ? (
-          <ul className="mt-10 grid gap-5 sm:mt-16 lg:grid-cols-2 lg:gap-6">
+          <ul className="mt-10 grid gap-5 sm:mt-14 lg:grid-cols-2 lg:gap-6">
             {events.slice(0, data.limit).map((e) => <li key={e.id} className="rise"><EventCard event={e} headingLevel={3} /></li>)}
           </ul>
         ) : (
@@ -65,11 +65,11 @@ export async function NewsBlock({ data, level }: { data: BlockDataOf<"news_highl
   const news = await getHomeNews(data.limit);
   if (news.length === 0 && !data.emptyMessage) return null;
   return (
-    <Section id={data.slot} className="bg-kraft py-20 text-ink sm:py-32">
+    <Section id={data.slot}>
       <Container>
-        <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} tint="text-ink" />
+        <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         {news.length > 0 ? (
-          <ul className={news.length === 1 ? "mt-10 max-w-4xl sm:mt-16" : "mt-10 grid gap-6 sm:mt-16 md:grid-cols-2 lg:grid-cols-3"}>
+          <ul className={news.length === 1 ? "mt-10 max-w-4xl sm:mt-14" : "mt-10 grid gap-6 sm:mt-14 md:grid-cols-2 lg:grid-cols-3"}>
             {news.slice(0, data.limit).map((n) => <li key={n.id} className="rise"><NewsCard news={n} headingLevel={3} wide={news.length === 1} /></li>)}
           </ul>
         ) : (

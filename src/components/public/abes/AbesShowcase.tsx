@@ -1,10 +1,9 @@
-// INTERFACE CONTRACT (owner: ABES+NEWS agent). Props must stay stable (`id` is an optional addition for the journey rail).
+// INTERFACE CONTRACT (owner: ABES+NEWS agent). Props must stay stable (`id` is an optional addition).
 import Image from "next/image";
 import { ButtonLink, Container } from "@/components/ui";
 import type { ShowcaseProduct } from "@/lib/abes/public";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-import { Stamp } from "../art/primitives";
 
 export type AbesShowcaseProps = {
   products: ShowcaseProduct[];
@@ -19,7 +18,7 @@ export type AbesShowcaseProps = {
 
 function ArrowUpRight({ className }: { className?: string }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className={cn("size-4", className)}>
+    <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={cn("size-4", className)}>
       <path d="M6 14 14 6M7 6h7v7" />
     </svg>
   );
@@ -33,9 +32,9 @@ function ProductCard({ p, index, cta, Heading }: { p: ShowcaseProduct; index: nu
       target="_blank"
       rel="noopener noreferrer"
       data-abes-product
-      className="group/card relative flex h-full flex-col overflow-hidden rounded-[1.4rem] border-[3px] border-ink bg-card text-ink transition-[transform,box-shadow] duration-300 ease-out-expo hover:-translate-y-2 hover:rotate-[-1.2deg] hover:shadow-[0.5rem_0.5rem_0_0_var(--color-ink)] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-cobalto"
+      className="group/card relative flex h-full flex-col overflow-hidden rounded-card border border-line bg-card text-ink transition-[box-shadow,border-color] duration-300 ease-out-expo hover:border-line-strong/40 hover:shadow-pop"
     >
-      <div className="relative aspect-square overflow-hidden border-b-[3px] border-ink bg-white">
+      <div className="relative aspect-square overflow-hidden bg-white">
         {p.imageUrl ? (
           <Image
             src={p.imageUrl}
@@ -43,27 +42,24 @@ function ProductCard({ p, index, cta, Heading }: { p: ShowcaseProduct; index: nu
             fill
             loading={index < 4 ? "eager" : "lazy"}
             sizes="(min-width:1024px) 22vw, (min-width:768px) 45vw, 72vw"
-            className="object-contain p-3 transition-transform duration-500 ease-out-expo group-hover/card:scale-[1.06]"
+            className="object-contain p-4 transition-transform duration-500 ease-out-expo group-hover/card:scale-[1.04]"
           />
         ) : (
-          <span aria-hidden="true" className="grid size-full place-items-center font-display text-5xl font-extrabold text-terracotta/40">ABES</span>
+          <span aria-hidden="true" className="grid size-full place-items-center text-4xl font-semibold text-ink/20">ABES</span>
         )}
-        <span aria-hidden="true" className="absolute left-3 top-3 rounded-md bg-ink px-2 py-1 font-stencil text-[0.78rem] font-bold tracking-widest text-limone">
-          N° {String(index + 1).padStart(2, "0")}
-        </span>
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        {p.category && <p className="font-stencil text-[0.78rem] font-bold uppercase tracking-[0.16em] text-olive-deep">{p.category}</p>}
-        <Heading className="text-[1.2rem] font-extrabold leading-tight">{p.title}</Heading>
+      <div className="flex flex-1 flex-col gap-1.5 border-t border-line p-5">
+        {p.category && <p className="text-sm text-ink-soft">{p.category}</p>}
+        <Heading className="text-[1.1rem] font-semibold leading-snug">{p.title}</Heading>
         {(p.priceText || p.available !== null) && (
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            {p.priceText && <span className="font-bold">{p.priceText}</span>}
+            {p.priceText && <span className="font-semibold">{p.priceText}</span>}
             {p.available === false && <span className="text-ink-soft">Al momento esaurito</span>}
             {p.available === true && <span className="text-olive-deep">Disponibile</span>}
           </p>
         )}
-        <span className="mt-auto inline-flex items-center gap-2 pt-3 text-[0.95rem] font-bold text-cobalto">
-          <span className="marker group-hover/card:[background-size:100%_44%]">{cta}</span>
+        <span className="mt-auto inline-flex items-center gap-1.5 pt-3 text-[0.95rem] font-medium text-terracotta-deep">
+          <span className="group-hover/card:underline group-hover/card:underline-offset-4">{cta}</span>
           <ArrowUpRight className="transition-transform duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
           <span className="sr-only"> (si apre su abes.bio)</span>
         </span>
@@ -74,33 +70,22 @@ function ProductCard({ p, index, cta, Heading }: { p: ShowcaseProduct; index: nu
 
 /**
  * ABES showcase: real products, each card is one link to THAT product on abes.bio (new tab).
- * No cart, no "buy now". Mobile = accessible scroll-snap strip, >= md = grid (alternate cards sit lower, like labels on a shelf).
- * A ticker of the real product categories runs above the scene. Empty list = plain CTA to the catalogue.
+ * No cart, no "buy now". Mobile = accessible scroll-snap strip, >= md = grid. Empty list = plain CTA to the catalogue.
  */
 export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCtaLabel, headingLevel = 2, id }: AbesShowcaseProps) {
   const H = headingLevel === 2 ? "h2" : "h3";
   const CardH = headingLevel === 2 ? "h3" : "h4";
   const cols = products.length === 3 || products.length === 6 ? "lg:grid-cols-3" : "lg:grid-cols-4";
-  const categories = [...new Set(products.map((p) => p.category).filter((c): c is string => Boolean(c)))];
   return (
-    <section id={id} aria-labelledby="abes-showcase-title" className="relative isolate overflow-hidden bg-limone text-ink">
-      {categories.length > 0 && (
-        <div aria-hidden="true" className="ticker border-b-[3px] border-ink bg-ink py-3 text-limone">
-          {[0, 1].map((n) => (
-            <div key={n} className="ticker-track font-stencil text-lg font-bold uppercase tracking-[0.2em]">
-              {[...categories, ...categories].map((c, i) => <span key={i}>{c} ✺</span>)}
-            </div>
-          ))}
-        </div>
-      )}
-      <Container className="py-20 sm:py-32">
-        <div className="grid items-end gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-          <div className="rise">
-            {eyebrow && <p className="mb-5"><Stamp className=" ">{eyebrow}</Stamp></p>}
-            <H id="abes-showcase-title" className="max-w-[16ch] text-[clamp(2.4rem,6.4vw,5.6rem)] font-extrabold leading-[0.98] tracking-[-0.03em]">{title}</H>
+    <section id={id} aria-labelledby="abes-showcase-title" className="bg-paper-deep">
+      <Container className="py-12 sm:py-24">
+        <div className="grid items-end gap-6 lg:grid-cols-12 lg:gap-16">
+          <div className="rise lg:col-span-7">
+            {eyebrow && <p className="stamp mb-4">{eyebrow}</p>}
+            <H id="abes-showcase-title" className="max-w-[20ch] text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-[1.08] tracking-[-0.026em]">{title}</H>
           </div>
-          <div className="space-y-6">
-            {text && <p className="max-w-prose text-[1.08rem] leading-relaxed sm:text-xl">{text}</p>}
+          <div className="space-y-6 lg:col-span-5">
+            {text && <p className="max-w-prose text-lg leading-relaxed text-ink-soft">{text}</p>}
             <div className="hidden lg:block">
               <ButtonLink href={paths.abesShop} size="lg">
                 {ctaLabel}
@@ -111,8 +96,8 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
         </div>
 
         {products.length > 0 ? (
-          <div className="mt-12 sm:mt-20">
-            <p className="mb-3 font-stencil text-sm font-bold uppercase tracking-widest md:hidden" aria-hidden="true">Scorri per vedere tutti i prodotti →</p>
+          <div className="mt-10 sm:mt-14">
+            <p className="mb-3 text-sm text-ink-soft md:hidden" aria-hidden="true">Scorri per vedere tutti i prodotti →</p>
             <ul
               role="list"
               // Cards are links, so the scrollable strip is keyboard reachable (focus scrolls them into view).
@@ -123,24 +108,24 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
               )}
             >
               {products.map((p, i) => (
-                <li key={p.id} className="w-[72%] max-w-[19rem] shrink-0 snap-start scroll-ml-5 sm:scroll-ml-8 md:w-auto md:max-w-none md:[&:nth-child(even)]:mt-10 lg:[&:nth-child(even)]:mt-14">
+                <li key={p.id} className="w-[72%] max-w-[19rem] shrink-0 snap-start scroll-ml-5 sm:scroll-ml-8 md:w-auto md:max-w-none">
                   <ProductCard p={p} index={i} cta={cardCtaLabel} Heading={CardH} />
                 </li>
               ))}
             </ul>
           </div>
         ) : (
-          <p className="mt-10 max-w-prose text-lg">Il catalogo completo, con tutte le schede, prezzi e disponibilità aggiornati, è sul negozio ABES.</p>
+          <p className="mt-10 max-w-prose text-lg text-ink-soft">Il catalogo completo, con tutte le schede, prezzi e disponibilità aggiornati, è sul negozio ABES.</p>
         )}
 
-        <div className={cn("mt-8 sm:mt-14", products.length > 0 && "lg:hidden")}>
+        <div className={cn("mt-8 sm:mt-12", products.length > 0 && "lg:hidden")}>
           <ButtonLink href={paths.abesShop} size="lg">
             {ctaLabel}
             <ArrowUpRight className="size-5" />
           </ButtonLink>
         </div>
         {products.length > 0 && (
-          <p className="mt-8 hidden max-w-xl text-sm lg:block">Prezzi, disponibilità, ordini e spedizioni sono gestiti da ABES: ogni scheda ti porta alla pagina del prodotto sul loro negozio.</p>
+          <p className="mt-8 hidden max-w-xl text-sm text-ink-soft lg:block">Prezzi, disponibilità, ordini e spedizioni sono gestiti da ABES: ogni scheda ti porta alla pagina del prodotto sul loro negozio.</p>
         )}
       </Container>
     </section>

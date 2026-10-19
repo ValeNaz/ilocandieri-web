@@ -2,63 +2,35 @@ import { Container } from "@/components/ui";
 import type { BlockDataOf } from "@/lib/content/blocks";
 import type { ImageMap } from "@/lib/content/queries";
 import { cn } from "@/lib/utils";
-import type { PosterTone } from "./shared";
-import { Stamp } from "../art/primitives";
-import { BlockHeading, CtaLink, FIELD, Foto, PAGE_FOTO, OptionalEyebrow, Paragraphs, TITLE, pickImage, toneForPage, type HeadingLevel } from "./shared";
+import { BlockHeading, CtaLink, Foto, OptionalEyebrow, PAGE_FOTO, PHOTO, Paragraphs, TITLE, pickImage, type FotoKey, type HeadingLevel } from "./shared";
 
-/** Home hero: text on one side, a real ABES photo on the other. */
-function SplitHero({ data, images, level }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel }) {
-  const image = pickImage(images, data.imageId);
+/**
+ * Hero: text on one side, a real photo on the other. The Home hero ("large") is bigger and sits on white;
+ * inner pages sit on sand with a smaller title.
+ */
+export function HeroBlock({ data, images, level, pageKey }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel; pageKey?: string }) {
+  const large = data.size === "large";
+  const fallback: FotoKey = large ? "ceci" : (PAGE_FOTO[pageKey ?? ""] ?? "cassette");
   return (
-    <section id={data.slot} className="bg-paper">
-      <Container className="grid items-center gap-10 py-12 sm:py-20 lg:grid-cols-12 lg:gap-14 lg:py-24">
-        <div className="lg:col-span-7">
-          {data.eyebrow && <p className="mb-5"><Stamp className="text-terracotta-deep">{data.eyebrow}</Stamp></p>}
-          <BlockHeading level={level} className={cn("reveal", TITLE.scene)}>{data.title}</BlockHeading>
-          <div className="reveal mt-6 max-w-xl space-y-4 text-lg leading-relaxed text-ink-soft [animation-delay:120ms] sm:text-xl">
-            <Paragraphs text={data.text} />
-          </div>
-          <div className="reveal mt-8 flex flex-wrap gap-3 [animation-delay:220ms]">
-            <CtaLink cta={data.primaryCta} size="lg" />
-            <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" />
-          </div>
-        </div>
-        <div className="lg:col-span-5">
-          <Foto image={image} fallback="ceci" priority className="aspect-[4/3] w-full rounded-[1.5rem] border-[3px] border-ink shadow-[0.6rem_0.6rem_0_0_var(--color-terracotta)] lg:aspect-[4/5]" />
-        </div>
-      </Container>
-    </section>
-  );
-}
-
-/** Title block of an inner page: a field of color from the page's identity, huge heading, large ornament drifting at the edge. */
-function PosterHero({ data, images, level, pageKey }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel; pageKey?: string }) {
-  const tone: PosterTone = toneForPage(pageKey, data.title);
-  const dark = tone === "limone" || tone === "kraft";
-  return (
-    <section id={data.slot} className={cn("relative isolate overflow-hidden", FIELD[tone])}>
-      <Container className="relative grid items-center gap-10 py-12 sm:py-20 lg:grid-cols-12 lg:py-24">
-        <div className="lg:col-span-7">
+    <section id={data.slot} className={large ? "bg-paper" : "bg-paper-deep"}>
+      <Container className={cn("grid items-center gap-10 lg:grid-cols-12 lg:gap-16", large ? "py-12 sm:py-20 lg:py-24" : "py-12 sm:py-16 lg:py-20")}>
+        <div className="lg:col-span-6">
           <OptionalEyebrow text={data.eyebrow} />
-          <BlockHeading level={level} className={cn("reveal", TITLE.scene)}>{data.title}</BlockHeading>
-          <div className={cn("reveal mt-7 max-w-2xl space-y-4 text-lg leading-relaxed sm:text-xl [animation-delay:120ms]", dark ? "text-ink" : "text-paper")}>
+          <BlockHeading level={level} className={cn("reveal", large ? TITLE.hero : TITLE.scene)}>{data.title}</BlockHeading>
+          <div className="reveal mt-6 max-w-xl space-y-4 text-lg leading-relaxed text-ink-soft [animation-delay:100ms]">
             <Paragraphs text={data.text} />
           </div>
           {(data.primaryCta || data.secondaryCta) && (
-            <div className="reveal mt-9 flex flex-wrap gap-3 [animation-delay:220ms]">
-              <CtaLink cta={data.primaryCta} size="lg" dark={!dark} />
-              <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" dark={!dark} />
+            <div className="reveal mt-8 flex flex-wrap gap-3 [animation-delay:180ms]">
+              <CtaLink cta={data.primaryCta} size="lg" />
+              <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" />
             </div>
           )}
         </div>
-        <div className="lg:col-span-5">
-          <Foto image={pickImage(images, data.imageId)} fallback={PAGE_FOTO[pageKey ?? ""] ?? "cassette"} priority className="aspect-[4/3] w-full rounded-[1.5rem] border-[3px] border-ink shadow-[0.6rem_0.6rem_0_0_var(--color-ink)]" />
+        <div className="lg:col-span-6">
+          <Foto image={pickImage(images, data.imageId)} fallback={fallback} priority className={cn(PHOTO, large ? "aspect-[4/3] lg:aspect-[5/4]" : "aspect-[16/10]")} />
         </div>
       </Container>
     </section>
   );
-}
-
-export function HeroBlock({ data, images, level, pageKey }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel; pageKey?: string }) {
-  return data.size === "large" ? <SplitHero data={data} images={images} level={level} /> : <PosterHero data={data} images={images} level={level} pageKey={pageKey} />;
 }

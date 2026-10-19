@@ -78,13 +78,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
         <Container>
           <Heading id="posizioni" size="lg" className="mb-6">Posizioni aperte</Heading>
           {openings.length === 0 ? (
-            <p className="rounded-[1.5rem] border-[3px] border-dashed border-ink/50 bg-card px-6 py-6 text-ink">{noOpenings}</p>
+            <p className="rounded-card border border-dashed border-line-strong/60 bg-card px-6 py-6 text-ink-soft">{noOpenings}</p>
           ) : (
             <ul className="grid gap-5 md:grid-cols-2">
               {openings.map((o) => (
                 <li key={o.id}>
                   <Card tone="label" className="h-full p-6">
-                    <h3 className="font-display text-2xl font-extrabold">{o.title}</h3>
+                    <h3 className="text-xl font-semibold">{o.title}</h3>
                     {o.description && <p className="mt-3 whitespace-pre-line text-ink-soft">{o.description}</p>}
                     <a href={`?posizione=${encodeURIComponent(o.slug)}#candidatura`} className="mt-5 inline-block font-medium text-terracotta-deep underline">
                       Candidati per questa posizione<span className="sr-only">: {o.title}</span>

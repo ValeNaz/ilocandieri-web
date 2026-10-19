@@ -86,9 +86,9 @@ export default async function EventPage({ params }: Params) {
   return (
     <article>
       <JsonLd data={jsonLd} />
-      <Section tone="cobalto" className="pb-14 sm:pb-20">
+      <Section tone="deep" className="pb-20 sm:pb-24">
         <Container>
-          <Link href={paths.events} className="mb-8 inline-flex min-h-11 items-center gap-2 text-[0.95rem] font-bold text-limone hover:underline">
+          <Link href={paths.events} className="mb-6 inline-flex min-h-11 items-center gap-2 text-[0.95rem] font-medium text-terracotta-deep hover:underline">
             <span aria-hidden="true">←</span> Tutti gli eventi
           </Link>
           <div className="flex flex-wrap items-center gap-2">
@@ -98,13 +98,13 @@ export default async function EventPage({ params }: Params) {
             {state === "full" && <Badge tone="warning">Posti esauriti</Badge>}
             {state === "closed" && !p.isPast && <Badge>Iscrizioni terminate</Badge>}
           </div>
-          <Heading as="h1" size="display" className="mt-5 max-w-4xl">{e.title}</Heading>
-          {e.summary && <p className="mt-6 max-w-2xl text-xl leading-relaxed">{e.summary}</p>}
+          <Heading as="h1" size="xl" className="mt-5 max-w-4xl">{e.title}</Heading>
+          {e.summary && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">{e.summary}</p>}
         </Container>
       </Section>
 
       <Container className="pb-20 sm:pb-28">
-        <div className="relative -mt-10 mb-12 aspect-[16/8] max-h-[30rem] w-full overflow-hidden rounded-[1.75rem] border-[3px] border-ink bg-paper-deep shadow-[0.6rem_0.6rem_0_0_var(--color-limone)] sm:-mt-14">
+        <div className="relative -mt-10 mb-12 aspect-[16/8] max-h-[30rem] w-full overflow-hidden rounded-[1.25rem] bg-paper-deep sm:-mt-14">
           {p.coverUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- media is served by our own /media route
             <img src={p.coverUrl} alt={p.coverAlt} className={`absolute inset-0 size-full object-cover ${p.isPast ? "saturate-[.7]" : ""}`} />
@@ -158,8 +158,8 @@ export default async function EventPage({ params }: Params) {
 
             {e.ctaType === "registration" && (
               <section id="iscrizione" aria-labelledby="iscrizione-titolo" className={body ? "mt-14 scroll-mt-28" : "scroll-mt-28"}>
-                <Eyebrow className="text-terracotta-deep">Partecipa</Eyebrow>
-                <h2 id="iscrizione-titolo" className="mb-6 text-[clamp(1.8rem,3.4vw,2.6rem)] font-extrabold">Iscrizione</h2>
+                <Eyebrow>Partecipa</Eyebrow>
+                <h2 id="iscrizione-titolo" className="mb-6 text-[clamp(1.6rem,2.8vw,2.2rem)] font-semibold">Iscrizione</h2>
                 {showForm && version && modeCopy && mode ? (
                   <Card tone="label" className="p-6 sm:p-9">
                     <RegistrationForm

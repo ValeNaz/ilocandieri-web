@@ -43,7 +43,7 @@ const PAIRS: [string, string, number][] = [
   // Body text on every paper surface
   ["ink", "paper", 4.5], ["ink", "card", 4.5], ["ink", "paper-deep", 4.5], ["ink-soft", "paper", 4.5], ["ink-soft", "card", 4.5], ["ink-soft", "paper-deep", 4.5],
   ["ink", "kraft", 4.5], ["ink", "limone", 4.5], ["ink", "sage-soft", 4.5], ["ink", "terracotta-soft", 4.5], ["ink", "cobalto-soft", 4.5], ["ink", "arancio", 4.5],
-  // Scenes drenched in a colour (cream or white text on the field)
+  // Buttons and the olive closing band (cream or white text on a color)
   ["paper", "terracotta", 4.5], ["white", "terracotta", 4.5], ["paper", "terracotta-deep", 4.5], ["white", "terracotta-deep", 4.5],
   ["paper", "cobalto", 4.5], ["white", "cobalto", 4.5], ["paper", "cobalto-deep", 4.5], ["white", "olive", 4.5], ["paper", "olive", 4.5], ["paper", "olive-deep", 4.5],
   ["paper", "ink", 4.5], ["limone", "ink", 4.5], ["limone", "cobalto", 4.5], ["limone", "cobalto-deep", 4.5], ["limone", "olive-deep", 4.5], ["sage", "olive-deep", 4.5], ["sage", "ink", 4.5],

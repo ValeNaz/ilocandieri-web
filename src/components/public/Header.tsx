@@ -36,14 +36,14 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-[var(--header-h)] border-b-[3px] border-ink bg-paper">
+      <header className="sticky top-0 z-50 h-[var(--header-h)] border-b border-line bg-paper/95 backdrop-blur-sm">
         <div className="mx-auto flex h-full max-w-[88rem] items-center justify-between gap-6 px-5 sm:px-8">
           <Link href="/" aria-label="I Locandieri - Home" className="rounded-lg">
             <Wordmark />
           </Link>
 
           <nav aria-label="Navigazione principale" className="hidden lg:block">
-            <ul className="flex items-center gap-1.5">
+            <ul className="flex items-center gap-1">
               {publicNav.slice(1).map((item) => {
                 const active = isActive(pathname, item.href);
                 const shop = item.href === paths.shop;
@@ -53,8 +53,8 @@ export function Header() {
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "inline-flex min-h-10 items-center px-3.5 text-[0.96rem] font-semibold",
-                        shop ? "rounded-full border-2 border-ink bg-limone px-4 font-bold transition-colors hover:bg-terracotta hover:text-white aria-[current=page]:bg-ink aria-[current=page]:text-limone" : "marker",
+                        "inline-flex min-h-10 items-center px-3.5 text-[0.95rem] font-medium",
+                        shop ? "ml-2 rounded-full bg-terracotta px-4 font-semibold text-white transition-colors hover:bg-terracotta-deep" : "marker text-ink-soft hover:text-ink aria-[current=page]:text-ink",
                       )}
                     >
                       {item.label}
@@ -71,10 +71,10 @@ export function Header() {
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
             onClick={() => { setOpenFor(pathname); setOpen((v) => !v); }}
-            className="inline-flex min-h-11 items-center gap-2.5 rounded-full border-2 border-ink bg-limone px-4 text-sm font-bold lg:hidden"
+            className="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-line-strong px-4 text-sm font-semibold lg:hidden"
           >
             {isOpen ? "Chiudi" : "Menu"}
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               {isOpen ? <path d="m6 6 12 12M18 6 6 18" /> : <path d="M4 8h16M4 16h16" />}
             </svg>
           </button>
@@ -82,19 +82,18 @@ export function Header() {
         <div aria-hidden="true" className="progress-bar" />
       </header>
 
-      <div id="mobile-menu" hidden={!isOpen} className="on-dark fixed inset-x-0 bottom-0 top-[var(--header-h)] z-40 overflow-y-auto bg-terracotta px-5 pb-10 pt-6 text-paper lg:hidden">
+      <div id="mobile-menu" hidden={!isOpen} className="fixed inset-x-0 bottom-0 top-[var(--header-h)] z-40 overflow-y-auto bg-paper px-5 pb-10 pt-4 text-ink lg:hidden">
         <nav aria-label="Navigazione mobile">
           <ol className="grid gap-1">
-            {publicNav.map((item, i) => {
+            {publicNav.map((item) => {
               const active = isActive(pathname, item.href);
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={cn("flex min-h-16 items-baseline gap-4 border-b-2 border-paper/30 py-2 font-display text-[clamp(2rem,9.5vw,3.2rem)] font-extrabold leading-none", active && "text-limone")}
+                    className={cn("flex min-h-14 items-center border-b border-line text-2xl font-semibold", active && "text-terracotta-deep")}
                   >
-                    <span aria-hidden="true" className="w-8 font-stencil text-base font-bold tracking-widest opacity-80">{String(i + 1).padStart(2, "0")}</span>
                     {item.label}
                   </Link>
                 </li>

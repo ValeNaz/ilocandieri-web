@@ -73,11 +73,11 @@ export function ConsentManager({ gaId }: { gaId: string }) {
       )}
       {showBanner && (
         <div role="dialog" aria-modal="false" aria-labelledby="cookie-title" aria-describedby="cookie-desc"
-          className="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-3xl rounded-[1.5rem] border-[3px] border-ink bg-card p-5 shadow-[0.45rem_0.45rem_0_0_var(--color-limone)] sm:inset-x-6 sm:bottom-6 sm:p-6">
-          <h2 id="cookie-title" className="font-display text-xl font-extrabold">Cookie di misurazione</h2>
+          className="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-3xl rounded-card border border-line bg-card p-5 shadow-pop sm:inset-x-6 sm:bottom-6 sm:p-6">
+          <h2 id="cookie-title" className="text-lg font-semibold">Cookie di misurazione</h2>
           <p id="cookie-desc" className="mt-2 text-[0.95rem] text-ink-soft">
             Usiamo Google Analytics per capire come viene usato il sito, solo se acconsenti. Il sito funziona allo stesso modo anche se rifiuti.{" "}
-            <Link href={paths.cookies} className="font-semibold text-cobalto underline">Cookie Policy</Link>
+            <Link href={paths.cookies} className="font-medium text-terracotta-deep underline">Cookie Policy</Link>
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button variant="secondary" onClick={() => choose("granted")}>Accetta</Button>

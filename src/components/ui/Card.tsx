@@ -8,8 +8,8 @@ const tones: Record<Tone, string> = {
   sage: "bg-sage-soft border border-sage/60",
   terracotta: "bg-terracotta-soft border border-terracotta/20",
   ink: "bg-ink text-paper border border-ink on-dark",
-  // Public forms and info panels: a printed label with a second color plate peeking out.
-  label: "bg-card border-[3px] border-ink shadow-[0.5rem_0.5rem_0_0_var(--color-limone)]",
+  // Public forms and info panels.
+  label: "bg-card border border-line shadow-card",
 };
 
 export function Card({ tone = "paper", interactive, className, ...rest }: HTMLAttributes<HTMLDivElement> & { tone?: Tone; interactive?: boolean }) {
@@ -17,7 +17,7 @@ export function Card({ tone = "paper", interactive, className, ...rest }: HTMLAt
     <div
       className={cn(
         "rounded-card",
-        tone !== "label" && "shadow-card",
+        "shadow-card",
         tones[tone],
         interactive && "transition-[transform,box-shadow] duration-300 ease-out-soft hover:-translate-y-1 hover:shadow-pop",
         className,

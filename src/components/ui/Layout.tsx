@@ -11,10 +11,10 @@ const tones: Record<Tone, string> = {
   deep: "bg-paper-deep",
   sage: "bg-sage-soft",
   ink: "bg-ink text-paper on-dark",
-  terracotta: "bg-terracotta text-paper on-dark",
-  cobalto: "bg-cobalto text-paper on-dark",
-  limone: "bg-limone text-ink",
-  kraft: "bg-kraft text-ink",
+  terracotta: "bg-terracotta-soft",
+  cobalto: "bg-paper-deep",
+  limone: "bg-paper-deep",
+  kraft: "bg-paper-deep",
   olive: "bg-olive-deep text-paper on-dark",
 };
 
@@ -35,10 +35,10 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
 }
 
 const sizes = {
-  display: "text-[clamp(2.6rem,7.4vw,6rem)] font-extrabold leading-[0.99] tracking-[-0.03em]",
-  xl: "text-[clamp(2rem,4.6vw,3.6rem)] font-extrabold leading-[1.04]",
-  lg: "text-[clamp(1.7rem,3.2vw,2.5rem)] font-extrabold leading-[1.06]",
-  md: "text-xl font-bold",
+  display: "text-[clamp(2.4rem,5.6vw,4.4rem)] font-semibold leading-[1.04] tracking-[-0.03em]",
+  xl: "text-[clamp(1.9rem,3.8vw,3rem)] font-semibold leading-[1.08] tracking-[-0.025em]",
+  lg: "text-[clamp(1.5rem,2.6vw,2.1rem)] font-semibold leading-[1.12]",
+  md: "text-xl font-semibold",
 } as const;
 
 export function Heading({ as: Tag = "h2", size = "xl", className, children, ...rest }: HTMLAttributes<HTMLHeadingElement> & { as?: ElementType; size?: keyof typeof sizes }) {
