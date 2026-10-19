@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Hallmark · genre: custom (bespoke) · vibe: "Sicilian land coming back to life, full light, contemporary"
- * paper oklch(97.8% 0.007 85) · night oklch(21% 0.022 145) · accent oklch(72% 0.165 55) citrus
+ * paper oklch(97.8% 0.007 85) · night oklch(23% 0.036 168) · accent oklch(70% 0.175 40) logo orange
  * display: Bricolage Grotesque · body: Instrument Sans · axes: light / grotesk-sans / warm
  * design-system: DESIGN.md · designed-as-app
  */
@@ -15,18 +15,23 @@
   --color-ink: oklch(19% 0.014 55);
   --color-ink-soft: oklch(44% 0.014 60);
 
-  /* Notte: the immersive dark field (activities, footer) */
-  --color-night: oklch(21% 0.022 145);
-  --color-night-soft: oklch(80% 0.02 120); /* secondary text on night */
+  /* Logo colors: the three figures of the mark (a house made of people) */
+  --color-brand-orange: oklch(68.4% 0.178 37); /* #f16842 */
+  --color-brand-yellow: oklch(85.6% 0.167 93); /* #f1cc26 */
+  --color-brand-green: oklch(52.8% 0.106 167); /* #0a7d5f */
 
-  /* Agrume: the bright accent, used as a fill or on night (never as text on paper) */
-  --color-citrus: oklch(72% 0.165 55);
+  /* Notte: the immersive dark field, the logo green taken to night */
+  --color-night: oklch(23% 0.036 168);
+  --color-night-soft: oklch(83% 0.03 160); /* secondary text on night */
+
+  /* Agrume: the bright accent (the logo orange), used as a fill or on night (never as text on paper) */
+  --color-citrus: oklch(70% 0.175 40);
   --color-line: oklch(91% 0.01 75);
   --color-line-strong: oklch(62% 0.014 70); /* form control borders, >= 3:1 (WCAG 1.4.11) */
 
   /* Arancio agrume: the only accent (buttons, links, small labels) */
-  --color-terracotta: oklch(56% 0.165 42);
-  --color-terracotta-deep: oklch(49% 0.15 40);
+  --color-terracotta: oklch(55% 0.17 37);
+  --color-terracotta-deep: oklch(48.5% 0.155 36);
   --color-terracotta-soft: oklch(95.5% 0.03 60);
   --color-arancio: oklch(74% 0.16 58); /* decorative only (never text on paper) */
 

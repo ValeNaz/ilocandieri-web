@@ -1,9 +1,13 @@
 import { Fragment } from "react";
+import Image from "next/image";
 import { Container } from "@/components/ui";
+import { LogoMark } from "@/components/brand/Logo";
 import type { BlockDataOf } from "@/lib/content/blocks";
-import type { ImageMap } from "@/lib/content/queries";
+import type { ImageMap, ResolvedImage } from "@/lib/content/queries";
 import { cn } from "@/lib/utils";
-import { BlockHeading, CtaLink, FOTO, Foto, OptionalEyebrow, PAGE_FOTO, PHOTO, Paragraphs, TITLE, pickImage, type FotoKey, type HeadingLevel } from "./shared";
+import { AmbientVideo } from "../media/AmbientVideo";
+import { PHOTOS, VIDEOS, type PhotoKey, type VideoKey } from "../media/stock";
+import { BlockHeading, CtaLink, MediaImage, OptionalEyebrow, Paragraphs, pickImage, type HeadingLevel } from "./shared";
 
 /** The title split into words so they can enter one after the other (journey.css .hero-word). */
 function Words({ text }: { text: string }) {
@@ -18,99 +22,103 @@ function Words({ text }: { text: string }) {
   );
 }
 
-const STRIP: FotoKey[] = ["cassette", "ceci", "vasetti", "pianta", "banco"];
+export type Backdrop = { photo: PhotoKey } | { video: VideoKey };
 
-/** Home opening: a very large title, the text and actions offset to the right, then a slow strip of real ABES photos. */
-function OpeningHero({ data, images, level }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel }) {
-  const own = pickImage(images, data.imageId);
-  const strip = (decorative: boolean) =>
-    STRIP.map((k, i) => {
-      const f = FOTO[k];
-      return (
-        <li key={`${k}-${decorative}`} aria-hidden={decorative || undefined} className="shrink-0">
-          {/* eslint-disable-next-line @next/next/no-img-element -- static files in /public/foto */}
-          <img src={f.src} alt={decorative ? "" : f.alt} width={f.w} height={f.h} loading={i < 2 ? "eager" : "lazy"} decoding="async"
-            className="h-[clamp(13rem,28vw,23rem)] w-auto rounded-[1.25rem] object-cover" style={{ aspectRatio: f.w > f.h ? "4 / 3" : "4 / 5" }} />
-        </li>
-      );
-    });
+/** Full-bleed media: the admin's image if chosen, else temporary stock (photo or ambient video). Decorative. */
+export function Backdrop({ own, backdrop, priority, className = "absolute inset-0 size-full" }: { own?: ResolvedImage | null; backdrop: Backdrop; priority?: boolean; className?: string }) {
+  if (own) return <MediaImage image={{ ...own, alt: "" }} priority={priority} className={className} />;
+  if ("video" in backdrop) return <AmbientVideo video={VIDEOS[backdrop.video]} priority={priority} className={className} />;
+  const p = PHOTOS[backdrop.photo];
+  return <Image src={p.src} alt="" fill priority={priority} sizes="100vw" className={cn("object-cover", className !== "absolute inset-0 size-full" && className)} />;
+}
+
+/** Veil that keeps paper text legible on any photo or video (darker at the bottom and on the left, where the text sits). */
+export function Veil() {
   return (
-    <section id={data.slot} className="overflow-hidden bg-paper pb-14 sm:pb-20">
-      <Container className="pt-10 sm:pt-16 lg:pt-20">
-        <OptionalEyebrow text={data.eyebrow} />
-        <BlockHeading level={level} className="max-w-[17ch] text-[clamp(2.6rem,6.6vw,6.4rem)] font-[680] leading-[0.98] tracking-[-0.032em]">
-          <Words text={data.title} />
-        </BlockHeading>
-        <div className="mt-8 grid gap-8 sm:mt-12 lg:grid-cols-12">
-          <div className="reveal space-y-4 text-lg leading-relaxed text-ink-soft [animation-delay:500ms] lg:col-span-5 lg:col-start-7 sm:text-xl">
-            <Paragraphs text={data.text} />
-            {(data.primaryCta || data.secondaryCta) && (
-              <div className="flex flex-wrap gap-3 pt-4">
-                <CtaLink cta={data.primaryCta} size="lg" />
-                <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" />
-              </div>
-            )}
-          </div>
-        </div>
-      </Container>
-      <div className="mt-12 sm:mt-16">
-        {own ? (
-          <Container><Foto image={own} fallback="ceci" priority className={cn(PHOTO, "aspect-[21/9]")} /></Container>
-        ) : (
-          <div className="film" role="region" tabIndex={0} aria-label="Foto dei prodotti ABES">
-            <ul className="film-track px-5 sm:px-8">
-              {strip(false)}
-              {strip(true)}
-            </ul>
-          </div>
-        )}
-      </div>
-    </section>
+    <>
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-night via-night/45 to-night/25" />
+      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-night/70 via-night/20 to-transparent" />
+    </>
   );
 }
 
 /**
- * Title block of an inner page, on sand. Pages about the cooperative or ABES (Chi siamo, Shop) carry a real photo;
- * the others (events, news, careers, contacts) are typographic, so no unrelated product shot stands in for them.
+ * Home opening: the Belice valley, Castelvetrano's land, under a slow camera move, the logo builds itself (two people raise a roof
+ * around a third), the title enters word by word. Leaving it, the scene folds into a rounded window.
  */
-function PageHero({ data, images, level, pageKey }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel; pageKey?: string }) {
-  const image = pickImage(images, data.imageId);
-  const fallback = PAGE_FOTO[pageKey ?? ""];
-  const body = (
-    <>
-      <div className="reveal space-y-4 text-lg leading-relaxed text-ink-soft [animation-delay:100ms] sm:text-xl">
-        <Paragraphs text={data.text} />
-      </div>
-      {(data.primaryCta || data.secondaryCta) && (
-        <div className="reveal mt-8 flex flex-wrap gap-3 [animation-delay:180ms]">
-          <CtaLink cta={data.primaryCta} size="lg" />
-          <CtaLink cta={data.secondaryCta} kind="secondary" size="lg" />
+function OpeningHero({ data, images, level }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel }) {
+  return (
+    <section id={data.slot} className="hero-shrink on-dark relative isolate -mt-[var(--header-h)] overflow-hidden bg-night text-paper">
+      <Backdrop own={pickImage(images, data.imageId)} backdrop={{ photo: "belice" }} priority className="kenburns absolute inset-0 size-full" />
+      <Veil />
+      <Container className="relative flex min-h-[100svh] flex-col justify-end pb-14 pt-[calc(var(--header-h)+4rem)] sm:pb-20">
+        <LogoMark build className="absolute right-8 top-[calc(var(--header-h)+3rem)] hidden h-40 w-auto md:block lg:h-52" />
+        <OptionalEyebrow text={data.eyebrow} />
+        <BlockHeading level={level} className="max-w-[16ch] text-[clamp(2.7rem,7vw,6.8rem)] leading-[0.98] tracking-[-0.032em]">
+          <Words text={data.title} />
+        </BlockHeading>
+        <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="reveal max-w-xl space-y-4 text-lg leading-relaxed text-paper/90 [animation-delay:600ms] sm:text-xl lg:col-span-6">
+            <Paragraphs text={data.text} />
+          </div>
+          {(data.primaryCta || data.secondaryCta) && (
+            <div className="reveal flex flex-wrap gap-3 [animation-delay:750ms] lg:col-span-6 lg:justify-end">
+              <CtaLink cta={data.primaryCta} size="lg" />
+              <CtaLink cta={data.secondaryCta} kind="secondary" dark size="lg" />
+            </div>
+          )}
         </div>
-      )}
-    </>
+        <div aria-hidden="true" className="mt-12 flex items-center gap-3 text-sm text-paper/75">
+          <span className="relative block h-10 w-px overflow-hidden bg-paper/25"><span className="cue-line absolute inset-0 bg-citrus" /></span>
+          Scorri la storia
+        </div>
+      </Container>
+    </section>
   );
-  if (!image && !fallback) {
+}
+
+/** Inner pages: the scene that belongs to each page (temporary stock until real photos arrive). */
+const PAGE_BACKDROP: Record<string, Backdrop> = {
+  "chi-siamo": { video: "germoglio" },
+  shop: { video: "granoSacco" },
+  eventi: { photo: "corso" },
+  news: { photo: "campagna" },
+  "lavora-con-noi": { video: "semina" },
+  contatti: { video: "olive" },
+};
+
+function PageHero({ data, images, level, pageKey }: { data: BlockDataOf<"hero">; images: ImageMap; level: HeadingLevel; pageKey?: string }) {
+  const own = pickImage(images, data.imageId);
+  const backdrop = PAGE_BACKDROP[pageKey ?? ""];
+  if (!own && !backdrop) {
     return (
       <section id={data.slot} className="bg-paper-deep">
         <Container className="py-14 sm:py-20 lg:py-24">
           <OptionalEyebrow text={data.eyebrow} />
           <BlockHeading level={level} className="reveal max-w-[18ch] text-[clamp(2.4rem,5.8vw,5.4rem)] leading-[1] tracking-[-0.032em]">{data.title}</BlockHeading>
-          <div className="mt-8 grid lg:grid-cols-12"><div className="lg:col-span-6 lg:col-start-7">{body}</div></div>
+          <div className="reveal mt-8 max-w-xl space-y-4 text-lg leading-relaxed text-ink-soft sm:text-xl"><Paragraphs text={data.text} /></div>
         </Container>
       </section>
     );
   }
   return (
-    <section id={data.slot} className="bg-paper-deep">
-      <Container className="grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-12 lg:gap-12 lg:py-20">
-        <div className="lg:col-span-7">
-          <OptionalEyebrow text={data.eyebrow} />
-          <BlockHeading level={level} className={cn("reveal", TITLE.hero)}>{data.title}</BlockHeading>
-          <div className="mt-6 max-w-xl">{body}</div>
+    <section id={data.slot} className="hero-shrink on-dark relative isolate -mt-[var(--header-h)] overflow-hidden bg-night text-paper">
+      <Backdrop own={own} backdrop={backdrop ?? { photo: "belice" }} priority />
+      <Veil />
+      <Container className="relative flex min-h-[78svh] flex-col justify-end pb-14 pt-[calc(var(--header-h)+4rem)] sm:pb-20">
+        <OptionalEyebrow text={data.eyebrow} />
+        <BlockHeading level={level} className="max-w-[18ch] text-[clamp(2.5rem,6vw,5.6rem)] leading-[1] tracking-[-0.032em]">
+          <Words text={data.title} />
+        </BlockHeading>
+        <div className="reveal mt-7 max-w-2xl space-y-4 text-lg leading-relaxed text-paper/90 [animation-delay:450ms] sm:text-xl">
+          <Paragraphs text={data.text} />
         </div>
-        <div className="lg:col-span-5">
-          <Foto image={image} fallback={fallback ?? "cassette"} priority className={cn(PHOTO, "aspect-[4/3] lg:aspect-[5/4]")} />
-        </div>
+        {(data.primaryCta || data.secondaryCta) && (
+          <div className="reveal mt-8 flex flex-wrap gap-3 [animation-delay:600ms]">
+            <CtaLink cta={data.primaryCta} size="lg" />
+            <CtaLink cta={data.secondaryCta} kind="secondary" dark size="lg" />
+          </div>
+        )}
       </Container>
     </section>
   );

@@ -13,6 +13,7 @@ export const paths = {
   contacts: "/contatti",
   privacy: "/privacy",
   cookies: "/cookie-policy",
+  credits: "/crediti",
   abesShop: "https://abes.bio/collections/all",
 } as const;
 

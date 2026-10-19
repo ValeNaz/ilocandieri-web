@@ -7,11 +7,12 @@
  * Without `animation-timeline` support, or with reduced motion, everything is simply visible and still.
  */
 
-/* Hero title: words enter once, on load */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-word { display: inline-block; animation: word-in 0.9s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 60ms + 80ms); }
+/* Hero title: words enter once, on load (from tablet up; on phones the title is there at once, it is the first paint) */
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
+  .hero-word { display: inline-block; animation: word-in 0.9s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 45ms); }
 }
-@keyframes word-in { from { opacity: 0; transform: translateY(0.45em); } to { opacity: 1; transform: none; } }
+/* Never fully transparent: the title is the page's largest paint and must count as painted from the first frame */
+@keyframes word-in { from { opacity: 0.04; transform: translateY(0.4em); } to { opacity: 1; transform: none; } }
 
 /* Photo strip under the hero: a slow drift; static and scrollable when motion is reduced */
 .film { overflow-x: auto; scrollbar-width: none; }
@@ -35,7 +36,8 @@
   }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-@keyframes lit { from { opacity: 0.18; } to { opacity: 1; } }
+/* From the 3:1 rule color (large text stays legible at every step) to full ink */
+@keyframes lit { from { color: var(--color-line-strong); } to { color: var(--color-ink); } }
 @keyframes unveil { from { clip-path: inset(9% 7% round 1.5rem); } to { clip-path: inset(0 round 1.5rem); } }
 @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
@@ -50,3 +52,65 @@
   transform-origin: 0 50%;
   transform: scaleX(0);
 }
+
+/* ---------- The logo assembles itself (on load) ---------- */
+.logo-build .lm-orange, .logo-build .lm-yellow, .logo-build .lm-dot, .logo-build .lm-base { transform-box: fill-box; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .logo-build .lm-orange { animation: lm-left 1.3s var(--ease-out-expo) 0.15s both; }
+  .logo-build .lm-yellow { animation: lm-right 1.3s var(--ease-out-expo) 0.3s both; }
+  .logo-build .lm-base { animation: lm-rise 1.1s var(--ease-out-expo) 0.05s both; }
+  .logo-build .lm-dot { animation: lm-pop 1s var(--ease-out-expo) 0.85s both; transform-origin: 50% 50%; }
+}
+/* Same assembly, driven by scroll: the mark builds as it enters the screen (closing scene) */
+.logo-build-view .lm-orange, .logo-build-view .lm-yellow, .logo-build-view .lm-dot, .logo-build-view .lm-base { transform-box: fill-box; transform-origin: 50% 100%; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .logo-build-view .lm-orange { animation: lm-left linear both; animation-timeline: view(); animation-range: entry 10% cover 35%; }
+    .logo-build-view .lm-yellow { animation: lm-right linear both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
+    .logo-build-view .lm-base { animation: lm-rise linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+    .logo-build-view .lm-dot { animation: lm-pop linear both; animation-timeline: view(); animation-range: entry 40% cover 48%; transform-origin: 50% 50%; }
+  }
+}
+@keyframes lm-left { from { opacity: 0; transform: translate(-28%, 10%) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes lm-right { from { opacity: 0; transform: translate(28%, 10%) rotate(14deg); } to { opacity: 1; transform: none; } }
+@keyframes lm-rise { from { opacity: 0; transform: translateY(60%) scaleX(0.4); } to { opacity: 1; transform: none; } }
+@keyframes lm-pop { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: none; } }
+
+/* ---------- Line drawings trace themselves as they enter ---------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .draw [pathLength]:not(.dots) { stroke-dasharray: 1; animation: draw linear both; animation-timeline: view(); animation-range: entry 15% cover 50%; }
+    .draw .dots { animation: fade-in linear both; animation-timeline: view(); animation-range: entry 15% cover 45%; }
+    /* Photos drift slower than the page (inside an overflow-hidden frame) */
+    .parallax { animation: parallax linear both; animation-timeline: view(); animation-range: cover; }
+    /* The opening shrinks into a rounded window as you leave it */
+    .hero-shrink { animation: hero-shrink linear both; animation-timeline: view(); animation-range: exit 0% exit 80%; }
+  }
+}
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes parallax { from { transform: translateY(-8%) scale(1.16); } to { transform: translateY(8%) scale(1.16); } }
+@keyframes hero-shrink { from { clip-path: inset(0 0 0 0 round 0); } to { clip-path: inset(4% 3% 0 3% round 2rem); } }
+
+/* Gentle breathing for small shapes (heads, pins, the sun) */
+@media (prefers-reduced-motion: no-preference) {
+  .float { animation: float 5.5s ease-in-out infinite alternate; transform-box: fill-box; }
+}
+@keyframes float { from { transform: translateY(-3px); } to { transform: translateY(4px); } }
+
+/* Scroll cue: a line that runs down */
+@media (prefers-reduced-motion: no-preference) {
+  .cue-line { animation: cue 2.4s var(--ease-out-expo) infinite; transform-origin: 50% 0; }
+}
+@keyframes cue { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+/* Stacked media that cross-fade (story panel in "Cosa facciamo") */
+.story-media > * { transition: opacity 0.9s var(--ease-out-expo), transform 1.4s var(--ease-out-expo); }
+.story-media > [data-active="false"] { opacity: 0; transform: scale(1.04); }
+.story-media > [data-active="true"] { opacity: 1; transform: none; }
+
+/* Slow camera move on the opening photo */
+@media (prefers-reduced-motion: no-preference) {
+  .kenburns { animation: kenburns 20s var(--ease-out-soft) both; transform-origin: 60% 40%; }
+}
+@keyframes kenburns { from { transform: scale(1.18) translate(1.5%, -1%); } to { transform: scale(1.04); } }

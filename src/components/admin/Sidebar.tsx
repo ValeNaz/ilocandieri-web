@@ -47,7 +47,7 @@ export function AdminShell({ children, footer, userLabel }: { children: ReactNod
 
   const aside = (
     <div className="flex h-full flex-col bg-card">
-      <div className="flex h-16 shrink-0 items-center border-b border-line px-5"><Wordmark className="text-xl" /></div>
+      <div className="flex h-16 shrink-0 items-center border-b border-line px-5"><Wordmark compact /></div>
       {nav}
       <div className="shrink-0 space-y-1 border-t border-line p-3">
         <a href="/" target="_blank" rel="noopener noreferrer" className="flex min-h-10 items-center rounded-xl px-3 text-[0.95rem] hover:bg-paper-deep">
@@ -67,7 +67,7 @@ export function AdminShell({ children, footer, userLabel }: { children: ReactNod
       <aside className="sticky top-0 hidden h-dvh border-r border-line lg:block">{aside}</aside>
 
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-card/95 px-4 backdrop-blur lg:hidden">
-        <Wordmark className="text-lg" />
+        <Wordmark compact />
         <button type="button" aria-expanded={open} aria-controls="admin-drawer" onClick={() => setOpenFor(open ? null : pathname)}
           className="inline-flex min-h-10 items-center rounded-full border border-line-strong px-4 text-sm font-medium">Menu</button>
       </div>

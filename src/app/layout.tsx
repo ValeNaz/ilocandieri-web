@@ -5,7 +5,7 @@ import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
 
 // Display: Bricolage Grotesque (contemporary grotesk with character, optical sizes). Text: Instrument Sans.
-const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", weight: "variable", axes: ["opsz", "wdth"], display: "swap" });
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", weight: "variable", axes: ["opsz"], display: "swap" });
 const instrument = Instrument_Sans({ subsets: ["latin"], variable: "--font-instrument", weight: "variable", axes: ["wdth"], display: "swap" });
 
 export const metadata: Metadata = {

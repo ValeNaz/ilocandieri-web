@@ -13,4 +13,5 @@ export const publicNav = [
 export const legalNav = [
   { label: "Privacy", href: paths.privacy },
   { label: "Cookie Policy", href: paths.cookies },
+  { label: "Crediti", href: paths.credits },
 ] as const;

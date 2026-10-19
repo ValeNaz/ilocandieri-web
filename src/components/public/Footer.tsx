@@ -13,7 +13,7 @@ export async function Footer() {
     <footer className="on-dark bg-night text-paper">
       <div className="mx-auto grid max-w-[88rem] gap-12 px-5 pb-14 pt-20 sm:px-8 md:grid-cols-[1.6fr_1fr_1fr]">
         <div>
-          <Wordmark className="[--mark-line:var(--color-night)]" />
+          <Wordmark tone="light" />
           <p className="mt-8 max-w-[18ch] font-display text-[clamp(1.9rem,3.6vw,3rem)] font-[650] leading-[1.04] tracking-[-0.03em] text-paper">{footer.line}</p>
         </div>
 

@@ -38,7 +38,7 @@ export function Header() {
     <>
       <header data-site-header className="sticky top-0 z-50 h-[var(--header-h)] px-3 pt-3 sm:px-5">
         <div className="relative mx-auto flex h-full max-w-[88rem] items-center justify-between gap-6 rounded-full border border-line bg-paper/90 pl-5 pr-2 shadow-card backdrop-blur-md sm:pl-6">
-          <Link href="/" aria-label="I Locandieri - Home" className="rounded-lg">
+          <Link href="/" className="rounded-lg">
             <Wordmark />
           </Link>
 

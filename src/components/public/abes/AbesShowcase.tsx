@@ -1,6 +1,8 @@
 // INTERFACE CONTRACT (owner: ABES+NEWS agent). Props must stay stable (`id` is an optional addition).
 import Image from "next/image";
 import { ButtonLink, Container } from "@/components/ui";
+import { AmbientVideo } from "../media/AmbientVideo";
+import { VIDEOS } from "../media/stock";
 import type { ShowcaseProduct } from "@/lib/abes/public";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/utils";
@@ -107,9 +109,8 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
                 "md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0", cols,
               )}
             >
-              <li aria-hidden="true" className="hidden md:col-span-2 md:row-span-2 md:block">
-                {/* eslint-disable-next-line @next/next/no-img-element -- static file in /public/foto */}
-                <img src="/foto/ceci-juta.jpg" alt="" width={1600} height={900} loading="lazy" decoding="async" className="unveil size-full min-h-80 rounded-card object-cover" />
+              <li className="relative hidden min-h-80 overflow-hidden rounded-card md:col-span-2 md:row-span-2 md:block">
+                <AmbientVideo video={VIDEOS.granoSacco} className="unveil absolute inset-0 size-full" />
               </li>
               {products.map((p, i) => (
                 <li key={p.id} className="w-[72%] max-w-[19rem] shrink-0 snap-start scroll-ml-5 sm:scroll-ml-8 md:w-auto md:max-w-none">

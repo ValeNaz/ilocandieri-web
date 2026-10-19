@@ -15,7 +15,6 @@ Sistema completo e vincolante in `DESIGN.md` (radice). Sito moderno e visivo: ca
 | Movimento (titolo, striscia foto, manifesto, aperture, barra) | `src/components/public/journey.css` |
 | Blocchi delle pagine (Home, Chi siamo, Shop...) | `src/components/public/blocks/` |
 | Foto reali ABES | `public/foto/` (mappa `FOTO` in `blocks/shared.tsx`) |
-| Illustrazioni dei luoghi (finché non ci sono foto) | `src/components/public/art/plates.tsx` |
 
 Le sezioni restano **blocchi modificabili da admin**: cambia solo come vengono disegnate.
 
