@@ -109,7 +109,7 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
             >
               <li aria-hidden="true" className="hidden md:col-span-2 md:row-span-2 md:block">
                 {/* eslint-disable-next-line @next/next/no-img-element -- static file in /public/foto */}
-                <img src="/foto/vasetti-abes.jpg" alt="" width={1000} height={1333} loading="lazy" decoding="async" className="unveil size-full min-h-80 rounded-card object-cover" />
+                <img src="/foto/ceci-juta.jpg" alt="" width={1600} height={900} loading="lazy" decoding="async" className="unveil size-full min-h-80 rounded-card object-cover" />
               </li>
               {products.map((p, i) => (
                 <li key={p.id} className="w-[72%] max-w-[19rem] shrink-0 snap-start scroll-ml-5 sm:scroll-ml-8 md:w-auto md:max-w-none">

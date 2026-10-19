@@ -76,8 +76,9 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
+  /* Anchor links land below the floating header; only the public site has one (the admin would get a stray offset). */
+  html:has([data-site-header]) { scroll-padding-top: calc(var(--header-h) + 1rem); }
   body {
     min-height: 100dvh;
     font-size: 1.0625rem;

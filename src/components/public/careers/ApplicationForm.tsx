@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { startTransition, useActionState, useRef, useState, type ReactNode } from "react";
-import { Button, Checkbox, Input, Select, Textarea } from "@/components/ui";
+import { Button, Checkbox, FileInput, Input, Select, Textarea } from "@/components/ui";
 import { submitApplicationAction, type ApplyState } from "@/app/(public)/lavora-con-noi/actions";
 import { paths } from "@/lib/paths";
 
@@ -87,9 +87,8 @@ export function ApplicationForm({ areas, openings, defaultOpeningId, confirmatio
       <Textarea name="message" label="Messaggio" required rows={6} maxLength={4000} error={fe.message}
         hint="Raccontaci chi sei, la tua esperienza e cosa ti interessa." />
 
-      <Input name="cv" type="file" label="Curriculum (CV)" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        hint="PDF, DOC o DOCX, massimo 5 MB." error={fe.cv ?? clientFileError}
-        className="file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-paper-deep file:px-4 file:py-2 file:text-sm file:font-medium file:text-ink" />
+      <FileInput name="cv" label="Curriculum (CV)" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        hint="PDF, DOC o DOCX, massimo 5 MB." error={fe.cv ?? clientFileError} />
 
       <Checkbox name="privacy" error={fe.privacy}
         label={<>Ho letto l&rsquo;<Link href={paths.privacy} target="_blank" className="font-medium text-terracotta-deep underline">informativa privacy<span className="sr-only"> (si apre in una nuova scheda)</span></Link> e acconsento al trattamento dei miei dati per valutare la candidatura.</>} />

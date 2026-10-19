@@ -1,8 +1,9 @@
 import type { ElementType, HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export function Container({ className, wide, ...rest }: HTMLAttributes<HTMLDivElement> & { wide?: boolean }) {
-  return <div className={cn("mx-auto w-full px-5 sm:px-8", wide ? "max-w-[88rem]" : "max-w-6xl", className)} {...rest} />;
+/** Page column. One width across the site so every section lines up; `wide` is kept for older call sites. */
+export function Container({ className, wide: _wide, ...rest }: HTMLAttributes<HTMLDivElement> & { wide?: boolean }) {
+  return <div className={cn("mx-auto w-full max-w-[88rem] px-5 sm:px-8", className)} {...rest} />;
 }
 
 type Tone = "paper" | "deep" | "sage" | "ink" | "terracotta" | "cobalto" | "limone" | "kraft" | "olive";

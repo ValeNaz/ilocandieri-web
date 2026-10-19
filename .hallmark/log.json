@@ -1,3 +1,25 @@
 [
-  { "date": "2026-10-19", "scope": "app", "macrostructure": "bespoke (opening + lit manifesto + night rows + unveil places + citrus close)", "theme": "custom", "theme_axes": "light / grotesk-sans / warm", "vibe": "Sicilian land coming back to life, contemporary", "enrichment": "real ABES photo strip", "nav": "N5 floating pill", "footer": "Ft5 statement", "brief": "I Locandieri · social cooperative + ABES organic" }
+  {
+    "date": "2026-10-19",
+    "scope": "app",
+    "macrostructure": "bespoke (inner pages: reading layout + night rows, typographic heroes)",
+    "theme": "custom",
+    "theme_axes": "light / grotesk-sans / warm",
+    "enrichment": "real ABES photos only where relevant",
+    "nav": "N5 floating pill",
+    "footer": "Ft5 statement",
+    "brief": "I Locandieri · inner pages + anomaly fixes"
+  },
+  {
+    "date": "2026-10-19",
+    "scope": "app",
+    "macrostructure": "bespoke (opening + lit manifesto + night rows + unveil places + citrus close)",
+    "theme": "custom",
+    "theme_axes": "light / grotesk-sans / warm",
+    "vibe": "Sicilian land coming back to life, contemporary",
+    "enrichment": "real ABES photo strip",
+    "nav": "N5 floating pill",
+    "footer": "Ft5 statement",
+    "brief": "I Locandieri · social cooperative + ABES organic"
+  }
 ]

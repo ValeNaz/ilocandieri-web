@@ -36,7 +36,7 @@ export const DEFAULT_SETTINGS: SettingsMap = {
   analytics: { gaMeasurementId: "", searchConsoleVerification: "" },
   retention: { applicationsDays: 365, pastRegistrationsDays: 365 },
   seo_defaults: { siteName: "I Locandieri", titleTemplate: "%s | I Locandieri", description: "", ogImageId: null },
-  footer: { line: "I Locandieri — Coltiviamo possibilità, costruiamo comunità." },
+  footer: { line: "Coltiviamo possibilità, costruiamo comunità." },
 };
 
 /** Read a setting merged over defaults (shallow). Cached per request. */

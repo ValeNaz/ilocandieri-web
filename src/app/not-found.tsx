@@ -1,6 +1,7 @@
 import { Container, ButtonLink, Eyebrow, Heading, Pattern, Section } from "@/components/ui";
 import { Footer } from "@/components/public/Footer";
 import { Header } from "@/components/public/Header";
+import "@/components/public/journey.css";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +21,7 @@ export default function NotFound() {
                 <ButtonLink href="/contatti" variant="secondary">Contattaci</ButtonLink>
               </div>
             </div>
-            <Pattern variant="agrumi" className="aspect-square rounded-[1.75rem]" />
+            <Pattern variant="agrumi" className="hidden aspect-square rounded-[1.75rem] md:block" />
           </Container>
         </Section>
       </main>

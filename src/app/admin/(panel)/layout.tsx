@@ -1,5 +1,4 @@
 import { AdminShell } from "@/components/admin";
-import { Button } from "@/components/ui";
 import { requireAdmin } from "@/lib/auth/session";
 import { logoutAction } from "./actions";
 
@@ -11,7 +10,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
       userLabel={user.name || user.email}
       footer={
         <form action={logoutAction}>
-          <Button type="submit" variant="ghost" size="sm" className="w-full justify-start rounded-xl px-3 text-[0.95rem]">Esci</Button>
+          <button type="submit" className="flex min-h-10 w-full items-center rounded-xl px-3 text-[0.95rem] hover:bg-paper-deep">Esci</button>
         </form>
       }
     >

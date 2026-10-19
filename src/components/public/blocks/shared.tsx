@@ -36,8 +36,8 @@ export function Foto({ image, fallback, className, priority }: { image?: Resolve
   );
 }
 
-/** Photo for the title block of an inner page. */
-export const PAGE_FOTO: Record<string, FotoKey> = { "chi-siamo": "cassette", shop: "vasetti", eventi: "ceci", news: "banco", "lavora-con-noi": "pianta", contatti: "cassette" };
+/** Photo for the title block of an inner page (only pages about the cooperative or ABES). */
+export const PAGE_FOTO: Partial<Record<string, FotoKey>> = { "chi-siamo": "cassette", shop: "vasetti" };
 
 export const pickImage = (images: ImageMap, id: string | null | undefined) => (id ? (images[id] ?? null) : null);
 
@@ -82,9 +82,9 @@ export function OptionalEyebrow({ text, className }: { text: string; className?:
 
 /** Title sizes (Bricolage Grotesque display): large and tight; weight comes from the h1-h4 base. */
 export const TITLE = {
-  hero: "text-[clamp(2.4rem,5.4vw,4.8rem)] leading-[1] tracking-[-0.04em]",
-  scene: "text-[clamp(2.1rem,4.4vw,3.8rem)] leading-[1.02] tracking-[-0.035em]",
-  section: "text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05] tracking-[-0.03em]",
+  hero: "text-[clamp(2.4rem,5.4vw,4.8rem)] leading-[1] tracking-[-0.032em]",
+  scene: "text-[clamp(2.1rem,4.4vw,3.8rem)] leading-[1.02] tracking-[-0.03em]",
+  section: "text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05] tracking-[-0.026em]",
   panel: "text-[clamp(1.35rem,2.1vw,1.7rem)] leading-[1.15] tracking-[-0.02em]",
 } as const;
 

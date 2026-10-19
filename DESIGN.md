@@ -7,8 +7,9 @@ Custom (bespoke). Vibe: "Sicilian land coming back to life, full light, contempo
 
 ## Macrostructure family
 - Home: bespoke sequence. Opening (very large title, offset text, drifting strip of real ABES photos) · manifesto that lights up word by word · activities on the night field as full-width rows · places that open up as they enter · ABES showcase (featured photo + product grid) · events / news · citrus closing band.
-- Inner marketing pages (Chi siamo, Shop): sand title band with photo, then text/photo sections; photos only where the section is about ABES or farming.
-- List pages (Eventi, News, Lavora con noi): compact heading + list/cards.
+- Inner marketing pages (Chi siamo, Shop): sand title band with photo. Text sections without a photo use a reading layout (title held on the left, text on the right); values/activities use the night rows. Photos only where the section is about ABES or farming.
+- Other inner pages (Eventi, News, Lavora con noi, Contatti): typographic sand title band (very large title, text offset right), never an unrelated product photo.
+- List pages: compact heading + list/cards.
 - Content pages (Privacy, Cookie, articles): typography only.
 
 ## Theme (tokens in `src/app/globals.css`, `@theme static`)
@@ -25,12 +26,12 @@ Custom (bespoke). Vibe: "Sicilian land coming back to life, full light, contempo
 - Focus ring: 2px `--color-terracotta`.
 
 ## Typography
-- Display: Bricolage Grotesque, weight 650–680, roman only, optical size 96, tracking −0.03 to −0.036em.
+- Display: Bricolage Grotesque, weight 650–680, roman only, optical size 96, tracking −0.026 to −0.032em.
 - Body: Instrument Sans 400, 1.0625rem / 1.6.
 - Scale anchors: opening title clamp(2.6rem, 6.6vw, 6.4rem); scene clamp(2.1rem, 4.4vw, 3.8rem); section clamp(1.9rem, 3.6vw, 3rem).
 
 ## Spacing
-Tailwind's 4-point scale. Sections breathe at `py-20 sm:py-32` on the Home, `py-12 sm:py-24` elsewhere.
+Tailwind's 4-point scale. One page column for every section: `max-w-[88rem]` with `px-5 sm:px-8` (`Container`). Sections breathe at `py-20 sm:py-32` on the Home, `py-12 sm:py-24` elsewhere.
 
 ## Motion
 All CSS, progressive enhancement (`src/components/public/journey.css`): title words enter once; photo strip drifts (pauses on hover/focus); manifesto words light up on scroll; large images open from an inset window; gentle rises. Reduced motion: everything visible and still. Easing `--ease-out-expo`. No libraries, no scroll-jacking.

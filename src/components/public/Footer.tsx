@@ -14,7 +14,7 @@ export async function Footer() {
       <div className="mx-auto grid max-w-[88rem] gap-12 px-5 pb-14 pt-20 sm:px-8 md:grid-cols-[1.6fr_1fr_1fr]">
         <div>
           <Wordmark className="[--mark-line:var(--color-night)]" />
-          <p className="mt-8 max-w-[18ch] font-display text-[clamp(1.9rem,3.6vw,3rem)] font-[650] leading-[1.04] tracking-[-0.035em] text-paper">{footer.line}</p>
+          <p className="mt-8 max-w-[18ch] font-display text-[clamp(1.9rem,3.6vw,3rem)] font-[650] leading-[1.04] tracking-[-0.03em] text-paper">{footer.line}</p>
         </div>
 
         <nav aria-label="Navigazione nel footer">

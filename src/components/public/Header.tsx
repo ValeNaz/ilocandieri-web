@@ -36,7 +36,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 h-[var(--header-h)] px-3 pt-3 sm:px-5">
+      <header data-site-header className="sticky top-0 z-50 h-[var(--header-h)] px-3 pt-3 sm:px-5">
         <div className="relative mx-auto flex h-full max-w-[88rem] items-center justify-between gap-6 rounded-full border border-line bg-paper/90 pl-5 pr-2 shadow-card backdrop-blur-md sm:pl-6">
           <Link href="/" aria-label="I Locandieri - Home" className="rounded-lg">
             <Wordmark />
@@ -78,7 +78,7 @@ export function Header() {
               {isOpen ? <path d="m6 6 12 12M18 6 6 18" /> : <path d="M4 8h16M4 16h16" />}
             </svg>
           </button>
-          <div aria-hidden="true" className="progress-bar" />
+          <div aria-hidden="true" className="progress-bar pointer-events-none absolute" />
         </div>
       </header>
 

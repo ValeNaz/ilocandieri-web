@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-type FieldMeta = { label: string; hint?: string; error?: string | null; required?: boolean };
+export type FieldMeta = { label: string; hint?: string; error?: string | null; required?: boolean };
 
 const control =
   "w-full rounded-control border border-line-strong bg-card px-4 py-3 text-base text-ink placeholder:text-ink-soft " +
@@ -9,7 +9,7 @@ const control =
   "disabled:bg-paper-deep disabled:text-ink-soft aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger/15";
 
 /** Label + control + hint + error wrapper with correct aria wiring. `id` defaults to `name`. */
-function Wrap({ id, label, hint, error, required, quiet, children }: FieldMeta & { id: string; quiet?: boolean; children: (aria: Record<string, string | boolean | undefined>) => ReactNode }) {
+export function Wrap({ id, label, hint, error, required, quiet, children }: FieldMeta & { id: string; quiet?: boolean; children: (aria: Record<string, string | boolean | undefined>) => ReactNode }) {
   const hintId = hint ? `${id}-hint` : undefined;
   const errId = error ? `${id}-err` : undefined;
   const describedBy = [hintId, errId].filter(Boolean).join(" ") || undefined;
