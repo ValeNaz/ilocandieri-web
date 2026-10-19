@@ -1,16 +1,26 @@
 @import "tailwindcss";
 
+/* Hallmark · genre: custom (bespoke) · vibe: "Sicilian land coming back to life, full light, contemporary"
+ * paper oklch(97.8% 0.007 85) · night oklch(21% 0.022 145) · accent oklch(72% 0.165 55) citrus
+ * display: Bricolage Grotesque · body: Instrument Sans · axes: light / grotesk-sans / warm
+ * design-system: DESIGN.md · designed-as-app
+ */
 /*
- * Design tokens: clean and bright.
- * Warm white and sand surfaces, warm grey text, one citrus orange accent; olive green for ABES and closing scenes.
- * Colors are OKLCH. Contrast pairs are verified by tests/unit/contrast.test.ts (WCAG AA): keep it green when editing.
+ * Design tokens. Colors are OKLCH. Contrast pairs are verified by tests/unit/contrast.test.ts (WCAG AA).
  */
 @theme static {
-  --color-paper: oklch(98.6% 0.005 80);
-  --color-paper-deep: oklch(95.6% 0.014 78);
-  --color-card: oklch(99.8% 0.002 80);
-  --color-ink: oklch(24% 0.012 60);
-  --color-ink-soft: oklch(46% 0.013 60);
+  --color-paper: oklch(97.8% 0.007 85);
+  --color-paper-deep: oklch(94.4% 0.016 80);
+  --color-card: oklch(99.6% 0.003 85);
+  --color-ink: oklch(19% 0.014 55);
+  --color-ink-soft: oklch(44% 0.014 60);
+
+  /* Notte: the immersive dark field (activities, footer) */
+  --color-night: oklch(21% 0.022 145);
+  --color-night-soft: oklch(80% 0.02 120); /* secondary text on night */
+
+  /* Agrume: the bright accent, used as a fill or on night (never as text on paper) */
+  --color-citrus: oklch(72% 0.165 55);
   --color-line: oklch(91% 0.01 75);
   --color-line-strong: oklch(62% 0.014 70); /* form control borders, >= 3:1 (WCAG 1.4.11) */
 
@@ -41,7 +51,7 @@
   --color-warning: oklch(42% 0.09 70);
   --color-warning-soft: oklch(93% 0.07 90);
 
-  --font-display: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
   --font-stencil: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
 
@@ -54,7 +64,7 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --header-h: 4.5rem;
+  --header-h: 4.75rem;
 }
 
 @layer base {
@@ -81,9 +91,12 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.022em;
-    line-height: 1.08;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    font-variation-settings: "opsz" 96;
+    overflow-wrap: break-word;
+    min-width: 0;
     text-wrap: balance;
   }
   p { text-wrap: pretty; }
@@ -119,7 +132,7 @@
   line-height: 1.2;
   color: var(--color-terracotta-deep);
 }
-.on-dark .stamp { color: var(--color-paper); opacity: 0.85; }
+.on-dark .stamp { color: var(--color-citrus); }
 
 /* Navigation link: quiet underline on hover/current page. */
 .marker {

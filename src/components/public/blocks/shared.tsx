@@ -53,14 +53,16 @@ export function Paragraphs({ text, className }: { text: string; className?: stri
   );
 }
 
-/** A validated CTA rendered as a button. `dark` = on the olive closing band. */
-export function CtaLink({ cta, kind = "primary", dark, size = "md" }: { cta: Cta | null | undefined; kind?: "primary" | "secondary"; dark?: boolean; size?: "md" | "lg" }) {
+/** A validated CTA rendered as a button. `dark` = on the night field, `ink` = on the citrus band. */
+export function CtaLink({ cta, kind = "primary", dark, ink, size = "md" }: { cta: Cta | null | undefined; kind?: "primary" | "secondary"; dark?: boolean; ink?: boolean; size?: "md" | "lg" }) {
   if (!cta) return null;
-  if (dark) {
+  if (dark || ink) {
+    const primary = dark ? "light" : "ink";
+    const outline = dark ? "border-paper/50 text-paper hover:border-paper hover:bg-paper/10" : "border-ink/60 text-ink hover:border-ink hover:bg-ink/10";
     return kind === "primary" ? (
-      <ButtonLink href={cta.href} variant="light" size={size}>{cta.label}</ButtonLink>
+      <ButtonLink href={cta.href} variant={primary} size={size}>{cta.label}</ButtonLink>
     ) : (
-      <ButtonLink href={cta.href} variant="secondary" size={size} className="border-paper/50 text-paper hover:border-paper hover:bg-paper/10">{cta.label}</ButtonLink>
+      <ButtonLink href={cta.href} variant="secondary" size={size} className={outline}>{cta.label}</ButtonLink>
     );
   }
   return <ButtonLink href={cta.href} variant={kind === "primary" ? "primary" : "secondary"} size={size}>{cta.label}</ButtonLink>;
@@ -78,13 +80,13 @@ export function OptionalEyebrow({ text, className }: { text: string; className?:
   return <p className={cn("stamp mb-4", className)}>{text}</p>;
 }
 
-/** Title sizes: medium-large, semibold, tight. */
+/** Title sizes (Bricolage Grotesque display): large and tight; weight comes from the h1-h4 base. */
 export const TITLE = {
-  hero: "font-semibold text-[clamp(2.3rem,5.2vw,4.1rem)] leading-[1.04] tracking-[-0.032em]",
-  scene: "font-semibold text-[clamp(1.9rem,3.6vw,2.9rem)] leading-[1.08] tracking-[-0.026em]",
-  section: "font-semibold text-[clamp(1.8rem,3.2vw,2.6rem)] leading-[1.1] tracking-[-0.024em]",
-  panel: "font-semibold text-[clamp(1.3rem,2vw,1.6rem)] leading-[1.18] tracking-[-0.018em]",
+  hero: "text-[clamp(2.4rem,5.4vw,4.8rem)] leading-[1] tracking-[-0.04em]",
+  scene: "text-[clamp(2.1rem,4.4vw,3.8rem)] leading-[1.02] tracking-[-0.035em]",
+  section: "text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05] tracking-[-0.03em]",
+  panel: "text-[clamp(1.35rem,2.1vw,1.7rem)] leading-[1.15] tracking-[-0.02em]",
 } as const;
 
 /** Rounded photo frame used across the site. */
-export const PHOTO = "w-full rounded-[1.25rem]";
+export const PHOTO = "unveil w-full rounded-[1.5rem]";

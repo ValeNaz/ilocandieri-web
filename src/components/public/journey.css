@@ -1,32 +1,52 @@
 /*
- * Motion of the public site: gentle entrances and a reading-progress bar, as progressive enhancement.
- * Where `animation-timeline` is unsupported, or the visitor asks for reduced motion, everything is simply visible.
+ * Motion of the public site, all CSS and all progressive enhancement:
+ * - the hero title enters word by word, the photo strip drifts slowly;
+ * - the manifesto lights up word by word as it scrolls past;
+ * - large images open up as they enter;
+ * - gentle rises and a reading-progress bar.
+ * Without `animation-timeline` support, or with reduced motion, everything is simply visible and still.
  */
+
+/* Hero title: words enter once, on load */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-word { display: inline-block; animation: word-in 0.9s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 60ms + 80ms); }
+}
+@keyframes word-in { from { opacity: 0; transform: translateY(0.45em); } to { opacity: 1; transform: none; } }
+
+/* Photo strip under the hero: a slow drift; static and scrollable when motion is reduced */
+.film { overflow-x: auto; scrollbar-width: none; }
+.film::-webkit-scrollbar { display: none; }
+.film-track { display: flex; width: max-content; gap: clamp(0.75rem, 1.6vw, 1.25rem); }
+@media (prefers-reduced-motion: no-preference) {
+  .film { overflow-x: clip; }
+  .film-track { animation: film 70s linear infinite; }
+  .film:hover .film-track, .film:focus-within .film-track { animation-play-state: paused; }
+}
+@keyframes film { to { transform: translateX(-50%); } }
+
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .rise { animation: rise linear both; animation-timeline: view(); animation-range: entry 6% entry 50%; }
+    /* Manifesto: each word goes from faint to full ink as it crosses the lower half of the screen */
+    .lit-word { animation: lit linear both; animation-timeline: view(); animation-range: entry 90% cover 42%; }
+    /* Large images open from a smaller window to the full frame */
+    .unveil { animation: unveil linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
     .progress-bar { animation: progress linear both; animation-timeline: scroll(root); }
   }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes lit { from { opacity: 0.18; } to { opacity: 1; } }
+@keyframes unveil { from { clip-path: inset(9% 7% round 1.5rem); } to { clip-path: inset(0 round 1.5rem); } }
 @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 .progress-bar {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  height: 4px;
+  left: 1.5rem;
+  right: 1.5rem;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
   background: var(--color-terracotta);
   transform-origin: 0 50%;
   transform: scaleX(0);
 }
-
-/* Ticker of product names (ABES showcase) */
-.ticker { display: flex; overflow: hidden; }
-.ticker-track { display: flex; flex-shrink: 0; gap: 2.5rem; padding-right: 2.5rem; min-width: 100%; justify-content: space-around; }
-@media (prefers-reduced-motion: no-preference) {
-  .ticker-track { animation: ticker 38s linear infinite; }
-  .ticker:hover .ticker-track { animation-play-state: paused; }
-}
-@keyframes ticker { to { transform: translateX(-100%); } }

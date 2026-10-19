@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { ButtonHTMLAttributes, ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "olive" | "light" | "limone";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "olive" | "light" | "limone" | "ink";
 export type ButtonSize = "sm" | "md" | "lg";
 
-// Calm pill buttons: solid accent for the main action, outline for the rest.
+// Pill buttons: solid accent for the main action, outline for the rest.
 const base =
   "inline-flex items-center justify-center gap-2 rounded-full border font-semibold leading-none whitespace-nowrap select-none " +
   "transition-[background-color,color,border-color] duration-200 ease-out-expo " +
@@ -19,6 +19,7 @@ const variants: Record<ButtonVariant, string> = {
   olive: "border-olive bg-olive text-white hover:border-olive-deep hover:bg-olive-deep",
   light: "border-paper bg-paper text-ink hover:bg-paper-deep hover:border-paper-deep",
   limone: "border-terracotta bg-terracotta text-white hover:border-terracotta-deep hover:bg-terracotta-deep",
+  ink: "border-ink bg-ink text-paper hover:bg-ink-soft hover:border-ink-soft",
 };
 
 const sizes: Record<ButtonSize, string> = {

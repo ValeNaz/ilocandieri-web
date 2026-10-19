@@ -75,14 +75,14 @@ function ProductCard({ p, index, cta, Heading }: { p: ShowcaseProduct; index: nu
 export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCtaLabel, headingLevel = 2, id }: AbesShowcaseProps) {
   const H = headingLevel === 2 ? "h2" : "h3";
   const CardH = headingLevel === 2 ? "h3" : "h4";
-  const cols = products.length === 3 || products.length === 6 ? "lg:grid-cols-3" : "lg:grid-cols-4";
+  const cols = "lg:grid-cols-4";
   return (
     <section id={id} aria-labelledby="abes-showcase-title" className="bg-paper-deep">
-      <Container className="py-12 sm:py-24">
+      <Container wide className="py-20 sm:py-32">
         <div className="grid items-end gap-6 lg:grid-cols-12 lg:gap-16">
           <div className="rise lg:col-span-7">
             {eyebrow && <p className="stamp mb-4">{eyebrow}</p>}
-            <H id="abes-showcase-title" className="max-w-[20ch] text-[clamp(1.9rem,3.6vw,2.9rem)] font-semibold leading-[1.08] tracking-[-0.026em]">{title}</H>
+            <H id="abes-showcase-title" className="max-w-[16ch] text-[clamp(2.1rem,4.4vw,3.8rem)] leading-[1.02] tracking-[-0.035em]">{title}</H>
           </div>
           <div className="space-y-6 lg:col-span-5">
             {text && <p className="max-w-prose text-lg leading-relaxed text-ink-soft">{text}</p>}
@@ -107,6 +107,10 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
                 "md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 md:pb-0", cols,
               )}
             >
+              <li aria-hidden="true" className="hidden md:col-span-2 md:row-span-2 md:block">
+                {/* eslint-disable-next-line @next/next/no-img-element -- static file in /public/foto */}
+                <img src="/foto/vasetti-abes.jpg" alt="" width={1000} height={1333} loading="lazy" decoding="async" className="unveil size-full min-h-80 rounded-card object-cover" />
+              </li>
               {products.map((p, i) => (
                 <li key={p.id} className="w-[72%] max-w-[19rem] shrink-0 snap-start scroll-ml-5 sm:scroll-ml-8 md:w-auto md:max-w-none">
                   <ProductCard p={p} index={i} cta={cardCtaLabel} Heading={CardH} />

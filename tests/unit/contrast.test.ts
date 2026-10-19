@@ -56,6 +56,8 @@ const PAIRS: [string, string, number][] = [
   // Status colours
   ["white", "danger", 4.5], ["danger", "danger-soft", 4.5], ["danger", "card", 4.5], ["success", "success-soft", 4.5], ["warning", "warning-soft", 4.5],
   ["ink", "success-soft", 4.5], ["ink", "danger-soft", 4.5],
+  // Night field and citrus fills
+  ["paper", "night", 4.5], ["night-soft", "night", 4.5], ["citrus", "night", 4.5], ["ink", "citrus", 4.5], ["ink-soft", "paper-deep", 4.5],
   // UI component boundaries (WCAG 1.4.11)
   ["line-strong", "paper", 3], ["line-strong", "card", 3],
 ];

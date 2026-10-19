@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { ToastProvider } from "@/components/ui/Toast";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
 
-// One clean grotesk for titles and text: hierarchy comes from size and weight.
+// Display: Bricolage Grotesque (contemporary grotesk with character, optical sizes). Text: Instrument Sans.
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", weight: "variable", axes: ["opsz", "wdth"], display: "swap" });
 const instrument = Instrument_Sans({ subsets: ["latin"], variable: "--font-instrument", weight: "variable", axes: ["wdth"], display: "swap" });
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export const viewport: Viewport = { themeColor: "#fbf9f5", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" className={instrument.variable}>
+    <html lang="it" className={`${bricolage.variable} ${instrument.variable}`}>
       <body>
         <ToastProvider>{children}</ToastProvider>
       </body>
