@@ -21,8 +21,11 @@ Le sezioni restano **blocchi modificabili da admin**: cambia solo come vengono d
 ## Movimento
 Tutto CSS (`journey.css`), miglioramento progressivo: parole del titolo che entrano, striscia di foto che scorre (si ferma al passaggio del mouse), manifesto che si accende parola per parola, immagini che si aprono entrando, entrate leggere. Con `prefers-reduced-motion` o senza supporto tutto è visibile e fermo. Nessuna libreria, nessun blocco dello scroll.
 
-## Immagini
-Nessuna foto stock o inventata. Le foto in `public/foto/` sono scatti reali di ABES (abes.bio) e compaiono solo dove si parla di ABES/agricoltura (hero, identità, sezioni ABES, news senza copertina); altrove, senza immagine scelta dall'admin, il testo sta da solo. Se l'admin sceglie un'immagine, ha sempre la precedenza. Le foto di ilocandieri.it non sono usate: sono stock non riferite ai loro luoghi.
+## Immagini e video
+- Foto reali ABES in `public/foto/` (prodotti e punto vendita).
+- PROVVISORI, finché la cooperativa non fornisce i suoi: foto Wikimedia Commons (`public/foto/stock/`, licenze CC, crediti obbligatori) e video Mixkit (`public/video/`, licenza gratuita). Catalogo con testi alternativi e crediti in `src/components/public/media/stock.ts`; elenco pubblico su `/crediti`.
+- Ogni scena deve corrispondere al testo accanto (es. "Beni confiscati" mostra un casale oltre un cancello, "Giardino delle Arance" gli agrumi).
+- Se l'admin sceglie un'immagine, ha sempre la precedenza. Per sostituire definitivamente lo stock: caricare le foto vere dall'admin, poi togliere le voci non più usate da `stock.ts` e i file in `public/`.
 
 ## Regole da mantenere
 - Al massimo una sezione `night` per pagina (oltre al footer); la fascia `citrus` solo in chiusura.
