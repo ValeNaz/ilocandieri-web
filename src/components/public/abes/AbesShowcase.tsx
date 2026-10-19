@@ -83,7 +83,7 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
   const cols = products.length === 3 || products.length === 6 ? "lg:grid-cols-3" : "lg:grid-cols-4";
   const categories = [...new Set(products.map((p) => p.category).filter((c): c is string => Boolean(c)))];
   return (
-    <section id={id} data-chapter aria-labelledby="abes-showcase-title" className="relative isolate overflow-hidden bg-limone text-ink">
+    <section id={id} aria-labelledby="abes-showcase-title" className="relative isolate overflow-hidden bg-limone text-ink">
       {categories.length > 0 && (
         <div aria-hidden="true" className="ticker border-b-[3px] border-ink bg-ink py-3 text-limone">
           {[0, 1].map((n) => (
@@ -96,7 +96,7 @@ export function AbesShowcase({ products, eyebrow, title, text, ctaLabel, cardCta
       <Container className="py-20 sm:py-32">
         <div className="grid items-end gap-8 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
           <div className="rise">
-            {eyebrow && <p className="mb-5"><Stamp className="stamp-in">{eyebrow}</Stamp></p>}
+            {eyebrow && <p className="mb-5"><Stamp className=" ">{eyebrow}</Stamp></p>}
             <H id="abes-showcase-title" className="max-w-[16ch] text-[clamp(2.4rem,6.4vw,5.6rem)] font-extrabold leading-[0.98] tracking-[-0.03em]">{title}</H>
           </div>
           <div className="space-y-6">

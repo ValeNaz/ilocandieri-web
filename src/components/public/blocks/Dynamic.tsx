@@ -32,7 +32,7 @@ export async function AbesBlock({ data, level }: { data: BlockDataOf<"abes_showc
     );
   }
   return (
-    <Section id={data.slot} data-chapter className="bg-limone text-ink">
+    <Section id={data.slot} className="bg-limone text-ink">
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} tint="text-ink" />
         <div className="mt-10"><ButtonLink href={paths.abesShop} size="lg">{data.ctaLabel}</ButtonLink></div>
@@ -45,7 +45,7 @@ export async function EventsBlock({ data, level }: { data: BlockDataOf<"events_h
   const events = await getHomeEvents(data.limit);
   if (events.length === 0 && !data.emptyMessage) return null;
   return (
-    <Section id={data.slot} data-chapter className="py-20 sm:py-32">
+    <Section id={data.slot} className="py-20 sm:py-32">
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} />
         {events.length > 0 ? (
@@ -65,7 +65,7 @@ export async function NewsBlock({ data, level }: { data: BlockDataOf<"news_highl
   const news = await getHomeNews(data.limit);
   if (news.length === 0 && !data.emptyMessage) return null;
   return (
-    <Section id={data.slot} data-chapter className="bg-kraft py-20 text-ink sm:py-32">
+    <Section id={data.slot} className="bg-kraft py-20 text-ink sm:py-32">
       <Container>
         <SectionHead eyebrow={data.eyebrow} title={data.title} text={data.text} level={level} tint="text-ink" />
         {news.length > 0 ? (

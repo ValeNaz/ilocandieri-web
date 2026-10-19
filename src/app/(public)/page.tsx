@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageBlocks } from "@/components/public/blocks";
-import { JourneyRail } from "@/components/public/JourneyRail";
 import { JsonLd } from "@/components/public/JsonLd";
 import { getPageBlocks } from "@/lib/content/queries";
 import { getSiteUrl } from "@/lib/env";
@@ -28,7 +27,6 @@ export default async function HomePage() {
   return (
     <>
       <JsonLd data={ld} />
-      <JourneyRail />
       <PageBlocks content={content} />
     </>
   );

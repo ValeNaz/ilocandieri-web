@@ -5,8 +5,7 @@ import type { ImageMap } from "@/lib/content/queries";
 import { cn } from "@/lib/utils";
 import { Emblem } from "../art/emblems";
 import { Plate } from "../art/plates";
-import { Seal } from "../art/primitives";
-import { BlockHeading, CtaLink, MediaImage, OptionalEyebrow, Paragraphs, TITLE, pickImage, type HeadingLevel } from "./shared";
+import { BlockHeading, CtaLink, Foto, MediaImage, OptionalEyebrow, Paragraphs, TITLE, pickImage, type HeadingLevel } from "./shared";
 
 type Vars = CSSProperties & Record<`--${string}`, string | number>;
 
@@ -14,6 +13,8 @@ type Vars = CSSProperties & Record<`--${string}`, string | number>;
  * Colors of the four "cosa facciamo" panels (field + the three print colors of the emblem). Verified pairs:
  * paper on cobalto / olive-deep / terracotta, ink on limone / kraft (tests/unit/contrast.test.ts).
  */
+const FEATURE_FOTO = ["vasetti", "banco", "pianta", "cassette"] as const;
+
 const PANELS = [
   { field: "bg-cobalto text-paper on-dark", e: ["var(--color-limone)", "var(--color-arancio)", "var(--color-paper)"], num: "text-limone" },
   { field: "bg-limone text-ink", e: ["var(--color-cobalto)", "var(--color-terracotta)", "var(--color-paper)"], num: "text-terracotta-deep" },
@@ -23,13 +24,12 @@ const PANELS = [
   { field: "bg-paper-deep text-ink", e: ["var(--color-cobalto)", "var(--color-arancio)", "var(--color-paper)"], num: "text-cobalto" },
 ] as const;
 
-/** Identity scene (home): the statement on a field of tomato, with the cooperative's seal turning as you scroll. */
+/** Identity scene (home): the statement on a field of tomato, next to a real photo. */
 export function IntroBlock({ data, images, level }: { data: BlockDataOf<"intro">; images: ImageMap; level: HeadingLevel }) {
   const image = pickImage(images, data.imageId);
   const sage = data.tone === "sage";
   return (
-    <section id={data.slot} data-chapter className={cn("relative isolate overflow-hidden", sage ? "bg-olive-deep text-paper on-dark" : "bg-terracotta text-paper on-dark")}>
-      <div aria-hidden="true" className="absolute -bottom-72 -right-48 -z-10 size-[40rem] rounded-full border-[3px] border-paper/20 lg:-bottom-56 lg:right-[-14rem]" />
+    <section id={data.slot} className={cn("relative isolate overflow-hidden", sage ? "bg-olive-deep text-paper on-dark" : "bg-terracotta text-paper on-dark")}>
       <Container className="grid items-center gap-14 py-20 sm:py-28 lg:grid-cols-12 lg:gap-10 lg:py-36">
         <div className="rise lg:col-span-7">
           <OptionalEyebrow text={data.eyebrow} />
@@ -40,15 +40,7 @@ export function IntroBlock({ data, images, level }: { data: BlockDataOf<"intro">
           {data.cta && <div className="mt-10"><CtaLink cta={data.cta} dark size="lg" /></div>}
         </div>
         <div className="relative grid place-items-center lg:col-span-5">
-          {image ? (
-            <div className="misprint w-full max-w-md rounded-[1.75rem]" style={{ "--misprint": "var(--color-limone)" } as Vars}>
-              <MediaImage image={image} className="aspect-[4/5] w-full rounded-[1.75rem] border-[3px] border-ink" />
-            </div>
-          ) : (
-            <div style={{ "--seal-bg": "var(--color-paper)", "--seal-ink": "var(--color-ink)" } as Vars} className="w-[min(21rem,72vw)] drop-shadow-[0.7rem_0.7rem_0_var(--color-ink)] lg:w-[min(26rem,100%)]">
-              <Seal className="w-full" />
-            </div>
-          )}
+          <Foto image={image} fallback="cassette" className="aspect-[4/5] w-full max-w-md rounded-[1.5rem] border-[3px] border-ink shadow-[0.6rem_0.6rem_0_0_var(--color-ink)]" />
         </div>
       </Container>
     </section>
@@ -59,8 +51,6 @@ export function IntroBlock({ data, images, level }: { data: BlockDataOf<"intro">
 export function FeatureBlock({ data, images, level, index = 0 }: { data: BlockDataOf<"feature">; images: ImageMap; level: HeadingLevel; index?: number }) {
   const image = pickImage(images, data.imageId);
   const left = data.imageSide === "left";
-  const panel = PANELS[(index + 1) % PANELS.length]!;
-  const useSeal = /missione|storia/.test(data.slot ?? "");
   return (
     <Section id={data.slot} tone={data.tone === "deep" ? "deep" : "paper"} className="py-16 sm:py-28">
       <Container>
@@ -74,22 +64,7 @@ export function FeatureBlock({ data, images, level, index = 0 }: { data: BlockDa
             {data.cta && <div className="mt-9"><CtaLink cta={data.cta} /></div>}
           </div>
           <div className={cn("lg:col-span-5", left && "lg:order-1")}>
-            {image ? (
-              <div className="misprint rounded-[1.75rem]" style={{ "--misprint": "var(--color-limone)" } as Vars}>
-                <MediaImage image={image} className="aspect-[4/3] w-full rounded-[1.75rem] border-[3px] border-ink lg:aspect-square" />
-              </div>
-            ) : (
-              <div
-                className={cn("relative grid aspect-square place-items-center overflow-hidden rounded-[1.75rem] border-[3px] border-ink", panel.field)}
-                style={{ "--e1": panel.e[0], "--e2": panel.e[1], "--e3": panel.e[2] } as Vars}
-              >
-                {useSeal ? (
-                  <div style={{ "--seal-bg": "var(--color-paper)", "--seal-ink": "var(--color-ink)" } as Vars} className="w-[70%]"><Seal className="w-full" /></div>
-                ) : (
-                  <Emblem slot={data.slot} index={index} className="drift-a w-[62%]" />
-                )}
-              </div>
-            )}
+            <Foto image={image} fallback={FEATURE_FOTO[index % FEATURE_FOTO.length]!} className="aspect-[4/3] w-full rounded-[1.5rem] border-[3px] border-ink shadow-[0.6rem_0.6rem_0_0_var(--color-limone)] lg:aspect-square" />
           </div>
         </div>
         {data.items.length > 0 && (
@@ -113,12 +88,11 @@ export function FeatureBlock({ data, images, level, index = 0 }: { data: BlockDa
 }
 
 /**
- * "Cosa facciamo": each activity is a panel printed on its own color; the panels stack like labels on a crate as you scroll.
- * Stacking is pure CSS (position: sticky) and is turned off under reduced motion.
+ * "Cosa facciamo": each activity is a panel on its own color, with its illustration.
  */
 export function PillarsBlock({ data, level }: { data: BlockDataOf<"pillars">; level: HeadingLevel }) {
   return (
-    <section id={data.slot} data-chapter className="bg-paper pb-24 pt-20 sm:pb-36 sm:pt-32">
+    <section id={data.slot} className="bg-paper pb-24 pt-20 sm:pb-36 sm:pt-32">
       <Container>
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="rise lg:col-span-8">
@@ -127,13 +101,13 @@ export function PillarsBlock({ data, level }: { data: BlockDataOf<"pillars">; le
           </div>
           {data.intro && <p className="rise text-lg leading-relaxed text-ink-soft lg:col-span-4">{data.intro}</p>}
         </div>
-        <ol className="stack mt-12 sm:mt-20">
+        <ol className="mt-12 space-y-6 sm:mt-16 sm:space-y-8">
           {data.items.map((it, i) => {
             const p = PANELS[i % PANELS.length]!;
             return (
-              <li key={i} style={{ "--i": i } as Vars}>
+              <li key={i}>
                 <div
-                  className={cn("stack-panel relative grid items-center gap-8 overflow-hidden rounded-[2rem] border-[3px] border-ink p-7 shadow-[0_18px_40px_-22px_rgb(30_25_18/0.55)] sm:p-12 lg:grid-cols-12 lg:p-16", p.field)}
+                  className={cn("relative grid items-center gap-8 overflow-hidden rounded-[2rem] border-[3px] border-ink p-7 sm:p-10 lg:grid-cols-12 lg:p-12", p.field)}
                   style={{ "--e1": p.e[0], "--e2": p.e[1], "--e3": p.e[2] } as Vars}
                 >
                   <div className="lg:col-span-7">
@@ -142,7 +116,7 @@ export function PillarsBlock({ data, level }: { data: BlockDataOf<"pillars">; le
                     <p className="mt-5 max-w-xl text-lg leading-relaxed sm:text-xl">{it.text}</p>
                   </div>
                   <div className="grid place-items-center lg:col-span-5">
-                    <Emblem index={i} className="w-44 sm:w-60 lg:w-[22rem]" />
+                    <Emblem index={i} className="w-44 sm:w-60 lg:w-72" />
                   </div>
                 </div>
               </li>
@@ -177,10 +151,10 @@ export function ValuesBlock({ data, level }: { data: BlockDataOf<"values">; leve
   );
 }
 
-/** Places: two plates on a field of olive, offset against each other and drifting at different speeds as you scroll. */
+/** Places: plates on a field of olive. */
 export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places">; images: ImageMap; level: HeadingLevel }) {
   return (
-    <section id={data.slot} data-chapter className="relative overflow-hidden bg-olive-deep py-20 text-paper on-dark sm:py-32">
+    <section id={data.slot} className="relative overflow-hidden bg-olive-deep py-20 text-paper on-dark sm:py-32">
       <Container>
         <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="rise lg:col-span-8">
@@ -193,7 +167,7 @@ export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places
           {data.items.map((it, i) => {
             const img = pickImage(images, it.imageId);
             return (
-              <li key={i} className={cn(i % 2 === 1 && "md:mt-32", i % 2 === 0 ? "drift-a" : "drift-b")}>
+              <li key={i} className={cn(i % 2 === 1 && "md:mt-32",)}>
                 <figure className="rounded-[2rem] bg-paper p-3 shadow-[0.7rem_0.7rem_0_0_var(--color-limone)]">
                   <div className="aspect-[4/5] overflow-hidden rounded-[1.4rem] border-[3px] border-ink">
                     {img ? <MediaImage image={img} className="size-full" /> : <Plate index={i} className="size-full" />}
@@ -214,8 +188,8 @@ export function PlacesBlock({ data, images, level }: { data: BlockDataOf<"places
 /** Closing call to action: the last scene, in cobalto, with a rising sun. */
 export function CtaBlock({ data, level }: { data: BlockDataOf<"cta">; level: HeadingLevel }) {
   return (
-    <section id={data.slot} data-chapter className="relative isolate overflow-hidden bg-cobalto pb-24 pt-52 text-paper on-dark sm:py-36">
-      <div aria-hidden="true" className="drift-b absolute -right-16 -top-16 -z-10 size-64 rounded-full bg-limone sm:-right-32 sm:top-8 sm:size-[38rem]" />
+    <section id={data.slot} className="relative isolate overflow-hidden bg-cobalto pb-24 pt-52 text-paper on-dark sm:py-36">
+      <div aria-hidden="true" className="absolute -right-16 -top-16 -z-10 size-64 rounded-full bg-limone sm:-right-32 sm:top-8 sm:size-[38rem]" />
       <div aria-hidden="true" className="absolute -right-24 -top-24 -z-10 size-80 rounded-full border-[3px] border-limone/60 sm:-right-44 sm:top-[-1rem] sm:size-[46rem]" />
       <Container>
         <div className="rise max-w-4xl">

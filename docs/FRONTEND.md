@@ -1,6 +1,6 @@
-# Frontend: "Il viaggio" (design system)
+# Frontend (design system)
 
-Il sito pubblico è un percorso: si parte da un luogo chiuso (un cancello), lo si apre, e si attraversano le scene fino al prodotto ABES e agli inviti a partecipare. Il riferimento visivo è il packaging artigianale mediterraneo: carta, colori pieni sovrapposti, lettering da cassetta di agrumi. Il contesto strategico è in `PRODUCT.md` (radice del progetto).
+Il sito pubblico è fatto di scene a colore pieno con foto reali dove esistono. Il riferimento visivo è il packaging artigianale mediterraneo: carta, colori pieni sovrapposti, lettering da cassetta di agrumi. Il contesto strategico è in `PRODUCT.md` (radice del progetto).
 
 ## Token e tipografia
 - Colori in OKLCH nel blocco `@theme static` di `src/app/globals.css`: `paper` (crema), `terracotta` (pomodoro), `cobalto` (maiolica), `limone`, `kraft`, `olive`, `ink`. I nomi storici (`paper`, `ink`, `terracotta`, `olive`, `sage`...) sono rimasti, quindi anche l'admin ha preso la nuova identità senza modifiche alla sua struttura.
@@ -11,21 +11,18 @@ Il sito pubblico è un percorso: si parte da un luogo chiuso (un cancello), lo s
 | Cosa | File |
 | --- | --- |
 | Utility di marca (`.stamp`, `.marker`, `.misprint`) | `src/app/globals.css` |
-| Coreografia di scroll (cancello, entrate, rail) | `src/components/public/journey.css` |
-| Illustrazioni originali (SVG piatti, `aria-hidden`) | `src/components/public/art/` (`hero-scene`, `emblems`, `plates`, `poster`, `primitives`) |
+| Movimento (entrate, barra di avanzamento, ticker) | `src/components/public/journey.css` |
+| Illustrazioni originali (SVG piatti, `aria-hidden`) | `src/components/public/art/` (`emblems`, `plates`, `primitives`) |
+| Foto reali ABES | `public/foto/` |
 | Scene dei blocchi (Home, Chi siamo, Shop...) | `src/components/public/blocks/` |
-| Rail dei capitoli (desktop) | `src/components/public/JourneyRail.tsx` |
 
-Le sezioni restano **blocchi modificabili da admin**: cambiano solo come vengono disegnate. Il cancello compare solo nel blocco `hero` con `size: "large"`; gli altri hero sono "poster" con il colore della pagina (`toneForPage` in `blocks/shared.tsx`).
+Le sezioni restano **blocchi modificabili da admin**: cambiano solo come vengono disegnate. Il blocco `hero` con `size: "large"` è l'hero della Home (testo + foto); gli altri hero hanno il colore della pagina (`toneForPage` in `blocks/shared.tsx`).
 
 ## Movimento
-Tutto il movimento legato allo scroll usa CSS `animation-timeline` (nessuna libreria, nessun JS per l'animazione) ed è miglioramento progressivo:
-- Se il browser non lo supporta, oppure con `prefers-reduced-motion: reduce`, ogni scena mostra lo stato finale leggibile: il cancello è già aperto, i pannelli "Cosa facciamo" non si sovrappongono, nessun contenuto è nascosto.
-- Niente blocco dello scroll. L'unico JS del percorso è il rail dei capitoli (evidenzia la scena corrente).
-- Il movimento di profondità dei "luoghi" è attivo solo da 768px in su.
+Sobrio: entrate leggere (`.rise`, 24px) e barra di avanzamento in header, con CSS `animation-timeline` come miglioramento progressivo (`src/components/public/journey.css`). Senza supporto o con `prefers-reduced-motion` tutto è già visibile. Nessuna libreria, nessun blocco dello scroll.
 
 ## Immagini
-Nessuna foto stock o inventata. Dove l'admin non ha caricato una foto si usano le illustrazioni in `art/`; se carica una foto reale, quella sostituisce l'illustrazione (hero, luoghi, sezioni Chi siamo). Le foto dei prodotti sono quelle reali di ABES.
+Nessuna foto stock o inventata. Le foto in `public/foto/` sono scatti reali di ABES (abes.bio) e fanno da default (`Foto` in `blocks/shared.tsx`); se l'admin sceglie un'immagine, quella ha la precedenza. Le foto di ilocandieri.it non sono usate: sono stock non riferite ai loro luoghi. Per i luoghi e le attività senza foto reale restano le illustrazioni in `art/` (`emblems`, `plates`). Le foto dei prodotti sono quelle reali di ABES.
 
 ## Regole da mantenere
 - Titoli: Hepta Slab pesante e grande; non usare serif corsivo, righe sottili o card tutte uguali (anti-riferimenti di `PRODUCT.md`).

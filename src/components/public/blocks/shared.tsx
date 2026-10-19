@@ -4,8 +4,8 @@ import type { Cta } from "@/lib/content/blocks";
 import type { ImageMap, ResolvedImage } from "@/lib/content/queries";
 import { cn } from "@/lib/utils";
 import { Stamp } from "../art/primitives";
-import type { PosterTone } from "../art/poster";
 
+export type PosterTone = "terracotta" | "cobalto" | "limone" | "olive" | "kraft";
 export type PatternVariant = "agrumi" | "maiolica" | "campi";
 export type HeadingLevel = 1 | 2;
 
@@ -35,6 +35,29 @@ export function MediaImage({ image, fallback = "campi", className, priority }: {
     <img src={image.url} alt={image.alt} width={image.width ?? undefined} height={image.height ?? undefined} loading={priority ? "eager" : "lazy"} decoding="async" className={cn("object-cover", className)} />
   );
 }
+
+/** Real photos from abes.bio (the cooperative's own product shots), used when the admin has not chosen an image. */
+export const FOTO = {
+  ceci: { src: "/foto/ceci-juta.jpg", w: 1600, h: 900, alt: "Ceci in un sacco di juta" },
+  cassette: { src: "/foto/cassette-verdure.jpg", w: 1000, h: 1000, alt: "Cassette di verdure davanti al muro ABES" },
+  vasetti: { src: "/foto/vasetti-abes.jpg", w: 1000, h: 1333, alt: "Vasetti ABES di patè di melanzane, peperonata e caponata siciliana" },
+  banco: { src: "/foto/abbracci-banco.jpg", w: 1000, h: 1000, alt: "Confezione di pasta Abbracci ABES su un tavolo di legno" },
+  pianta: { src: "/foto/abbracci-pianta.jpg", w: 900, h: 1200, alt: "Confezione di pasta Abbracci ABES tra le foglie" },
+} as const;
+export type FotoKey = keyof typeof FOTO;
+
+/** A photo from FOTO, or the admin's image when one was chosen. */
+export function Foto({ image, fallback, className, priority }: { image?: ResolvedImage | null; fallback: FotoKey; className?: string; priority?: boolean }) {
+  if (image) return <MediaImage image={image} className={className} priority={priority} />;
+  const f = FOTO[fallback];
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- static files in /public/foto
+    <img src={f.src} alt={f.alt} width={f.w} height={f.h} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" className={cn("object-cover", className)} />
+  );
+}
+
+/** Photo for the title block of an inner page. */
+export const PAGE_FOTO: Record<string, FotoKey> = { "chi-siamo": "cassette", shop: "vasetti", eventi: "ceci", news: "banco", "lavora-con-noi": "pianta", contatti: "cassette" };
 
 export const pickImage = (images: ImageMap, id: string | null | undefined) => (id ? (images[id] ?? null) : null);
 
@@ -87,7 +110,7 @@ export function OptionalEyebrow({ text, className }: { text: string; className?:
   if (!text) return null;
   return (
     <p className={cn("mb-5", className)}>
-      <Stamp className="stamp-in">{text}</Stamp>
+      <Stamp className=" ">{text}</Stamp>
     </p>
   );
 }
