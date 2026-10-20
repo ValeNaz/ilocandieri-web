@@ -1,0 +1,36 @@
+/* Home/Dynamic sections: event tickets and the asymmetric news layout. */
+.etk-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+@media (min-width: 900px) { .etk-list.etk-2, .etk-list.etk-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .etk-list.etk-3 > li:first-child { grid-column: span 2; } }
+.etk { --tk: var(--c-white); --tkfg: var(--c-ink); position: relative; display: grid; grid-template-columns: minmax(7.5rem, 32%) 1fr; background: var(--tk); color: var(--tkfg); border-radius: 1.75rem; transition: transform 0.4s var(--ease-out-expo); min-height: 12rem; }
+.etk-g { --tk: var(--c-green); --tkfg: var(--c-white); }
+.etk-o { --tk: var(--c-orange); }
+.etk::before, .etk::after { content: ""; position: absolute; left: calc(32% - 0.9rem); width: 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--bg, var(--c-yellow)); z-index: 1; }
+.etk::before { top: -0.9rem; } .etk::after { bottom: -0.9rem; }
+.etk-stub { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.2rem 0.5rem; border-right: 3px dashed currentColor; text-align: center; }
+.etk-day { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 0.9; letter-spacing: -0.03em; font-size: clamp(3.4rem, 7vw, 5.6rem); }
+.etk-mon { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; letter-spacing: 0.08em; text-transform: uppercase; font-size: 1rem; margin-top: 0.4rem; }
+.etk-body { padding: 1.4rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
+.etk-title { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1.1; font-size: clamp(1.4rem, 2.6vw, 2.1rem); letter-spacing: -0.02em; }
+.etk-title a { text-decoration: none; } .etk-title a::after { content: ""; position: absolute; inset: 0; border-radius: 1.75rem; }
+.etk-title a:focus-visible { outline: none; }
+.etk:has(a:focus-visible) { outline: 3px solid var(--c-ink); outline-offset: 4px; }
+.etk-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; font-weight: 700; }
+.etk-tag { align-self: flex-start; border: 2px solid currentColor; border-radius: 999px; padding: 0.15rem 0.8rem; font-size: 0.95rem; font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) { .etk:nth-child(odd) { rotate: -0.8deg; } .etk:nth-child(even) { rotate: 0.7deg; } .etk:hover { transform: translateY(-6px) rotate(-1.2deg); } }
+.etk-empty { border: 3px dashed var(--c-ink); border-radius: 1.75rem; padding: clamp(1.5rem, 4vw, 3rem); display: grid; gap: 1.2rem; max-width: 46rem; }
+
+.nw { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+@media (min-width: 900px) { .nw.nw-n { grid-template-columns: repeat(12, minmax(0, 1fr)); } .nw-n > li:first-child { grid-column: span 7; grid-row: span 2; } .nw-n > li:not(:first-child) { grid-column: span 5; } .nw-n.nw-1 > li:first-child { grid-column: span 12; grid-row: auto; } }
+.nw-card { position: relative; display: flex; flex-direction: column; height: 100%; border-radius: 2rem; padding: 0.9rem; background: var(--nb); color: var(--nf); transition: transform 0.4s var(--ease-out-expo); }
+.nw-card:hover { transform: translateY(-5px); }
+.nw-card:has(a:focus-visible) { outline: 3px solid var(--c-ink); outline-offset: 4px; }
+.nw-pic { position: relative; overflow: hidden; border-radius: 1.4rem 1.4rem 1.4rem 5rem; aspect-ratio: 16 / 10; background: var(--c-white); display: grid; place-items: center; }
+.nw-first .nw-pic { aspect-ratio: 16 / 11; border-radius: 1.4rem 6rem 1.4rem 6rem; }
+.nw-pic img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.nw-big { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: clamp(3.6rem, 9vw, 6.4rem); line-height: 1; color: var(--c-ink); }
+.nw-txt { padding: 1rem 0.5rem 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+.nw-meta { font-weight: 700; font-size: 1rem; }
+.nw-title { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1.12; letter-spacing: -0.02em; font-size: clamp(1.3rem, 2.4vw, 1.8rem); }
+.nw-first .nw-title { font-size: clamp(1.7rem, 3vw, 2.6rem); }
+.nw-title a { text-decoration: none; } .nw-title a::after { content: ""; position: absolute; inset: 0; border-radius: 2rem; } .nw-title a:focus-visible { outline: none; }
+.nw-ex { font-size: 1.0625rem; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

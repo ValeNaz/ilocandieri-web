@@ -4,21 +4,22 @@ import { cn } from "@/lib/utils";
  * The I Locandieri mark, redrawn as vector from the official logo (public/brand/logo-originale.svg):
  * a house made of people. The orange figure is the roof and the left wall, the yellow figure the right wall,
  * the green dot is the person welcomed inside, the green bar the foundation.
- * Each part has its own class so the mark can assemble itself (journey.css `.logo-build`).
+ * The mark is ONE drawing: no part carries a class of its own, so no stylesheet can move, rotate or squeeze a piece of it.
+ * It enters whole with kit.css `.logo-build` (on load) or `.logo-build-view` (on scroll): opacity + a short rise.
  */
 export function LogoMark({ className, build }: { className?: string; build?: boolean | "view" }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 126 156" className={cn("shrink-0 overflow-visible", build === "view" ? "logo-build-view" : build && "logo-build", className)}>
-      <g className="lm-orange">
+      <g>
         <circle cx="14" cy="22" r="12.5" fill="var(--color-brand-orange)" />
         <path d="M71 3H78V36L27 75V122H1V66Z" fill="var(--color-brand-orange)" />
       </g>
-      <g className="lm-yellow">
+      <g>
         <circle cx="110" cy="22" r="13" fill="var(--color-brand-yellow)" />
         <path d="M79 40L124 71V122H96V84L79 69Z" fill="var(--color-brand-yellow)" />
       </g>
-      <circle className="lm-dot" cx="62" cy="99" r="13.5" fill="var(--color-brand-green)" />
-      <rect className="lm-base" x="28" y="125" width="68" height="29" fill="var(--color-brand-green)" />
+      <circle cx="62" cy="99" r="13.5" fill="var(--color-brand-green)" />
+      <rect x="28" y="125" width="68" height="29" fill="var(--color-brand-green)" />
     </svg>
   );
 }

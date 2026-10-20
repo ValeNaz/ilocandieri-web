@@ -1,43 +1,69 @@
 import type { Metadata } from "next";
-import { PHOTOS, VIDEOS } from "@/components/public/media/stock";
-import { Container } from "@/components/ui";
+import { Room, Wrap } from "@/components/public/kit/Room";
+import { CreditsHero } from "@/components/public/liste/PageHeroes";
+import { resolveSlot } from "@/components/public/real/resolve";
+import { MEDIA_SLOTS, mediaSlotPageLabel, type MediaSlotId } from "@/lib/media-slots";
+import "@/components/public/liste/liste.css";
 
-export const metadata: Metadata = { title: "Crediti foto e video", robots: { index: false } };
+export const metadata: Metadata = { title: "Crediti", description: "Chi ha disegnato le illustrazioni del sito, da dove vengono foto e video e quali caratteri usiamo.", robots: { index: false } };
 
-/** Credits for the temporary stock media (required by the Creative Commons licences of the photos). */
-export default function Page() {
-  const link = "text-terracotta-deep underline underline-offset-4";
+const ITEMS = [
+  { h: "Illustrazioni", t: "Le illustrazioni sono originali, disegnate per questo sito. Le persone hanno la forma del logo: una testa tonda e un corpo a forma di casa. Sono tutte in SVG, nessuna viene da un archivio." },
+  { h: "Caratteri", t: "Anybody per i titoli e Hanken Grotesk per i testi, entrambi con licenza SIL Open Font License, caricati tramite Google Fonts." },
+];
+
+/** Real photos and videos of the places that are online now (no placeholders), with their caption or description. */
+async function placeMedia() {
+  const ids = MEDIA_SLOTS.map((s) => s.id as MediaSlotId);
+  const found = await Promise.all(ids.map(async (id) => ({ slot: MEDIA_SLOTS.find((s) => s.id === id)!, media: await resolveSlot(id, { showPlaceholder: false }) })));
+  return found.flatMap(({ slot, media }) => (!media || media.origin === "placeholder" ? [] : [{
+    id: slot.id,
+    page: mediaSlotPageLabel(slot.page),
+    kind: media.type === "video" ? "Video" : "Foto",
+    text: media.caption || media.alt,
+  }]));
+}
+
+export default async function Page() {
+  const media = await placeMedia();
   return (
-    <Container className="py-16 sm:py-24">
-      <div className="mx-auto max-w-3xl">
-        <p className="stamp mb-4">Crediti</p>
-        <h1 className="text-[clamp(2.2rem,5vw,3.6rem)] leading-[1.02] tracking-[-0.03em]">Foto e video</h1>
-        <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-          Le immagini del sito sono provvisorie, in attesa delle foto e dei video della cooperativa. Le foto dei prodotti sono di ABES.
-        </p>
-        <h2 className="mt-12 text-2xl">Foto (Wikimedia Commons)</h2>
-        <ul className="mt-4 divide-y divide-line border-y border-line">
-          {Object.values(PHOTOS).map((p) => (
-            <li key={p.src} className="py-4">
-              <p className="font-medium">{p.alt}</p>
-              <p className="mt-1 text-sm text-ink-soft">
-                Foto di {p.credit} · licenza {p.license} · <a className={link} href={p.source} target="_blank" rel="noopener noreferrer">fonte<span className="sr-only"> (si apre in una nuova scheda)</span></a>
-              </p>
-            </li>
-          ))}
-        </ul>
-        <h2 className="mt-12 text-2xl">Video (Mixkit, licenza gratuita)</h2>
-        <ul className="mt-4 divide-y divide-line border-y border-line">
-          {Object.values(VIDEOS).map((v) => (
-            <li key={v.src} className="py-4">
-              <p className="font-medium">{v.alt}</p>
-              <p className="mt-1 text-sm text-ink-soft">
-                Video {v.credit} · <a className={link} href={v.source} target="_blank" rel="noopener noreferrer">fonte<span className="sr-only"> (si apre in una nuova scheda)</span></a>
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </Container>
+    <>
+      <CreditsHero eyebrow="Crediti" title="Chi ha fatto cosa." text="Illustrazioni, foto, video e caratteri di questo sito, con la loro provenienza." />
+      <Room tone="white" className="lr-pad">
+        <Wrap>
+          <section aria-labelledby="foto-video" className="cut cut-yellow">
+            <h2 id="foto-video" className="t-head">Fotografie e video</h2>
+            <div className={media.length ? "mt-5 grid gap-6 lg:grid-cols-2 lg:gap-10" : "mt-5"}>
+              <div className="t-body space-y-4">
+                <p>Le foto dei prodotti sono di ABES, il progetto agricolo della cooperativa (abes.bio), e sono quelle che vedi nel negozio.</p>
+                <p>Le foto e i video dei luoghi (il Giardino delle Arance, il Campo Polivalente, la casa dell&apos;accoglienza) sono della cooperativa I Locandieri. Dove c&apos;è, la didascalia accanto all&apos;immagine dice cosa mostra.</p>
+                <p>Non usiamo foto né video di repertorio. Le illustrazioni, invece, sono disegni originali fatti per questo sito.</p>
+              </div>
+              {media.length > 0 && (
+                <div>
+                  <h3 className="t-label">Immagini dei luoghi pubblicate</h3>
+                  <ul className="mt-3 border-b-2 border-[var(--c-ink)]">
+                    {media.map((m) => (
+                      <li key={m.id} className="grid gap-1 border-t-2 border-[var(--c-ink)] py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                        <span className="font-bold">{m.kind} · {m.page}</span>
+                        <span>{m.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </section>
+          <ul className="mt-6 grid gap-6 lg:grid-cols-2">
+            {ITEMS.map((i, n) => (
+              <li key={i.h} className={`cut ${["cut-orange", "cut-green"][n]}`}>
+                <h2 className="t-head">{i.h}</h2>
+                <p className="t-body mt-4">{i.t}</p>
+              </li>
+            ))}
+          </ul>
+        </Wrap>
+      </Room>
+    </>
   );
 }

@@ -12,13 +12,13 @@ const base =
   "disabled:pointer-events-none disabled:opacity-55 aria-disabled:pointer-events-none aria-disabled:opacity-55";
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "border-terracotta bg-terracotta text-white hover:border-terracotta-deep hover:bg-terracotta-deep",
+  primary: "border-ink bg-ink text-white hover:border-brand-green hover:bg-brand-green",
   secondary: "border-line-strong bg-transparent text-ink hover:border-ink hover:bg-paper-deep",
   ghost: "border-transparent text-ink hover:bg-paper-deep",
   danger: "border-danger bg-danger text-white hover:bg-ink hover:border-ink",
-  olive: "border-olive bg-olive text-white hover:border-olive-deep hover:bg-olive-deep",
-  light: "border-paper bg-paper text-ink hover:bg-paper-deep hover:border-paper-deep",
-  limone: "border-terracotta bg-terracotta text-white hover:border-terracotta-deep hover:bg-terracotta-deep",
+  olive: "border-brand-green bg-brand-green text-white hover:bg-ink hover:border-ink",
+  light: "border-white bg-white text-ink hover:bg-brand-yellow hover:border-brand-yellow",
+  limone: "border-ink bg-brand-yellow text-ink hover:bg-white",
   ink: "border-ink bg-ink text-paper hover:bg-ink-soft hover:border-ink-soft",
 };
 

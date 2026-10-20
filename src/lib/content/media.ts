@@ -33,6 +33,9 @@ export async function getMediaUsage(mediaId: string): Promise<MediaUsage> {
   if (gallery.length) out.push({ label: `Galleria di ${gallery.length} news` });
   const events = await db.select({ title: schema.events.title }).from(schema.events).where(eq(schema.events.coverId, mediaId));
   for (const e of events) out.push({ label: `Evento «${e.title}»` });
+  const [slots] = await db.select().from(schema.settings).where(eq(schema.settings.key, "mediaSlots"));
+  const slotMap = (slots?.value ?? {}) as Record<string, { mediaId?: string | null } | null>;
+  for (const [id, entry] of Object.entries(slotMap)) if (entry?.mediaId === mediaId) out.push({ label: `Foto e video reali, spazio «${id}»` });
   return out;
 }
 

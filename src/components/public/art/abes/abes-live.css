@@ -1,0 +1,2 @@
+/* ABES stations, scene vive: the Live box fills the station panel exactly like the svg it wraps. */
+.abes-live { position: absolute; inset: 0; }

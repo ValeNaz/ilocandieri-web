@@ -1,0 +1,101 @@
+/*
+ * /abes, "Dal seme al barattolo". Owner: ABES+SHOP agent.
+ * The pinned scene is driven by --p (0..1, set by <PinScene>): a paused animation whose delay is scrubbed by --p,
+ * so any keyframes can be played by scrolling. Only transform / opacity / clip-path / stroke-dashoffset animate.
+ * Reduced motion: no pin, no scrub; the seven stations stack, each scene beside its text.
+ */
+
+/* ---------- Hero ---------- */
+.abes-hero-frame { width: 100%; max-width: 44rem; margin-inline: auto; aspect-ratio: 10 / 8; border-radius: 2.5rem; overflow: hidden; background: var(--c-white); position: relative; }
+.abes-hero-stage { position: absolute; inset: 0; }
+.abes-hero-stage .stage-tilt { position: absolute; inset: 0; }
+
+/* ---------- The pinned filiera ----------
+ * v3.1: no camera sliding the whole world sideways. The seven stations are stacked; each one rises in as a rounded
+ * panel (clip-path, soft ease) over the previous, which drifts up a little and dims. Inside, the layers of the scene
+ * (whole objects) enter with a short rise. Station i owns the scroll window around i/7; every move is short (<= 28px). */
+.abes-stage { container-type: inline-size; padding-top: var(--header-h); background: var(--c-white); }
+.abes-world { position: relative; height: 100%; margin: 0; padding: 0; list-style: none; }
+.abes-world > .abes-st { position: absolute; inset: 0; z-index: calc(var(--i) + 1); display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: 3.4rem 0.9rem 0;
+  --s: calc(var(--i) / 7 - 0.012);
+  animation: abes-wipe 1s var(--ease-scroll-io) paused both; animation-delay: calc(-1s * (var(--p, 0) - (var(--i) / 7 - 0.045)) / 0.075); }
+.abes-world > .abes-st:first-child { --s: -0.2; animation: none; }
+.abes-scene { position: relative; flex: 1 1 auto; min-height: 12rem; max-height: calc((100cqw - 1.8rem) * 1.17); overflow: hidden; order: 1; border-radius: 1.75rem; }
+.abes-scene, .abes-cap { animation: abes-leave 1s var(--ease-scroll-io) paused both; animation-delay: calc(-1s * (var(--p, 0) - ((var(--i) + 1) / 7 - 0.045)) / 0.075); }
+.abes-st:last-child .abes-scene, .abes-st:last-child .abes-cap { animation: none; }
+.abes-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.abes-cap { order: 2; flex: none; padding: 0.9rem 0.35rem 1.2rem; max-width: 40rem; }
+.abes-num { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 1.6rem; line-height: 1; letter-spacing: -0.01em; }
+.abes-cap h3 { margin-top: 0.35rem; font-size: clamp(1.45rem, 6vw, 1.9rem); line-height: 1.1; }
+.abes-cap p:not(.abes-num) { margin-top: 0.55rem; font-size: 1rem; line-height: 1.5; }
+@container (min-width: 56rem) {
+  .abes-world > .abes-st { display: grid; justify-content: normal; grid-template-rows: 1fr; grid-template-columns: minmax(22rem, 38%) minmax(0, 1fr); padding: 4.4rem 1.5rem 1.5rem 0; }
+  /* The panel keeps the drawing's own proportions (840x900): nothing is cropped on wide screens, figures keep their margin */
+  .abes-scene { order: 2; border-radius: 2.5rem; max-height: none; min-height: 0; aspect-ratio: 840 / 900; height: 100%; width: auto; max-width: 100%; justify-self: center; }
+  .abes-cap { order: 1; align-self: center; padding: 0 0 2rem clamp(2.5rem, 6cqw, 6rem); max-width: none; }
+  .abes-num { font-size: clamp(2.6rem, 5cqw, 4.2rem); }
+  .abes-cap h3 { font-size: clamp(1.9rem, 3cqw, 2.8rem); margin-top: 0.8rem; }
+  .abes-cap p:not(.abes-num) { font-size: 1.1875rem; line-height: 1.6; max-width: 28rem; margin-top: 1rem; }
+}
+@keyframes abes-wipe { from { clip-path: inset(100% 0 0 0 round 2.5rem 2.5rem 0 0); } to { clip-path: inset(0 0 0 0 round 0); } }
+@keyframes abes-leave { from { opacity: 1; transform: none; } to { opacity: 0.35; transform: translate3d(0, -24px, 0) scale(0.97); } }
+
+/* Progress rail: a white pill with seven stops, the line fills continuously with the scroll */
+.abes-rail { position: absolute; z-index: 20; left: 0.9rem; right: 0.9rem; top: calc(var(--header-h) + 0.5rem); height: 2.1rem; border-radius: 999px; background: var(--c-white); border: 2px solid var(--c-ink); display: flex; align-items: center; padding: 0 0.7rem; pointer-events: none; }
+.abes-rail ol { list-style: none; margin: 0; padding: 0; display: flex; width: 100%; position: relative; }
+.abes-rail li { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; height: 1.4rem; font-family: var(--font-sans); font-weight: 700; font-size: 0.8125rem; color: var(--c-ink); gap: 0.4rem; }
+.abes-rail li i { display: block; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--c-white); border: 2px solid var(--c-ink); animation: abes-dot 1s var(--ease-scroll) paused both; animation-delay: calc(-1s * (var(--p, 0) - var(--s)) / 0.04); }
+.abes-rail li span { display: none; background: var(--c-white); padding: 0 0.3rem; position: relative; border-radius: 999px; }
+.abes-rail .abes-track, .abes-rail .abes-fill { position: absolute; left: calc(100% / 14); right: calc(100% / 14); top: 50%; height: 4px; margin-top: -2px; border-radius: 4px; }
+.abes-rail .abes-track { background: var(--c-ink); opacity: 0.18; }
+.abes-rail .abes-fill { background: var(--c-orange); transform-origin: 0 50%; animation: abes-line 1s linear paused both; animation-delay: calc(var(--p, 0) * -7s / 6); }
+@media (min-width: 900px) { .abes-rail { left: auto; right: 2rem; width: min(56rem, 66%); height: 2.6rem; } .abes-rail li span { display: inline; } .abes-rail li { font-size: 0.8rem; gap: 0.3rem; } }
+@keyframes abes-dot { from { background: var(--c-white); transform: scale(0.85); } to { background: var(--c-orange); transform: scale(1.1); } }
+@keyframes abes-line { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Layers of a station (b1..b3, max three) enter one after the other while the panel rises; whole objects, short travel. Station 1 starts complete. */
+.rv { transform-box: fill-box; transform-origin: 50% 100%; animation: rv-in 1s var(--ease-scroll) paused both; animation-delay: calc(-1s * (var(--p, 0) - var(--s, 0) - var(--o, 0)) / 0.05); }
+.b1 { --o: 0; } .b2 { --o: 0.014; } .b3 { --o: 0.028; }
+@keyframes rv-in { from { opacity: 0; transform: translate3d(0, 24px, 0) scale(0.96); } to { opacity: 1; transform: none; } }
+/* The sprout grows (uniform scale, never squashed) out of the seed while station 2 is held */
+.abes-sprout { transform-box: fill-box; transform-origin: 50% 100%; animation: abes-grow 1s var(--ease-scroll) paused both; animation-delay: calc(-1s * (var(--p, 0) - 0.19) / 0.06); }
+@keyframes abes-grow { from { transform: translate3d(0, 20px, 0) scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+/* Reduced motion: no pin, no scrub. Stations stack; the scene sits beside (or above) its text. */
+@media (prefers-reduced-motion: reduce) {
+  .abes-pin { height: auto !important; }
+  .abes-pin .pin { position: relative; height: auto; min-height: 0; overflow: visible; }
+  .abes-stage { padding-top: 0; }
+  .abes-world { height: auto; }
+  .abes-world > .abes-st { position: relative; inset: auto; width: 100%; height: auto; padding-top: 1rem; animation: none; clip-path: none; }
+  .abes-scene, .abes-cap { animation: none; }
+  .abes-scene { aspect-ratio: 10 / 9; }
+  .abes-rail { display: none; }
+  .rv, .abes-sprout { animation: none; }
+  .abes-cap { padding-block: 1.25rem 2.5rem; }
+}
+@container (min-width: 56rem) {
+  @media (prefers-reduced-motion: reduce) { .abes-scene { aspect-ratio: 840 / 900; height: auto; width: 100%; max-width: 38rem; } .abes-cap { padding-block: 3rem; } }
+}
+
+/* ---------- Real photo of the harvest: inside station 4 (wide screens, beside its text), in the photo room on phones ---------- */
+.abes-cap-media { margin-top: 1.25rem; max-width: 24rem; }
+@media (max-width: 59.99rem) { .abes-cap-media { display: none; } }
+@media (min-width: 60rem) { .abes-raccolta-m { display: none; } }
+@media (max-height: 760px) { .abes-cap-media { max-width: 17rem; } }
+
+/* ---------- Photo room: real photographs as cut-out panels ---------- */
+.ph { position: relative; display: block; overflow: hidden; background: var(--c-white); }
+.ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ph-arch { border-radius: 999px 999px 2rem 2rem; }
+.ph-soft { border-radius: 2rem; }
+.ph-leaf { border-radius: 2rem 8rem 2rem 8rem; }
+.ph-tilt { transition: transform 0.8s var(--ease-out-quint); }
+@media (prefers-reduced-motion: no-preference) { .ph-tilt:hover { transform: perspective(1200px) rotateY(-2.5deg) rotateX(1.5deg) translateY(-4px); } }
+.ph-cap { margin-top: 0.8rem; font-size: 1rem; line-height: 1.45; max-width: 34ch; }
+
+/* ---------- Values: three clear phrases (calm weight, readable size) ---------- */
+.abes-val { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1.1; letter-spacing: -0.015em; font-size: clamp(1.75rem, 3.6vw, 3.2rem); text-wrap: balance; max-width: 24ch; }
+.abes-val-row { padding-block: clamp(2rem, 5vw, 4rem); }
+.abes-val-row + .abes-val-row { border-top: 3px solid currentColor; border-radius: 2px; }
+
+

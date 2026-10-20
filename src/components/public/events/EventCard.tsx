@@ -1,47 +1,59 @@
-// INTERFACE CONTRACT (owner: EVENTS agent). Props must stay stable.
+// INTERFACE CONTRACT (owner: EVENTS agent). Props must stay stable (`featured` is an optional addition).
 import Link from "next/link";
-import { Badge, type BadgeTone } from "@/components/ui";
-import { eventDayBadge, formatEventTime } from "@/lib/events/format";
+import { eventDayBadge, formatEventDateShort, formatEventTime } from "@/lib/events/format";
 import type { EventCardData } from "@/lib/events/public";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/utils";
+import "../liste/liste.css";
 
-const labelTone = (label: string): BadgeTone =>
-  label === "Iscrizioni aperte" ? "success" : label === "Posti esauriti" ? "warning" : label === "Iscrizioni a breve" ? "olive" : "neutral";
+const weekday = new Intl.DateTimeFormat("it-IT", { weekday: "short", timeZone: "Europe/Rome" });
 
-/** Event card: the date on the left, details on the right. */
-export function EventCard({ event, headingLevel = 3 }: { event: EventCardData; headingLevel?: 2 | 3 }) {
+type TicketState = "open" | "full" | "closed" | "soon" | "past" | "none";
+const stateOf = (e: Pick<EventCardData, "isPast" | "registrationLabel">): TicketState =>
+  e.isPast ? "past" : e.registrationLabel === "Iscrizioni aperte" ? "open" : e.registrationLabel === "Posti esauriti" ? "full" : e.registrationLabel === "Iscrizioni terminate" ? "closed" : e.registrationLabel === "Iscrizioni a breve" ? "soon" : "none";
+const BADGE: Record<TicketState, string> = { open: "bd bd-green", full: "bd bd-orange", closed: "bd", soon: "bd bd-yellow", past: "bd bd-line", none: "bd" };
+
+/**
+ * An event as a cut-out ticket: the date as a huge stub on the left (colour = state of the registrations), a dashed tear line,
+ * the details on the right. The whole ticket is one link (the title's `::after`).
+ */
+export function EventCard({ event, headingLevel = 3, featured = false }: { event: EventCardData; headingLevel?: 2 | 3; featured?: boolean }) {
   const Heading = `h${headingLevel}` as "h2" | "h3";
   const { day, month } = eventDayBadge(event.startsAt);
+  const state = stateOf(event);
   return (
-    <article className={cn("group relative flex h-full overflow-hidden rounded-card border border-line bg-card text-ink transition-shadow duration-300 ease-out-expo hover:shadow-pop focus-within:shadow-pop", event.isPast && "bg-paper-deep")}>
-      <div aria-hidden="true" className={cn("flex w-20 shrink-0 flex-col items-center justify-start gap-1 border-r border-line px-2 pt-6 text-center sm:w-24", event.isPast ? "text-ink-soft" : "text-terracotta-deep")}>
-        <span className="text-[2.2rem] font-semibold leading-none tabular-nums sm:text-[2.6rem]">{day}</span>
-        <span className="text-xs font-semibold uppercase tracking-[0.1em]">{month}</span>
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        {event.coverUrl && (
-          // eslint-disable-next-line @next/next/no-img-element -- media is served by our own /media route
-          <img src={event.coverUrl} alt={event.coverAlt} loading="lazy" decoding="async" className={cn("aspect-[16/7] w-full object-cover", event.isPast && "saturate-[.55]")} />
-        )}
-        <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            {event.isPast && <Badge>Concluso</Badge>}
-            {event.categoryName && <Badge tone="terracotta">{event.categoryName}</Badge>}
-            {event.registrationLabel && <Badge tone={labelTone(event.registrationLabel)}>{event.registrationLabel}</Badge>}
+    <article className={cn("tk", featured && "tk-lg")} data-state={state}>
+      <div className="tk-in">
+        <div aria-hidden="true" className="tk-stub">
+          <span className="tk-wd">{weekday.format(event.startsAt).replace(".", "")}</span>
+          <span className="tk-day">{day}</span>
+          <span className="tk-mo">{month}</span>
+        </div>
+        <div className="tk-body">
+          {event.coverUrl && (
+            // eslint-disable-next-line @next/next/no-img-element -- media is served by our own /media route
+            <img src={event.coverUrl} alt={event.coverAlt} loading="lazy" decoding="async" className="tk-cover" />
+          )}
+          <div className="tk-text">
+            <div className="tk-badges">
+              {event.isPast && <span className={BADGE.past}>Concluso</span>}
+              {event.registrationLabel && <span className={BADGE[state]}>{event.registrationLabel}</span>}
+              {event.categoryName && <span className="bd">{event.categoryName}</span>}
+            </div>
+            <Heading className="tk-title">
+              <Link href={paths.event(event.slug)}>{event.title}</Link>
+            </Heading>
+            {event.summary && <p className="tk-sum">{event.summary}</p>}
+            <p className="tk-meta">
+              <span className="sr-only">Data: {formatEventDateShort(event.startsAt)}. </span>
+              <span><span className="sr-only">Orario: </span><time dateTime={new Date(event.startsAt).toISOString()}>Ore {formatEventTime(event.startsAt)}</time></span>
+              {event.location && <span><span className="sr-only">Luogo: </span>{event.location}</span>}
+            </p>
           </div>
-          <Heading className="text-[1.25rem] font-semibold leading-snug sm:text-[1.35rem]">
-            <Link href={paths.event(event.slug)} className="rounded after:absolute after:inset-0 after:content-[''] focus-visible:outline-offset-[-4px]">
-              {event.title}
-            </Link>
-          </Heading>
-          {event.summary && <p className="line-clamp-3 text-[0.98rem] text-ink-soft">{event.summary}</p>}
-          <p className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 pt-2 text-sm text-ink-soft">
-            <span><span className="sr-only">Orario: </span>{formatEventTime(event.startsAt)}</span>
-            {event.location && <span><span className="sr-only">Luogo: </span>{event.location}</span>}
-          </p>
         </div>
       </div>
+      <i aria-hidden="true" className="tk-n tk-n1" />
+      <i aria-hidden="true" className="tk-n tk-n2" />
     </article>
   );
 }

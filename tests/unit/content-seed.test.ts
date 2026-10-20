@@ -27,7 +27,7 @@ describe("content seed", () => {
     const home = await getPageBlocks("home");
     expect(home.blocks.map((b) => b.type)).toEqual(["hero", "intro", "pillars", "places", "abes_showcase", "events_highlight", "news_highlight", "cta"]);
     const hero = home.blocks[0]!;
-    expect(hero.type === "hero" && hero.data.title).toBe("Diamo nuova vita ai luoghi. E nuove possibilità alle persone.");
+    expect(hero.type === "hero" && hero.data.title).toBe("Luoghi che tornano a vivere.");
   });
 
   it("never overwrites admin edits and honours visibility", async () => {

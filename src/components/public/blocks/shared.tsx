@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ButtonLink, Pattern } from "@/components/ui";
+import Link from "next/link";
 import type { Cta } from "@/lib/content/blocks";
 import type { ImageMap, ResolvedImage } from "@/lib/content/queries";
 import { cn } from "@/lib/utils";
@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 export type PatternVariant = "agrumi" | "maiolica" | "campi";
 export type HeadingLevel = 1 | 2;
 
-/** Real image from the media library, or the decorative <Pattern> when none was chosen (never a stock/grey placeholder). */
-export function MediaImage({ image, fallback = "campi", className, priority }: { image?: ResolvedImage | null; fallback?: PatternVariant; className?: string; priority?: boolean }) {
-  if (!image) return <Pattern variant={fallback} className={className} />;
+/** Real image from the media library. Without one nothing is drawn here: the caller shows an illustration instead (never stock). */
+export function MediaImage({ image, className, priority }: { image?: ResolvedImage | null; fallback?: PatternVariant; className?: string; priority?: boolean }) {
+  if (!image) return null;
   return (
     // eslint-disable-next-line @next/next/no-img-element -- local /media files, sized by CSS
     <img src={image.url} alt={image.alt} width={image.width ?? undefined} height={image.height ?? undefined} loading={priority ? "eager" : "lazy"} decoding="async" className={cn("object-cover", className)} />
@@ -53,19 +53,21 @@ export function Paragraphs({ text, className }: { text: string; className?: stri
   );
 }
 
-/** A validated CTA rendered as a button. `dark` = on the night field, `ink` = on the citrus band. */
-export function CtaLink({ cta, kind = "primary", dark, ink, size = "md" }: { cta: Cta | null | undefined; kind?: "primary" | "secondary"; dark?: boolean; ink?: boolean; size?: "md" | "lg" }) {
+/**
+ * A validated CTA as a pill (kit.css): primary = solid, secondary = line. The pill adapts to its room (white pill on
+ * green). `dark` / `ink` / `size` are kept for old call sites and no longer change the look.
+ */
+export function CtaLink({ cta, kind = "primary", className }: { cta: Cta | null | undefined; kind?: "primary" | "secondary"; dark?: boolean; ink?: boolean; size?: "md" | "lg"; className?: string }) {
   if (!cta) return null;
-  if (dark || ink) {
-    const primary = dark ? "light" : "ink";
-    const outline = dark ? "border-paper/50 text-paper hover:border-paper hover:bg-paper/10" : "border-ink/60 text-ink hover:border-ink hover:bg-ink/10";
-    return kind === "primary" ? (
-      <ButtonLink href={cta.href} variant={primary} size={size}>{cta.label}</ButtonLink>
-    ) : (
-      <ButtonLink href={cta.href} variant="secondary" size={size} className={outline}>{cta.label}</ButtonLink>
-    );
-  }
-  return <ButtonLink href={cta.href} variant={kind === "primary" ? "primary" : "secondary"} size={size}>{cta.label}</ButtonLink>;
+  const cls = cn("pill", kind === "primary" ? "pill-solid" : "pill-line", className);
+  const label = <>{cta.label}{kind === "primary" && <> <span className="arrow" aria-hidden="true">→</span></>}</>;
+  if (cta.href.startsWith("/")) return <Link href={cta.href} className={cls}>{label}</Link>;
+  const external = /^https?:/i.test(cta.href);
+  return (
+    <a href={cta.href} className={cls} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+      {label}{external && <span className="sr-only"> (si apre in una nuova scheda)</span>}
+    </a>
+  );
 }
 
 /** Heading with the right level for the position of the block on the page. */
@@ -74,19 +76,14 @@ export function BlockHeading({ level, className, children, id }: { level: Headin
   return <Tag id={id} className={className}>{children}</Tag>;
 }
 
-/** Small label above a title. */
+/** Small label above a title (kit.css .t-label): only when it adds information. */
 export function OptionalEyebrow({ text, className }: { text: string; className?: string }) {
   if (!text) return null;
-  return <p className={cn("stamp mb-4", className)}>{text}</p>;
+  return <p className={cn("t-label mb-4", className)}>{text}</p>;
 }
 
-/** Title sizes (Bricolage Grotesque display): large and tight; weight comes from the h1-h4 base. */
-export const TITLE = {
-  hero: "text-[clamp(2.4rem,5.4vw,4.8rem)] leading-[1] tracking-[-0.032em]",
-  scene: "text-[clamp(2.1rem,4.4vw,3.8rem)] leading-[1.02] tracking-[-0.03em]",
-  section: "text-[clamp(1.9rem,3.6vw,3rem)] leading-[1.05] tracking-[-0.026em]",
-  panel: "text-[clamp(1.35rem,2.1vw,1.7rem)] leading-[1.15] tracking-[-0.02em]",
-} as const;
+/** Title sizes: the kit.css scale (Anybody 700, width 100%). */
+export const TITLE = { hero: "t-giant", scene: "t-scene", section: "t-scene", panel: "t-head" } as const;
 
 /** Rounded photo frame used across the site. */
-export const PHOTO = "unveil w-full rounded-[1.5rem]";
+export const PHOTO = "w-full rounded-[1.75rem]";

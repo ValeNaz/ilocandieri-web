@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "@/components/public/journey.css";
+import "@/components/public/kit/kit.css";
 import { ConsentManager } from "@/components/public/cookies/ConsentManager";
 import { Footer } from "@/components/public/Footer";
 import { Header } from "@/components/public/Header";

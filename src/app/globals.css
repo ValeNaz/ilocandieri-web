@@ -1,19 +1,15 @@
 @import "tailwindcss";
 
-/* Hallmark · genre: custom (bespoke) · vibe: "Sicilian land coming back to life, full light, contemporary"
- * paper oklch(97.8% 0.007 85) · night oklch(23% 0.036 168) · accent oklch(70% 0.175 40) logo orange
- * display: Bricolage Grotesque · body: Instrument Sans · axes: light / grotesk-sans / warm
- * design-system: DESIGN.md · designed-as-app
- */
+/* I Locandieri · "La casa fatta di persone" · backgrounds: white + the three logo colors only (DESIGN.md) */
 /*
  * Design tokens. Colors are OKLCH. Contrast pairs are verified by tests/unit/contrast.test.ts (WCAG AA).
  */
 @theme static {
-  --color-paper: oklch(97.8% 0.007 85);
-  --color-paper-deep: oklch(94.4% 0.016 80);
-  --color-card: oklch(99.6% 0.003 85);
-  --color-ink: oklch(19% 0.014 55);
-  --color-ink-soft: oklch(44% 0.014 60);
+  --color-paper: oklch(100% 0 0); /* white */
+  --color-paper-deep: oklch(96.6% 0.018 165); /* admin surfaces only, never on the public site */
+  --color-card: oklch(100% 0 0);
+  --color-ink: oklch(19% 0.04 168); /* text and line art only, never a background */
+  --color-ink-soft: oklch(40% 0.045 168);
 
   /* Logo colors: the three figures of the mark (a house made of people) */
   --color-brand-orange: oklch(68.4% 0.178 37); /* #f16842 */
@@ -21,11 +17,11 @@
   --color-brand-green: oklch(52.8% 0.106 167); /* #0a7d5f */
 
   /* Notte: the immersive dark field, the logo green taken to night */
-  --color-night: oklch(23% 0.036 168);
-  --color-night-soft: oklch(83% 0.03 160); /* secondary text on night */
+  --color-night: oklch(52.8% 0.106 167); /* = brand green */
+  --color-night-soft: oklch(98% 0.01 160); /* text on green */
 
   /* Agrume: the bright accent (the logo orange), used as a fill or on night (never as text on paper) */
-  --color-citrus: oklch(70% 0.175 40);
+  --color-citrus: oklch(68.4% 0.178 37); /* = brand orange */
   --color-line: oklch(91% 0.01 75);
   --color-line-strong: oklch(62% 0.014 70); /* form control borders, >= 3:1 (WCAG 1.4.11) */
 
@@ -56,9 +52,9 @@
   --color-warning: oklch(42% 0.09 70);
   --color-warning-soft: oklch(93% 0.07 90);
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-stencil: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-anybody), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-stencil: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
 
   --radius-card: 1.25rem;
   --radius-control: 0.75rem;
@@ -70,6 +66,13 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   --header-h: 4.75rem;
+
+  /* Public site: the four room colors (white + logo). Use via .room-* in kit.css or these vars in SVG. */
+  --c-white: #ffffff;
+  --c-orange: #f16842;
+  --c-yellow: #f1cc26;
+  --c-green: #0a7d5f;
+  --c-ink: oklch(19% 0.04 168);
 }
 
 @layer base {
@@ -97,10 +100,10 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 650;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
-    font-variation-settings: "opsz" 96;
+    font-weight: 700;
+    font-stretch: 100%;
+    letter-spacing: -0.018em;
+    line-height: 1.06;
     overflow-wrap: break-word;
     min-width: 0;
     text-wrap: balance;

@@ -1,0 +1,54 @@
+/* /lavora-con-noi: form fields (always visible labels, 48px targets, strong focus) and page shapes. */
+.cf-field { display: grid; gap: 0.5rem; }
+.cf-label { font-family: var(--font-display); font-weight: 700; font-size: 1rem; line-height: 1.2; color: var(--c-ink); }
+.cf-label .cf-opt { font-family: var(--font-sans); font-weight: 500; font-size: 0.9rem; color: var(--c-ink); opacity: 0.72; }
+.cf-label .cf-req { color: var(--c-ink); }
+.cf-hint { font-size: 0.9375rem; line-height: 1.45; color: var(--c-ink); opacity: 0.8; }
+.cf-control {
+  width: 100%; min-height: 3rem; padding: 0.7rem 1rem; font: inherit; font-size: 1.0625rem; line-height: 1.4;
+  color: var(--c-ink); background: var(--c-white); border: 2px solid var(--c-ink); border-radius: 0.9rem;
+  transition: box-shadow 0.18s var(--ease-out-expo), border-color 0.18s;
+}
+.cf-control::placeholder { color: var(--c-ink); opacity: 0.5; }
+textarea.cf-control { min-height: 9rem; resize: vertical; }
+select.cf-control { appearance: none; padding-right: 2.8rem; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23051f19' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='m5 8 5 5 5-5'/></svg>"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.1rem; }
+.cf-control:hover { border-color: var(--c-green); }
+.cf-control:focus-visible { outline: 3px solid var(--c-ink); outline-offset: 3px; border-color: var(--c-ink); }
+.cf-control[aria-invalid="true"] { border-width: 3px; border-color: var(--color-danger); }
+.cf-err { display: flex; gap: 0.5rem; align-items: flex-start; font-weight: 700; font-size: 0.975rem; line-height: 1.4; color: var(--color-danger); }
+.cf-err::before { content: "!"; flex: none; display: inline-grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-top: 0.05rem; border-radius: 0.3rem; background: var(--color-danger); color: var(--c-white); font-size: 0.85rem; font-family: var(--font-display); }
+.cf-summary { border: 3px solid var(--c-ink); background: var(--c-yellow); border-radius: 1.1rem; padding: 1rem 1.25rem; font-weight: 700; }
+.cf-summary:focus-visible { outline: 3px solid var(--c-ink); outline-offset: 3px; }
+
+/* checkbox: a big square target */
+.cf-check { display: grid; grid-template-columns: 1.75rem 1fr; gap: 0.9rem; align-items: start; }
+.cf-check input { appearance: none; width: 1.75rem; height: 1.75rem; margin-top: 0.1rem; border: 2px solid var(--c-ink); border-radius: 0.45rem; background: var(--c-white); cursor: pointer; display: grid; place-items: center; transition: background-color 0.15s; }
+.cf-check input:checked { background: var(--c-ink); }
+.cf-check input:checked::after { content: ""; width: 0.8rem; height: 0.45rem; border-left: 3px solid var(--c-white); border-bottom: 3px solid var(--c-white); transform: translateY(-2px) rotate(-45deg); }
+.cf-check input:focus-visible { outline: 3px solid var(--c-ink); outline-offset: 3px; }
+.cf-check input[aria-invalid="true"] { border-width: 3px; border-color: var(--color-danger); }
+.cf-check label { font-size: 1rem; line-height: 1.5; cursor: pointer; min-height: 2.75rem; }
+.cf-check a { text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+
+/* file picker: the real input is invisible but stays focusable and labelled; a styled stand-in sits under it */
+.cf-file { position: relative; display: flex; align-items: center; gap: 1rem; min-height: 3.5rem; padding: 0.5rem 0.75rem; border: 2px dashed var(--c-ink); border-radius: 0.9rem; background: var(--c-white); }
+.cf-file:hover { border-color: var(--c-green); }
+.cf-file:has(input:focus-visible) { outline: 3px solid var(--c-ink); outline-offset: 3px; }
+.cf-file[data-invalid="true"] { border: 3px solid var(--color-danger); }
+.cf-file input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.cf-file .cf-pick { flex: none; display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 1.1rem; border-radius: 999px; background: var(--c-ink); color: var(--c-white); font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 0.95rem; }
+.cf-file .cf-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.975rem; }
+
+/* submit */
+.cf-submit { width: 100%; min-height: 3.5rem; font-size: 1.05rem; }
+@media (min-width: 640px) { .cf-submit { width: auto; padding-inline: 2.5rem; } }
+.cf-submit[disabled] { opacity: 0.7; cursor: progress; transform: none; }
+
+/* Open positions: rows, not cards */
+.cf-row { border-top: 3px solid var(--c-ink); }
+.cf-panel-a { border-radius: 2rem 7rem 2rem 2rem; }
+
+/* Areas of collaboration: one calm list, not a wall of headlines */
+.cf-area { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.15rem, 1.6vw, 1.4rem); line-height: 1.25; }
+/* Trade names under the hero people: sentence case, readable, not a row of labels */
+.cf-trade { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; line-height: 1.2; }

@@ -1,0 +1,76 @@
+/* Pagina Tradizione: stanze-ingrediente, apertura, striscia dei nomi. Solo transform / opacity / clip-path / stroke-dashoffset. */
+.scene-svg { display: block; width: 100%; height: 100%; }
+
+.ing { padding-block: clamp(4rem, 8vw, 7rem); }
+@media (min-width: 1024px) { .ing { min-height: 100svh; display: flex; align-items: center; } .ing > div { width: 100%; } }
+.ing-grid { display: grid; gap: 2rem; align-items: center; }
+.ing-obj { position: relative; aspect-ratio: var(--ar, 14/15); width: 100%; }
+.ing-obj > svg { position: absolute; inset: 0; overflow: hidden; }
+.ing-real { margin-top: 2.25rem; }
+.ing-real figcaption { color: var(--fg); }
+.ing-label { margin-bottom: 1.1rem; color: var(--fg); }
+.ing-text h2 { margin-bottom: 1.1rem; font-size: clamp(1.75rem, 2.9vw, 2.6rem); line-height: 1.12; max-width: 18ch; }
+.ing-text .t-body + .t-body { margin-top: 1rem; }
+.ing-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+.ing-note { margin-top: 1.1rem; font-size: 0.95rem; max-width: 52ch; }
+@media (min-width: 1024px) {
+  .ing-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0; }
+  .ing-obj, .ing-text { grid-row-start: 1; }
+  .ing-grid[data-side="left"] .ing-obj { grid-column: 1 / span 6; }
+  .ing-grid[data-side="left"] .ing-text { grid-column: 8 / span 5; }
+  .ing-grid[data-side="right"] .ing-obj { grid-column: 7 / span 6; }
+  .ing-grid[data-side="right"] .ing-text { grid-column: 1 / span 5; }
+}
+@media (max-width: 1023px) { .ing-obj { max-width: 34rem; margin-inline: auto; } }
+
+/* Apertura */
+.tr-hero { position: relative; margin-top: auto; margin-inline: -3rem; height: clamp(320px, min(58svh, 55vw), 640px); }
+.tr-hero .stage-tilt { position: absolute; inset: 0; }
+.tr-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: var(--c-green); z-index: -1; }
+/* Telefono: cornice fissa 10/9 senza sbordare: si vede sempre la fascia x 461-1139 (tempio, ulivi, persone interi) */
+@media (max-width: 639px) { .tr-hero { margin-inline: 0; height: auto; aspect-ratio: 10 / 9; } }
+
+/* Striscia dei nomi */
+.names { padding-block: 1.1rem; }
+.names .dot { width: 0.75rem; height: 0.75rem; border-radius: 999px; background: var(--c-green); display: inline-block; flex: none; }
+
+/* Chiusura: il logo entra sempre intero */
+
+/* Scene vive (kit <Live>): il contenitore riempie il riquadro come prima lo faceva l'SVG */
+.tr-live { position: absolute; inset: 0; }
+.tr-live > svg { position: absolute; inset: 0; overflow: hidden; }
+.tr-live .lv-drop, .tr-lv-flit, .tr-lv-olive { transform-box: fill-box; transform-origin: 50% 50%; }
+.tr-lv-carry, .tr-lv-arrive { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* Movimenti propri: i nomi contengono "lv-" così il kit li tiene in pausa finché la scena non è in vista */
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .tr-lv-branch { animation: tr-lv-branch 7s var(--ease-in-out-sine) infinite alternate; }
+  .live[data-live] .tr-lv-carry { animation: tr-lv-carry 15s linear infinite both; animation-delay: calc(var(--d, 0) * 1s + 2.2s); }
+  .live[data-live] .tr-lv-arrive { animation: tr-lv-arrive 2.2s var(--ease-out-quint) 1.4s both; }
+  .live[data-live] .tr-lv-olive { animation: tr-lv-olive 7s var(--ease-in-out-sine) infinite both; animation-delay: calc(var(--d, 0) * 1s); }
+  .live[data-live] .tr-lv-flit { animation: tr-lv-flit 7s var(--ease-in-out-sine) infinite; animation-delay: calc(var(--d, 0) * -1s); }
+}
+@keyframes tr-lv-branch { from { transform: rotate(-1.6deg); } to { transform: rotate(1.6deg); } }
+/* chi porta la cassetta: si gira, va verso l'albero, si gira di nuovo e torna alla pila (sempre nel verso in cui guarda) */
+@keyframes tr-lv-carry {
+  0%, 6% { transform: none; }
+  8% { transform: scaleX(-1); }
+  46% { transform: translateX(-110px) scaleX(-1); }
+  48%, 56% { transform: translateX(-110px); }
+  94%, 100% { transform: none; }
+}
+@keyframes tr-lv-arrive { from { transform: translateX(140px); } to { transform: none; } }
+/* l'oliva matura: cresce sul ramo, cade nel piattino rimpicciolendo alla misura delle altre, poi sparisce e ricresce */
+@keyframes tr-lv-olive {
+  0% { transform: scale(0); }
+  12%, 46% { transform: none; }
+  58% { transform: translate(var(--dx), var(--dy)) scale(0.42); animation-timing-function: linear; }
+  92% { transform: translate(var(--dx), var(--dy)) scale(0.42); }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); }
+}
+@keyframes tr-lv-flit {
+  0%, 100% { transform: none; }
+  25% { transform: translate(34px, -26px); }
+  50% { transform: translate(64px, -4px); }
+  75% { transform: translate(30px, 16px); }
+}

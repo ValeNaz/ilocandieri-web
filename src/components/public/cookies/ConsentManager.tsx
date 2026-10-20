@@ -3,7 +3,7 @@
 import Script from "next/script";
 import Link from "next/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Button } from "@/components/ui";
+import "../chrome.css";
 import { paths } from "@/lib/paths";
 
 export const CONSENT_COOKIE = "il_consent";
@@ -72,16 +72,17 @@ export function ConsentManager({ gaId }: { gaId: string }) {
         </>
       )}
       {showBanner && (
-        <div role="dialog" aria-modal="false" aria-labelledby="cookie-title" aria-describedby="cookie-desc"
-          className="fixed inset-x-3 bottom-3 z-[90] mx-auto max-w-3xl rounded-card border border-line bg-card p-5 shadow-pop sm:inset-x-6 sm:bottom-6 sm:p-6">
-          <h2 id="cookie-title" className="text-lg font-semibold">Cookie di misurazione</h2>
-          <p id="cookie-desc" className="mt-2 text-[0.95rem] text-ink-soft">
-            Usiamo Google Analytics per capire come viene usato il sito, solo se acconsenti. Il sito funziona allo stesso modo anche se rifiuti.{" "}
-            <Link href={paths.cookies} className="font-medium text-terracotta-deep underline">Cookie Policy</Link>
-          </p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Button variant="secondary" onClick={() => choose("granted")}>Accetta</Button>
-            <Button variant="secondary" onClick={() => choose("denied")}>Rifiuta</Button>
+        <div role="dialog" aria-modal="false" aria-labelledby="cookie-title" aria-describedby="cookie-desc" className="ck">
+          <div className="ck-body">
+            <h2 id="cookie-title" className="ck-title">Cookie di misurazione</h2>
+            <p id="cookie-desc" className="ck-text">
+              Usiamo Google Analytics per capire come viene usato il sito, solo se acconsenti. Se rifiuti, il sito funziona allo stesso modo.{" "}
+              <Link href={paths.cookies}>Leggi la Cookie Policy</Link>
+            </p>
+            <div className="ck-actions">
+              <button type="button" className="pill pill-solid" onClick={() => choose("granted")}>Accetta</button>
+              <button type="button" className="pill pill-line" onClick={() => choose("denied")}>Rifiuta</button>
+            </div>
           </div>
         </div>
       )}

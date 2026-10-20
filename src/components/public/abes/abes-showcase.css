@@ -1,0 +1,30 @@
+/* ABES showcase: a lively grid of tiles in different sizes and logo colours, photos cut out in rounded shapes, soft and slight 3D tilt on hover. */
+.shw-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; list-style: none; margin: 0; padding: 0; }
+@media (min-width: 768px) { .shw-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; grid-auto-flow: dense; } }
+@media (min-width: 1100px) { .shw-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.shw-grid > li { perspective: 1000px; display: flex; min-width: 0; }
+.shw-l { grid-column: span 2; }
+@media (min-width: 1100px) { .shw-xl { grid-column: span 2; grid-row: span 2; } }
+@media (max-width: 1099px) { .shw-xl { grid-column: span 2; } }
+.shw-tile { --rx: 0deg; --ry: 0deg; position: relative; display: flex; flex-direction: column; width: 100%; padding: 0.9rem; border-radius: 2rem; background: var(--tile); color: var(--tfg); transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 0.9s var(--ease-out-quint); text-decoration: none; }
+.shw-tile:focus-visible { outline: 3px solid var(--c-ink); outline-offset: 4px; transform: translateY(-6px); }
+.shw-l .shw-tile { flex-direction: row; align-items: center; gap: 1rem; }
+.shw-photo { position: relative; border-radius: 1.4rem; flex: 1 1 auto; min-height: 9rem; aspect-ratio: 1; overflow: hidden; background: var(--c-white); transform: translateZ(14px); transition: transform 0.9s var(--ease-out-quint); }
+.shw-xl .shw-photo { min-height: 16rem; }
+.shw-l .shw-photo { flex: 0 0 42%; aspect-ratio: 1; }
+.shw-s0 { border-radius: 999px 999px 1.4rem 1.4rem; }
+.shw-s1 { border-radius: 1.4rem; }
+.shw-s2 { border-radius: 50%; }
+.shw-s3 { border-radius: 1.4rem 5rem 1.4rem 5rem; }
+.shw-body { padding: 0.8rem 0.35rem 0.4rem; display: flex; flex-direction: column; gap: 0.3rem; flex: 1 1 auto; transform: translateZ(8px); }
+.shw-l .shw-body { padding: 0.4rem 0.6rem 0.4rem 0; }
+.shw-cat { font-family: var(--font-sans); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.04em; }
+.shw-name { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; font-size: clamp(1.05rem, 2.6vw, 1.35rem); text-wrap: balance; }
+.shw-xl .shw-name { font-size: clamp(1.4rem, 3vw, 2.1rem); }
+.shw-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.7rem; font-size: 1rem; font-weight: 700; }
+.shw-go { margin-top: auto; padding-top: 0.5rem; font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; min-height: 2.75rem; display: inline-flex; align-items: center; gap: 0.4rem; }
+.shw-tile:hover .shw-go span:first-child, .shw-tile:focus-visible .shw-go span:first-child { text-decoration: underline; text-underline-offset: 0.25em; }
+.shw-tile:hover .shw-photo { transform: translateZ(20px); }
+@media (prefers-reduced-motion: reduce) { .shw-tile, .shw-photo { transform: none !important; transition: none; } }
+.shw-empty { border-radius: 2rem; background: var(--c-yellow); color: var(--c-ink); padding: clamp(1.5rem, 4vw, 3rem); display: grid; gap: 1.5rem; align-items: center; }
+@media (min-width: 768px) { .shw-empty { grid-template-columns: 14rem 1fr; } }

@@ -1,0 +1,52 @@
+/*
+ * Scene vive dell'hub /luoghi e del Campo (agente "luoghi B"). Si appoggia al kit Live (kit/live.css): qui solo i
+ * percorsi speciali (chi cammina e si gira, chi entra da una porta o da un cancello rimpicciolendo) e il cancello che
+ * si apre. Stato di riposo = fotogramma finale (movimento ridotto / senza JS). Solo transform.
+ */
+.lb-walk, .lb-gate, .lb-garden, .lb-home { transform-box: view-box; transform-origin: 0 0; }
+
+/* cancello: aperto a riposo; all'ingresso della scena si apre una volta */
+.lb-leaf-l, .lb-leaf-r { transform-box: view-box; transform-origin: var(--hx, 0px) 0; transform: scaleX(0.16); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .lb-leaf-l, .live[data-live] .lb-leaf-r { animation: lb-leaf 2.2s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) 1.2s both; }
+  /* chi va avanti e indietro e si gira in fondo (--x0 / --x1 in px, --t in s) */
+  .live[data-live] .lb-walk { animation: lb-walk calc(var(--t, 14) * 1s) linear infinite both; animation-delay: calc(var(--d, 0) * 1s); }
+  /* chi entra: dal bordo al cancello / alla porta, poi sparisce dentro */
+  .live[data-live] .lb-gate { animation: lb-gate 17s linear 2.2s infinite both; }
+  .live[data-live] .lb-garden { animation: lb-garden 15s linear 2s infinite both; }
+  .live[data-live] .lb-home { animation: lb-home 16s linear 2.4s infinite both; }
+  .live:not([data-live="on"]) [class*="lb-"] { animation-play-state: paused; }
+}
+
+@keyframes lb-leaf { from { transform: scaleX(1); } to { transform: scaleX(0.16); } }
+@keyframes lb-walk {
+  0% { transform: translate(var(--x0, 0px), 0); animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  48% { transform: translate(var(--x1, 0px), 0); }
+  50% { transform: translate(var(--x1, 0px), 0) scaleX(-1); animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1); }
+  98% { transform: translate(var(--x0, 0px), 0) scaleX(-1); }
+  100% { transform: translate(var(--x0, 0px), 0); }
+}
+/* GateScene: chi porta la cassetta arriva da sinistra, sale il vialetto e passa il cancello (si allontana: rimpicciolisce) */
+@keyframes lb-gate {
+  0% { transform: translate(-150px, 0) scale(0); }
+  4% { transform: translate(-140px, 0) scale(1); }
+  52% { transform: translate(150px, -4px) scale(1); }
+  64% { transform: translate(204px, -40px) scale(0.8); }
+  80% { transform: translate(208px, -70px) scale(0.58); }
+  84%, 100% { transform: translate(208px, -72px) scale(0); }
+}
+/* GardenTeaser: dal bordo del pannello alla porta del casolare */
+@keyframes lb-garden {
+  0% { transform: translate(-360px, 0); }
+  55% { transform: translate(60px, 0); }
+  75% { transform: translate(110px, -80px) scale(0.62); }
+  79%, 100% { transform: translate(110px, -82px) scale(0); }
+}
+/* WelcomeTeaser: chi arriva con la valigia entra dalla porta aperta */
+@keyframes lb-home {
+  0% { transform: translate(150px, 0); }
+  50% { transform: translate(-100px, 0); }
+  66% { transform: translate(-174px, -50px) scale(0.72); }
+  70%, 100% { transform: translate(-174px, -52px) scale(0); }
+}

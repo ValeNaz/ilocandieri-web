@@ -24,7 +24,9 @@ const srgbToLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1
 /** Relative luminance of a token declared as #rrggbb or oklch(L% C H). */
 function luminance(name: string): number {
   if (name === "white") return 1;
-  const re = new RegExp(`--color-${name}:\\s*(?:(#[0-9a-fA-F]{6})|oklch\\(\\s*([\\d.]+)%\\s+([\\d.]+)\\s+([\\d.]+)\\s*\\))`);
+  // Public room colours are declared as --c-<name>; they are addressed here as "c-<name>".
+  const prop = name.startsWith("c-") ? `--${name}` : `--color-${name}`;
+  const re = new RegExp(`${prop}:\\s*(?:(#[0-9a-fA-F]{6})|oklch\\(\\s*([\\d.]+)%\\s+([\\d.]+)\\s+([\\d.]+)\\s*\\))`);
   const m = re.exec(css);
   if (!m) throw new Error(`token ${name} not found`);
   const [r, g, b] = m[1]
@@ -40,6 +42,9 @@ const ratio = (a: string, b: string) => {
 
 // [foreground, background, minimum ratio] - WCAG AA: 4.5 normal text, 3 for large text / UI.
 const PAIRS: [string, string, number][] = [
+  // Public rooms (DESIGN.md colour law): text on white / orange / yellow / green fields
+  ["c-ink", "c-white", 4.5], ["c-ink", "c-orange", 4.5], ["c-ink", "c-yellow", 4.5], ["c-white", "c-green", 4.5], ["c-green", "c-white", 4.5],
+  ["c-yellow", "c-green", 3], ["c-orange", "c-white", 3], ["c-white", "c-ink", 4.5],
   // Body text on every paper surface
   ["ink", "paper", 4.5], ["ink", "card", 4.5], ["ink", "paper-deep", 4.5], ["ink-soft", "paper", 4.5], ["ink-soft", "card", 4.5], ["ink-soft", "paper-deep", 4.5],
   ["ink", "kraft", 4.5], ["ink", "limone", 4.5], ["ink", "sage-soft", 4.5], ["ink", "terracotta-soft", 4.5], ["ink", "cobalto-soft", 4.5], ["ink", "arancio", 4.5],
@@ -57,8 +62,8 @@ const PAIRS: [string, string, number][] = [
   ["white", "danger", 4.5], ["danger", "danger-soft", 4.5], ["danger", "card", 4.5], ["success", "success-soft", 4.5], ["warning", "warning-soft", 4.5],
   ["ink", "success-soft", 4.5], ["ink", "danger-soft", 4.5],
   // Night field and citrus fills
-  ["paper", "night", 4.5], ["night-soft", "night", 4.5], ["citrus", "night", 4.5], ["ink", "citrus", 4.5], ["ink-soft", "paper-deep", 4.5],
-  ["brand-yellow", "night", 4.5], ["ink", "brand-yellow", 4.5], ["paper", "brand-green", 4.5],
+  ["paper", "night", 4.5], ["night-soft", "night", 4.5], ["ink", "citrus", 4.5], ["ink-soft", "paper-deep", 4.5],
+  ["brand-yellow", "night", 3], ["ink", "brand-yellow", 4.5], ["paper", "brand-green", 4.5],
   // UI component boundaries (WCAG 1.4.11)
   ["line-strong", "paper", 3], ["line-strong", "card", 3],
 ];

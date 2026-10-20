@@ -8,6 +8,7 @@ import { parseBlockData, type BlockType, type PageKey } from "../../src/lib/cont
 import { getDefaultTemplates } from "../../src/lib/email/templates";
 import "../../src/lib/content/email-templates";
 import type { SeedFn } from "../seed-types";
+import { COPY } from "../copy";
 
 type Seed = { type: BlockType; data: Record<string, unknown> };
 
@@ -175,7 +176,7 @@ const seed: SeedFn = async ({ db, schema, newId, log }) => {
     for (const [i, b] of blocks.entries()) {
       const slot = b.data.slot as string;
       if (existingSlots.has(slot)) continue;
-      const parsed = parseBlockData(b.type, b.data);
+      const parsed = parseBlockData(b.type, { ...b.data, ...(COPY[pageKey]?.[slot] ?? {}) });
       if (!parsed.success) throw new Error(`content seed: invalid ${b.type}/${slot} on ${pageKey}: ${parsed.error.message}`);
       await db.insert(schema.pageBlocks).values({ id: newId(), pageId: page.id, type: b.type, position: startFresh ? i : position++, visible: true, data: parsed.data });
       inserted++;

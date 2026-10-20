@@ -1,7 +1,9 @@
-import { Container, ButtonLink, Eyebrow, Heading, Pattern, Section } from "@/components/ui";
+import "@/components/public/kit/kit.css";
+import Link from "next/link";
 import { Footer } from "@/components/public/Footer";
 import { Header } from "@/components/public/Header";
-import "@/components/public/journey.css";
+import { LostHero } from "@/components/public/liste/PageHeroes";
+import { paths } from "@/lib/paths";
 
 export const dynamic = "force-dynamic";
 
@@ -9,21 +11,16 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <main>
-        <Section className="py-20 sm:py-32">
-          <Container className="grid items-center gap-12 md:grid-cols-[1.2fr_1fr]">
-            <div>
-              <Eyebrow>Errore 404</Eyebrow>
-              <Heading as="h1" size="display">Questa strada non porta da nessuna parte.</Heading>
-              <p className="mt-6 max-w-lg text-lg text-ink-soft">La pagina che cerchi non esiste più o non è mai esistita. Torna alla home oppure scrivici: ti aiutiamo volentieri.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/">Torna alla home</ButtonLink>
-                <ButtonLink href="/contatti" variant="secondary">Contattaci</ButtonLink>
-              </div>
-            </div>
-            <Pattern variant="agrumi" className="hidden aspect-square rounded-[1.75rem] md:block" />
-          </Container>
-        </Section>
+      <main id="contenuto">
+        <LostHero
+          eyebrow="Errore 404"
+          title="Questa strada non porta a nessuna pagina."
+          text="L'indirizzo non esiste più o non è mai esistito. Torna alla home, oppure scrivici: ti aiutiamo volentieri."
+          actions={<>
+            <Link href={paths.home} className="pill pill-solid">Torna alla home <span className="arrow" aria-hidden="true">→</span></Link>
+            <Link href={paths.contacts} className="pill pill-line">Contattaci</Link>
+          </>}
+        />
       </main>
       <Footer />
     </>

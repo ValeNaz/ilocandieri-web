@@ -1,0 +1,45 @@
+/*
+ * Life loops of the list scenes that need a special path (kit live.css covers the rest). Same rules as the kit:
+ * they run only inside a <Live> that is on screen, pause when it leaves, and reduced motion keeps the rest frame.
+ *   .lv-ls-climb  someone walks up the winding path of the 404 hill and goes into the house, shrinking with distance
+ *   .lv-ls-post   a letter slides into the letterbox slot, then a new one is in the hand
+ */
+.lv-ls-climb { transform-box: view-box; transform-origin: 0 0; }
+.lv-ls-post { transform-box: fill-box; transform-origin: 100% 50%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .lv-ls-climb { animation: lv-ls-climb 18s linear infinite both; animation-delay: calc(var(--d, 0) * 1s); }
+  .live[data-live] .lv-ls-post { animation: lv-ls-post 5.2s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite both; animation-delay: calc(var(--d, 0) * 1s); }
+  .live:not([data-live="on"]) :is(.lv-ls-climb, .lv-ls-post) { animation-play-state: paused; }
+}
+
+/* rest (0,0) = halfway up the path; offsets follow the path's curve, scale shrinks with distance */
+@keyframes lv-ls-climb {
+  0% { transform: translate(-104px, 72px) scale(0); }
+  3% { transform: translate(-104px, 72px) scale(1.35); }
+  15% { transform: translate(-50px, 33px) scale(1.15); }
+  30% { transform: translate(0, 0) scale(1); }
+  45% { transform: translate(12px, -30px) scale(0.86); }
+  58% { transform: translate(3px, -58px) scale(0.74); }
+  70% { transform: translate(-11px, -88px) scale(0.62); }
+  80% { transform: translate(-12px, -116px) scale(0.5); }
+  84%, 100% { transform: translate(-12px, -116px) scale(0); }
+}
+@keyframes lv-ls-post {
+  0% { transform: scale(0); }
+  14%, 42% { transform: none; }
+  72%, 100% { transform: translateX(10px) scaleX(0); }
+}
+
+/* .lv-ls-walk-in: someone walks from --x0 to --x1 (the door) and goes in (shrinks at the door), then comes again. */
+.lv-ls-walk-in { transform-box: view-box; transform-origin: 0 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .lv-ls-walk-in { animation: lv-ls-walk-in 12s linear infinite both; animation-delay: calc(var(--d, 0) * 1s); }
+  .live:not([data-live="on"]) .lv-ls-walk-in { animation-play-state: paused; }
+}
+@keyframes lv-ls-walk-in {
+  0% { transform: translate(var(--x0, -100px), 0) scale(0); }
+  5% { transform: translate(var(--x0, -100px), 0) scale(1); }
+  62% { transform: translate(var(--x1, 100px), 0) scale(1); }
+  68%, 100% { transform: translate(var(--x1, 100px), 0) scale(0); }
+}

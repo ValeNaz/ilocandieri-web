@@ -1,0 +1,118 @@
+/*
+ * LIVE scenes: the Home hero's motion language, reusable. Wrap a scene in <Live> (Live.tsx); inside it use:
+ *
+ * INTRO (plays once when the scene comes into view; order with --k = 0, 1, 2…):
+ *   .lv-rise    a layer/group rises into place (--lv-y, default 60px)
+ *   .lv-pop     a tree/plant/object grows from its foot (scale 0 → 1, pivot bottom centre)
+ *   .lv-sun     the sun comes up (--lv-y, default 150px)
+ *   .lv-reveal  a path/road/field appears from the bottom up (clip-path); .lv-reveal-x from left to right
+ *   .lv-draw    a stroked path draws itself (give it pathLength="1")
+ *   .lv-in      HTML or a small group slides in (18px)
+ *   timing: delay = --k × --lv-step (0.12s) + --lv-base (0.1s); trees use --lv-base ≈ 0.85s, people ≈ 1.6s, like the hero.
+ *
+ * LIFE (loops, start with the scene; give neighbours different --d so nothing moves in unison):
+ *   .lv-move    travels from (--x0,--y0) to (--x1,--y1) in --t seconds (default 16), linear, forever (walkers, trucks,
+ *               boats). The group's REST position (no motion, reduced motion) is translate(0,0): put the outer
+ *               <g transform> where it should stand still, and x0..x1 around it.
+ *               add .lv-alt to go back and forth (eased) instead of restarting
+ *   .lv-fly     same as lv-move for birds/insects in the sky (default 30s)
+ *   .lv-step    the bob of a walking step (put it INSIDE the lv-move group, around the Person)
+ *   .lv-spin    turns forever (wheels, a ball in flight, sun rays); --t (default 1s)
+ *   .lv-flap    wings beat (scaleY), .lv-flutter butterfly wings (scaleX)
+ *   .lv-rock    rocks on its feet (digging, kneading, hammering): pivot bottom centre
+ *   .lv-swing   swings from the top (lantern, sign, swing seat)
+ *   .lv-hop     a small jump (kids cheering), --t (default 0.9s)
+ *   .lv-arc-x + .lv-arc-y  a ball/fruit thrown along an arc: nest .lv-arc-y inside .lv-arc-x; --dx --dy (end offset),
+ *               --h (height of the arc, px), --t; it goes there and back (alternate)
+ *   .lv-drop    something appears in a hand, falls to (--dx,--dy) and vanishes in the basket (6.5s cycle)
+ *   .lv-cloud   drifts left/right ±26px, slowly
+ *   .lv-puff    smoke/steam puff: rises --lv-y (default 40px) while growing, then shrinks away; stagger 3 puffs with --d
+ *
+ * --t and --d are plain numbers of seconds (--t: 6, --d: 1.5); offsets (--x0, --dx, --h, --lv-y) need px.
+ * Own keyframes in an area CSS: give the class a name containing "lv-" (e.g. .gd-lv-walk) and gate it with
+ * `.live[data-live] .gd-lv-walk { animation: … }`: then it waits for the view and pauses off screen like the kit.
+ * Rules: animate the inner <g> of a <Placed> (never an element with a transform attribute); only transform/clip-path/
+ * stroke-dashoffset; a person and what they hold move as ONE group; reduced motion = final state, still.
+ */
+
+.lv-pop, .lv-rock, .lv-hop { transform-box: fill-box; transform-origin: 50% 100%; }
+.lv-spin, .lv-flap, .lv-flutter, .lv-puff, .lv-drop { transform-box: fill-box; transform-origin: 50% 50%; }
+.lv-swing { transform-box: fill-box; transform-origin: 50% 0%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- intro, once ---- */
+  .live[data-live] .lv-rise { animation: lv-rise 1.2s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-pop { animation: lv-pop 0.7s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-sun { animation: lv-sun 1.4s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-reveal { animation: lv-reveal 1.3s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-reveal-x { animation: lv-reveal-x 1.3s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-draw { stroke-dasharray: 1; animation: lv-draw 1.6s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] .lv-in { animation: lv-in 0.9s var(--ease-out-quint, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+  .live[data-live] :is(.lv-rise, .lv-pop, .lv-sun, .lv-reveal, .lv-reveal-x, .lv-draw, .lv-in) {
+    animation-delay: calc(var(--k, 0) * var(--lv-step, 0.12s) + var(--lv-base, 0.1s));
+  }
+
+  /* ---- life, loops ---- */
+  .live[data-live] .lv-move { animation: lv-move calc(var(--t, 16) * 1s) linear infinite both; }
+  .live[data-live] .lv-move.lv-alt { animation: lv-move calc(var(--t, 16) * 1s) var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate both; }
+  .live[data-live] .lv-fly { animation: lv-move calc(var(--t, 30) * 1s) linear infinite both; }
+  .live[data-live] .lv-step { animation: lv-step 0.42s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-spin { animation: lv-spin calc(var(--t, 1) * 1s) linear infinite; }
+  .live[data-live] .lv-flap { animation: lv-flap 0.34s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-flutter { animation: lv-flutter 0.2s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-rock { animation: lv-rock calc(var(--t, 1.5) * 1s) var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-swing { animation: lv-swing calc(var(--t, 3.2) * 1s) var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-hop { animation: lv-hop calc(var(--t, 0.9) * 1s) infinite; }
+  .live[data-live] .lv-arc-x { animation: lv-arc-x calc(var(--t, 1.7) * 1s) linear infinite alternate both; }
+  .live[data-live] .lv-arc-y { animation: lv-arc-y calc(var(--t, 1.7) * 1s) linear infinite alternate both; }
+  .live[data-live] .lv-drop { animation: lv-drop 6.5s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite both; }
+  .live[data-live] .lv-cloud { animation: lv-cloud 9s var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite alternate; }
+  .live[data-live] .lv-puff { animation: lv-puff calc(var(--t, 3.6) * 1s) var(--ease-in-out-sine, cubic-bezier(0.37, 0, 0.63, 1)) infinite both; }
+  .live[data-live] :is(.lv-move, .lv-fly, .lv-step, .lv-spin, .lv-flap, .lv-flutter, .lv-rock, .lv-swing, .lv-hop, .lv-arc-x, .lv-arc-y, .lv-drop, .lv-cloud, .lv-puff) {
+    animation-delay: calc(var(--d, 0) * 1s);
+  }
+
+  /* armed but not yet seen, or scrolled away: everything waits (scroll-driven .depth/.rise are left alone) */
+  /* !important on purpose: an area rule written with the full `animation` shorthand resets play-state to running and
+     would otherwise start before the scene is seen. Name your own animated classes with "lv-" to be covered. */
+  .live:not([data-live="on"]) :is([class*="lv-"], .sway, .sway-s, .bob, .drift, .spin-slow) { animation-play-state: paused !important; }
+}
+
+@keyframes lv-rise { from { transform: translate3d(0, var(--lv-y, 60px), 0); } to { transform: none; } }
+@keyframes lv-pop { from { transform: scale(0); } to { transform: none; } }
+@keyframes lv-sun { from { transform: translateY(var(--lv-y, 150px)); } to { transform: none; } }
+@keyframes lv-reveal { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes lv-reveal-x { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes lv-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes lv-in { from { transform: translateY(18px); } to { transform: none; } }
+
+@keyframes lv-move { from { transform: translate(var(--x0, 0px), var(--y0, 0px)); } to { transform: translate(var(--x1, 0px), var(--y1, 0px)); } }
+@keyframes lv-step { from { transform: translateY(-1.5px); } to { transform: translateY(1.5px); } }
+@keyframes lv-spin { to { transform: rotate(360deg); } }
+@keyframes lv-flap { from { transform: none; } to { transform: scaleY(0.35); } }
+@keyframes lv-flutter { from { transform: none; } to { transform: scaleX(0.3); } }
+@keyframes lv-rock { from { transform: rotate(-3deg); } to { transform: rotate(4deg); } }
+@keyframes lv-swing { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes lv-hop {
+  0%, 55%, 100% { transform: none; animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  25% { transform: translateY(-14px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+}
+@keyframes lv-arc-x { from { transform: translateX(0); } to { transform: translateX(var(--dx, 200px)); } }
+@keyframes lv-arc-y {
+  0% { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  50% { transform: translateY(calc(var(--h, 140px) * -1)); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  100% { transform: translateY(var(--dy, 0px)); }
+}
+@keyframes lv-drop {
+  0% { transform: scale(0); }
+  12%, 46% { transform: none; }
+  58% { transform: translate(var(--dx, 0px), var(--dy, 50px)); animation-timing-function: linear; }
+  92% { transform: translate(var(--dx, 0px), var(--dy, 50px)); }
+  100% { transform: translate(var(--dx, 0px), var(--dy, 50px)) scale(0); }
+}
+@keyframes lv-cloud { from { transform: translateX(-26px); } to { transform: translateX(26px); } }
+@keyframes lv-puff {
+  0% { transform: scale(0); }
+  30% { transform: translateY(calc(var(--lv-y, 40px) * -0.35)) scale(1); }
+  100% { transform: translateY(calc(var(--lv-y, 40px) * -1)) scale(0); }
+}

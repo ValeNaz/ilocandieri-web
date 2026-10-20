@@ -1,60 +1,78 @@
 import Link from "next/link";
 import { CookiePreferencesButton } from "@/components/public/cookies/ConsentManager";
+import { Room, Wrap } from "@/components/public/kit/Room";
 import { safeGaId } from "@/lib/content/analytics";
-import { legalNav, publicNav } from "@/lib/nav";
+import { legalNav, navGroups } from "@/lib/nav";
+import { paths } from "@/lib/paths";
 import { getSetting } from "@/lib/settings";
 import { Wordmark } from "./Wordmark";
+import "./chrome.css";
+
+/** Column headings for the footer map: the header groups, plus one column for the single entries. */
+const HEADINGS: Record<string, string> = { "Chi siamo": "Cooperativa" };
+const COLUMNS = [
+  ...navGroups.filter((g) => g.children).map((g) => ({ title: HEADINGS[g.label] ?? g.label, links: g.children!.map(({ label, href }) => ({ label, href })) })),
+  { title: "Partecipa", links: navGroups.filter((g) => !g.children).map(({ label, href }) => ({ label, href })) },
+];
 
 export async function Footer() {
   const [org, footer, analytics] = await Promise.all([getSetting("org"), getSetting("footer"), getSetting("analytics")]);
   const hasConsent = Boolean(safeGaId(analytics.gaMeasurementId));
   const social = Object.entries(org.social).filter(([, v]) => v) as [string, string][];
+  const tel = org.phone ? org.phone.replace(/[^+\d]/g, "") : "";
   return (
-    <footer className="on-dark bg-night text-paper">
-      <div className="mx-auto grid max-w-[88rem] gap-12 px-5 pb-14 pt-20 sm:px-8 md:grid-cols-[1.6fr_1fr_1fr]">
-        <div>
-          <Wordmark tone="light" />
-          <p className="mt-8 max-w-[18ch] font-display text-[clamp(1.9rem,3.6vw,3rem)] font-[650] leading-[1.04] tracking-[-0.03em] text-paper">{footer.line}</p>
+    <Room as="footer" tone="green" className="ftr">
+      <Wrap>
+        <div className="ftr-top">
+          <div className="ftr-intro">
+            <Link href="/" className="ftr-tag" aria-label="I Locandieri, cooperativa sociale: home"><Wordmark tone="light" /></Link>
+            <p className="ftr-line">{footer.line}</p>
+          </div>
+          <Link href={paths.contacts} className="pill pill-solid ftr-cta">Scrivici <span className="arrow" aria-hidden="true">→</span></Link>
         </div>
 
-        <nav aria-label="Navigazione nel footer">
-          <h2 className="text-sm font-semibold text-citrus">Il sito</h2>
-          <ul className="mt-4 space-y-2 text-night-soft">
-            {publicNav.map((i) => (
-              <li key={i.href}><Link href={i.href} className="hover:text-paper">{i.label}</Link></li>
+        <div className="ftr-cols">
+          <nav aria-label="Mappa del sito" className="ftr-map">
+            {COLUMNS.map((col) => (
+              <div key={col.title} className="ftr-col">
+                <h2 className="ftr-h">{col.title}</h2>
+                <ul>
+                  {col.links.map((l) => (
+                    <li key={l.href}><Link href={l.href}>{l.label}</Link></li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
-        </nav>
+          </nav>
 
-        <div>
-          <h2 className="text-sm font-semibold text-citrus">Contatti</h2>
-          <address className="mt-4 space-y-2 not-italic text-night-soft">
-            <p className="font-medium text-paper">{org.name}</p>
-            {org.address && <p>{org.address}</p>}
-            {org.phone && <p><a className="hover:text-paper" href={`tel:${org.phone.replace(/\s+/g, "")}`}>{org.phone}</a></p>}
-            {org.email && <p><a className="break-all hover:text-paper" href={`mailto:${org.email}`}>{org.email}</a></p>}
-            {org.vatId && <p className="text-sm">P.IVA {org.vatId}</p>}
-          </address>
-          {social.length > 0 && (
-            <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-              {social.map(([k, url]) => (
-                <li key={k}><a className="capitalize underline hover:text-paper" href={url} target="_blank" rel="noopener noreferrer">{k}<span className="sr-only"> (nuova scheda)</span></a></li>
-              ))}
-            </ul>
-          )}
+          <div className="ftr-col ftr-contact">
+            <h2 className="ftr-h">Contatti</h2>
+            <address>
+              <p className="ftr-org">{org.name}</p>
+              {org.address && <p>{org.address}</p>}
+              {tel && <p><a href={`tel:${tel}`}>{org.phone}</a></p>}
+              {org.email && <p><a className="break-all" href={`mailto:${org.email}`}>{org.email}</a></p>}
+            </address>
+            {social.length > 0 && (
+              <ul className="ftr-social" aria-label="Social">
+                {social.map(([k, url]) => (
+                  <li key={k}><a href={url} target="_blank" rel="noopener noreferrer" className="capitalize">{k}<span className="sr-only"> (si apre in una nuova scheda)</span></a></li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="border-t border-paper/15">
-        <div className="mx-auto flex max-w-[88rem] flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-night-soft sm:px-8">
-          <p>© {new Date().getFullYear()} {org.name}</p>
-          <ul className="flex gap-5">
+
+        <div className="ftr-legal">
+          <p>© {new Date().getFullYear()} {org.name}{org.vatId && <span> · P.IVA {org.vatId}</span>}</p>
+          <ul>
             {legalNav.map((i) => (
-              <li key={i.href}><Link href={i.href} className="underline underline-offset-4 hover:text-paper">{i.label}</Link></li>
+              <li key={i.href}><Link href={i.href}>{i.label}</Link></li>
             ))}
-            {hasConsent && <li><CookiePreferencesButton className="underline underline-offset-4 hover:text-paper" /></li>}
+            {hasConsent && <li><CookiePreferencesButton className="ftr-prefs" /></li>}
           </ul>
         </div>
-      </div>
-    </footer>
+      </Wrap>
+    </Room>
   );
 }

@@ -7,12 +7,15 @@ import { HeroBlock } from "./Hero";
 import { RichTextBlock } from "./RichText";
 import { CtaBlock, FeatureBlock, SectionHeadingBlock, IntroBlock, PillarsBlock, PlacesBlock, ValuesBlock } from "./Sections";
 import type { HeadingLevel } from "./shared";
+import { SLOT_VIEWS } from "./slots";
 
 /**
  * Render ONE block. `level` is the heading level of the block's main title (1 for the first block of a page, else 2).
  * `message` blocks are system microcopy and never render as sections.
  */
 export function BlockView({ block, images, level = 2, pageKey, index = 0 }: { block: ParsedBlock; images: ImageMap; level?: HeadingLevel; pageKey?: string; index?: number }): ReactNode {
+  const Custom = pageKey && block.data.slot ? SLOT_VIEWS[`${pageKey}:${block.data.slot}`] : undefined;
+  if (Custom) return <Custom data={block.data as never} images={images} level={level} block={block} />;
   switch (block.type) {
     case "hero": return <HeroBlock data={block.data} images={images} level={level} pageKey={pageKey} />;
     case "intro": return <IntroBlock data={block.data} images={images} level={level} />;

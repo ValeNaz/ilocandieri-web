@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { sendContactMessage, type ContactState } from "@/app/(public)/contatti/actions";
-import { Button, Checkbox, Input, Textarea } from "@/components/ui";
+import { Checkbox, Input, Textarea } from "@/components/ui";
+import { Spinner } from "@/components/ui/Button";
 import { paths } from "@/lib/paths";
 
 function Submit() {
   const { pending } = useFormStatus();
-  return <Button type="submit" size="lg" pending={pending}>Invia il messaggio</Button>;
+  return <button type="submit" disabled={pending} aria-busy={pending || undefined} className="pill pill-solid pf-submit">{pending && <Spinner />}Invia il messaggio {!pending && <span className="arrow" aria-hidden="true">→</span>}</button>;
 }
 
 export function ContactForm({ token, tokenField }: { token: string; tokenField: string }) {
@@ -19,8 +20,8 @@ export function ContactForm({ token, tokenField }: { token: string; tokenField: 
 
   if (state?.ok) {
     return (
-      <div role="status" className="mt-6 rounded-card border border-success/30 bg-success-soft p-6 text-ink">
-        <p className="font-display text-xl font-medium">Messaggio inviato</p>
+      <div role="status" className="cut cut-green mt-6">
+        <p className="t-head">Messaggio inviato</p>
         <p className="mt-2">{state.message}</p>
       </div>
     );
@@ -43,10 +44,10 @@ export function ContactForm({ token, tokenField }: { token: string; tokenField: 
       <Checkbox
         name="privacy"
         error={err?.privacy}
-        label={<>Ho letto l&apos;<Link href={paths.privacy} className="font-medium text-terracotta-deep underline">informativa privacy</Link> e acconsento al trattamento dei dati per ricevere una risposta.</>}
+        label={<>Ho letto l&apos;<Link href={paths.privacy} >informativa privacy</Link> e acconsento al trattamento dei dati per ricevere una risposta.</>}
       />
 
-      {state && !state.ok && !err && <p role="alert" className="rounded-control bg-danger-soft px-4 py-3 text-sm font-medium text-danger">{state.message}</p>}
+      {state && !state.ok && !err && <p role="alert" className="pf-note bg-danger-soft text-danger font-bold">{state.message}</p>}
       <div className="pt-1"><Submit /></div>
     </form>
   );

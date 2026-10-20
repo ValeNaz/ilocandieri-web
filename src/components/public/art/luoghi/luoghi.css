@@ -1,0 +1,80 @@
+/*
+ * Luoghi: movimento e piccole regole di scena (v3.2). Solo transform / opacity / stroke-dashoffset.
+ * Massimo 3 elementi animati per scena, uno protagonista. Con prefers-reduced-motion tutto resta visibile e fermo
+ * (le scene sono disegnate nello stato "finale").
+ */
+
+/* ---------- Superfici ---------- */
+.lw-panel { border-radius: 2rem; overflow: hidden; position: relative; }
+.lw-yellow { background: var(--c-yellow); }
+.lw-green { background: var(--c-green); }
+.lw-orange { background: var(--c-orange); }
+.lw-white { background: var(--c-white); }
+.lw-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.lw-stage { width: 100%; }
+.lw-stage > .stage-tilt { position: absolute; inset: 0; }
+.lw-clip { border-radius: 2rem; overflow: hidden; position: relative; }
+
+/* ---------- Movimento ambientale ----------
+ * Loop lenti (>= 5s) con --ease-in-out-sine, sfasati con --d. Ogni oggetto si muove intero (gruppo che lo contiene). */
+@media (prefers-reduced-motion: no-preference) {
+  /* Persona che cammina avanti e indietro: .lw-pace (spostamento) > .lw-face (si gira) > <Person> intera */
+  .lw-pace { animation: lw-pace var(--t, 10s) var(--ease-in-out-sine) infinite alternate; animation-delay: calc(var(--d, 0) * -1s); }
+  .lw-face { animation: lw-face calc(var(--t, 10s) * 2) steps(1, end) infinite; animation-delay: calc(var(--d, 0) * -1s); }
+  .lw-steam { animation: lw-steam 5.6s var(--ease-in-out-sine) infinite; }
+  .lw-drops { animation: lw-drops 5s var(--ease-in-out-sine) infinite; }
+  .lw-arc-x { animation: lw-arc-x var(--t, 5s) var(--ease-in-out-sine) infinite alternate; animation-delay: calc(var(--d, 0) * -1s); }
+  .lw-arc-y { animation: lw-arc-y var(--t, 5s) var(--ease-in-out-sine) infinite; animation-delay: calc(var(--d, 0) * -1s); }
+  .lw-bee { animation: lw-bee var(--t, 8s) var(--ease-in-out-sine) infinite alternate; }
+  .lw-leaf-l { animation: lw-leaf-l 2.4s var(--ease-out-quint) 0.6s both; }
+  .lw-leaf-r { animation: lw-leaf-r 2.4s var(--ease-out-quint) 0.6s both; }
+  .lw-trace { stroke-dasharray: 1; animation: lw-trace 2.8s var(--ease-out-quint) 0.4s both; }
+  .lw-runner { animation: lw-runner var(--t, 6s) var(--ease-in-out-sine) infinite alternate; }
+}
+@keyframes lw-pace { from { transform: translate(0, 0); } to { transform: translate(var(--dx, 120px), var(--dy, 0px)); } }
+@keyframes lw-face { 0% { transform: scaleX(1); } 50% { transform: scaleX(-1); } }
+@keyframes lw-steam { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(-18px); opacity: 0; } }
+@keyframes lw-drops { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(22px); opacity: 0; } }
+@keyframes lw-arc-x { from { transform: translateX(0); } to { transform: translateX(var(--dx, 300px)); } }
+@keyframes lw-arc-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(var(--dy, -140px)); } }
+@keyframes lw-bee { 0% { transform: translate(0, 0); } 33% { transform: translate(22px, -10px); } 66% { transform: translate(-10px, -18px); } 100% { transform: translate(12px, 6px); } }
+@keyframes lw-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes lw-runner { from { transform: translate(0, 0); } to { transform: translate(var(--dx, 80px), var(--dy, 0px)); } }
+
+/* Cancello: stato finale = aperto (visibile con movimento ridotto); all'avvio si apre una volta */
+.lw-leaf-l, .lw-leaf-r { transform-box: view-box; }
+.lw-leaf-l { transform-origin: var(--hx, 436px) 0; transform: scaleX(0.16); }
+.lw-leaf-r { transform-origin: var(--hx, 564px) 0; transform: scaleX(0.16); }
+@keyframes lw-leaf-l { from { transform: scaleX(1); } to { transform: scaleX(0.16); } }
+@keyframes lw-leaf-r { from { transform: scaleX(1); } to { transform: scaleX(0.16); } }
+
+/* Pezzi che si muovono sul posto: stesso riferimento (origine locale) */
+.lw-pace, .lw-face, .lw-arc-x, .lw-arc-y, .lw-bee, .lw-runner, .lw-steam, .lw-drops { transform-box: view-box; transform-origin: 0 0; }
+
+/* ---------- Dettagli di layout ---------- */
+.lw-num { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 0.9; letter-spacing: -0.02em; }
+
+/* Titolo d'apertura piu' contenuto del t-mega standard, cosi' la scena entra nel primo schermo */
+.t-mega.lw-h1 { font-size: clamp(2.5rem, 5.6vw, 5.2rem); }
+
+/* Apertura: testo sopra, scena sotto, in due zone che non si toccano mai.
+ * Desktop: la scena riempie lo spazio che resta (la scena e' in "meet": tutta intera, il terreno continua ai lati).
+ * Telefono: la zona della scena ha le proporzioni del disegno (--ar), cosi' nulla si taglia e non resta cielo vuoto. */
+.lw-hero { display: flex; flex-direction: column; min-height: calc(100svh - 4.75rem); }
+.lw-hero-art { position: relative; flex: 1 1 auto; min-height: 17rem; margin-top: 2rem; overflow: hidden; }
+.lw-hero-art > * { position: absolute; inset: 0; }
+.lw-hero-art .lw-stage { height: 100%; }
+@media (max-width: 767px), (max-aspect-ratio: 1/1) {
+  .lw-hero { min-height: 0; }
+  .lw-hero-art { flex: none; min-height: 0; aspect-ratio: var(--ar, 16 / 9); }
+}
+
+/* ---------- Scene vive (kit Live) ----------
+ * La frutta che cade (lv-drop) nasce e sparisce dal proprio centro. I loop propri dei luoghi (passeggiate, ape, gocce,
+ * acqua nell'irrigazione) si fermano anche loro quando la scena e' fuori vista o non ancora vista. */
+.live .lv-drop { transform-box: fill-box; transform-origin: 50% 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  .lw-flow { animation: lw-flow 1.4s linear infinite; }
+  .live:not([data-live="on"]) :is(.lw-pace, .lw-face, .lw-bee, .lw-drops, .lw-steam, .lw-flow) { animation-play-state: paused; }
+}
+@keyframes lw-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -9.1; } }

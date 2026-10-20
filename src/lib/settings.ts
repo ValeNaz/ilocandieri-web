@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { cache } from "react";
 import { db, schema } from "@/lib/db";
+import type { MediaSlotsSettings } from "@/lib/media-slots";
 
 /** Typed settings. Keys per contract: org, notifications, analytics, retention, seo_defaults, footer. */
 export type OrgSettings = {
@@ -27,6 +28,8 @@ export type SettingsMap = {
   retention: RetentionSettings;
   seo_defaults: SeoDefaults;
   footer: FooterSettings;
+  /** Real photos/videos assigned to the slots of src/lib/media-slots.ts (admin "Foto e video reali"). */
+  mediaSlots: MediaSlotsSettings;
 };
 export type SettingKey = keyof SettingsMap;
 
@@ -37,6 +40,7 @@ export const DEFAULT_SETTINGS: SettingsMap = {
   retention: { applicationsDays: 365, pastRegistrationsDays: 365 },
   seo_defaults: { siteName: "I Locandieri", titleTemplate: "%s | I Locandieri", description: "", ogImageId: null },
   footer: { line: "Coltiviamo possibilità, costruiamo comunità." },
+  mediaSlots: {},
 };
 
 /** Read a setting merged over defaults (shallow). Cached per request. */

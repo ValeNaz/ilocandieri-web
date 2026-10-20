@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { startTransition, useActionState, useRef, useState, type ReactNode } from "react";
-import { Button, Checkbox, FileInput, Input, Select, Textarea } from "@/components/ui";
+import { LogoMark } from "@/components/brand/Logo";
+import { AreaField, ChoiceField, ConsentField, FileField, TextField } from "./Fields";
 import { submitApplicationAction, type ApplyState } from "@/app/(public)/lavora-con-noi/actions";
 import { paths } from "@/lib/paths";
 
@@ -26,12 +27,9 @@ export function ApplicationForm({ areas, openings, defaultOpeningId, confirmatio
 
   if (state?.ok) {
     return (
-      <div role="status" className="rounded-card border border-success/30 bg-success-soft p-8 text-center">
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="mx-auto mb-4 size-10 text-success" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10" />
-          <path d="m7.5 12.5 3 3 6-7" />
-        </svg>
-        <p className="font-display text-2xl font-medium text-ink">{confirmation}</p>
+      <div role="status" className="grid items-center gap-6 sm:grid-cols-[8rem_1fr]">
+        <LogoMark build className="h-auto w-28 sm:w-full" />
+        <p className="t-head">{confirmation}</p>
       </div>
     );
   }
@@ -54,47 +52,47 @@ export function ApplicationForm({ areas, openings, defaultOpeningId, confirmatio
   const errorCount = Object.keys(fe).length + (clientFileError ? 1 : 0);
 
   return (
-    <form onSubmit={onSubmit} noValidate={false} className="space-y-6" aria-busy={pending || undefined} encType="multipart/form-data">
+    <form onSubmit={onSubmit} noValidate={false} className="grid gap-7" aria-busy={pending || undefined} encType="multipart/form-data">
       {guard}
       <div ref={summaryRef} tabIndex={-1} className="outline-none" aria-live="polite">
         {state && !state.ok && state.message && (
-          <p role="alert" className="rounded-control border border-danger/30 bg-danger-soft px-4 py-3 text-sm font-medium text-danger">
+          <p role="alert" className="cf-summary">
             {state.message}
             {errorCount > 1 ? ` (${errorCount} campi da correggere)` : ""}
           </p>
         )}
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Input name="firstName" label="Nome" required autoComplete="given-name" maxLength={80} error={fe.firstName} />
-        <Input name="lastName" label="Cognome" required autoComplete="family-name" maxLength={80} error={fe.lastName} />
-        <Input name="email" type="email" label="Email" required autoComplete="email" maxLength={200} error={fe.email} />
-        <Input name="phone" type="tel" label="Telefono" autoComplete="tel" maxLength={30} error={fe.phone} />
+      <div className="grid gap-7 sm:grid-cols-2">
+        <TextField name="firstName" label="Nome" required autoComplete="given-name" maxLength={80} error={fe.firstName} />
+        <TextField name="lastName" label="Cognome" required autoComplete="family-name" maxLength={80} error={fe.lastName} />
+        <TextField name="email" type="email" label="Email" required autoComplete="email" maxLength={200} error={fe.email} />
+        <TextField name="phone" type="tel" label="Telefono" autoComplete="tel" maxLength={30} error={fe.phone} />
       </div>
 
-      <Select name="area" label="Ambito di interesse" required defaultValue="" error={fe.area}>
+      <ChoiceField name="area" label="Ambito di interesse" required defaultValue="" error={fe.area}>
         <option value="" disabled>Scegli un ambito</option>
         {areas.map((a) => <option key={a} value={a}>{a}</option>)}
-      </Select>
+      </ChoiceField>
 
       {openings.length > 0 && (
-        <Select name="openingId" label="Posizione" defaultValue={defaultOpeningId ?? ""} error={fe.openingId} hint="Scegli una posizione aperta oppure lascia «Candidatura spontanea».">
+        <ChoiceField name="openingId" label="Posizione" defaultValue={defaultOpeningId ?? ""} error={fe.openingId} hint="Scegli una posizione aperta oppure lascia «Candidatura spontanea».">
           <option value="">Candidatura spontanea</option>
           {openings.map((o) => <option key={o.id} value={o.id}>{o.title}</option>)}
-        </Select>
+        </ChoiceField>
       )}
 
-      <Textarea name="message" label="Messaggio" required rows={6} maxLength={4000} error={fe.message}
+      <AreaField name="message" label="Messaggio" required rows={6} maxLength={4000} error={fe.message}
         hint="Raccontaci chi sei, la tua esperienza e cosa ti interessa." />
 
-      <FileInput name="cv" label="Curriculum (CV)" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      <FileField name="cv" label="Curriculum (CV)" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         hint="PDF, DOC o DOCX, massimo 5 MB." error={fe.cv ?? clientFileError} />
 
-      <Checkbox name="privacy" error={fe.privacy}
-        label={<>Ho letto l&rsquo;<Link href={paths.privacy} target="_blank" className="font-medium text-terracotta-deep underline">informativa privacy<span className="sr-only"> (si apre in una nuova scheda)</span></Link> e acconsento al trattamento dei miei dati per valutare la candidatura.</>} />
+      <ConsentField name="privacy" error={fe.privacy}
+        label={<>Ho letto l&rsquo;<Link href={paths.privacy} target="_blank">informativa privacy<span className="sr-only"> (si apre in una nuova scheda)</span></Link> e acconsento al trattamento dei miei dati per valutare la candidatura.</>} />
 
-      <div className="pt-2">
-        <Button type="submit" size="lg" pending={pending}>{pending ? "Invio in corso…" : cta}</Button>
+      <div>
+        <button type="submit" disabled={pending} aria-busy={pending || undefined} className="pill pill-solid cf-submit">{pending ? "Invio in corso…" : cta}{!pending && <span className="arrow" aria-hidden="true">→</span>}</button>
       </div>
     </form>
   );

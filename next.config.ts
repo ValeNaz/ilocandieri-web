@@ -10,6 +10,8 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.shopify.com",
   "font-src 'self' data:",
+  // Real videos of the cooperative (admin "Foto e video reali" accepts https mp4/webm URLs).
+  "media-src 'self' https:",
   "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",

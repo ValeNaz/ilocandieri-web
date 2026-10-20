@@ -1,0 +1,12 @@
+/* Lavora con noi, scene vive: the two special loops that the kit (kit/live.css) does not have. Reduced motion: still. */
+.kit-stir { transform-box: fill-box; transform-origin: 50% 100%; }
+.lav-door { transform-box: fill-box; transform-origin: 0% 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  /* the cook stirs: a small lean towards the pot and back (smaller than .lv-rock, so the ladle stays in the pot) */
+  .live[data-live] .kit-stir { animation: lav-stir calc(var(--t, 1.6) * 1s) var(--ease-in-out-sine, ease-in-out) infinite alternate; }
+  /* the open door leaf swings a little on its hinges (left edge) */
+  .live[data-live] .lav-door { animation: lav-door 4.8s var(--ease-in-out-sine, ease-in-out) infinite alternate; animation-delay: 1.8s; }
+  .live:not([data-live="on"]) :is(.kit-stir, .lav-door) { animation-play-state: paused; }
+}
+@keyframes lav-stir { from { transform: rotate(-1.2deg); } to { transform: rotate(1.6deg); } }
+@keyframes lav-door { from { transform: none; } to { transform: scaleX(0.72); } }

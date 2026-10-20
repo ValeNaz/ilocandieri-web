@@ -35,6 +35,16 @@ Menu **Media**.
 - Sotto ogni foto vedi **dove e' usata**. Si puo' eliminare solo se non e' usata: prima sostituiscila nei punti indicati.
 - Carica solo foto di cui hai i diritti e il consenso delle persone ritratte (specialmente minori).
 
+## 5 bis. Foto e video reali
+Menu **Foto e video reali**. Ogni pagina del sito ha degli **spazi** pensati per una foto o un video veri (il casolare, il campo, la raccolta...). Sono elencati per pagina; per ognuno trovi **cosa riprendere**, il formato e cosa si vede ora sul sito. Uno spazio vuoto **non compare** sul sito: nessun buco.
+1. Carica prima la foto in **Media** (con descrizione e crediti).
+2. Torna in **Foto e video reali**, trova lo spazio, premi "Scegli immagine", scegli la foto e premi **Salva** in quello spazio. Ogni spazio si salva da solo e la foto è subito sul sito ("Apri la pagina" per controllare).
+3. **Descrizione per chi non vede**: se la lasci vuota il sito usa quella predefinita, scritta sotto il campo. Se la tua foto mostra altro, scrivi cosa si vede davvero.
+4. **Didascalia**: facoltativa, breve (luogo, momento, autore).
+5. **Video**: negli spazi video scegli un'immagine di copertina e incolla l'indirizzo diretto del file video (deve iniziare con `https://` e finire con `.mp4` o `.webm`; non funzionano i link di pagine YouTube, Instagram o Facebook). Il video è muto, parte da solo solo quando è visibile, ha sempre il pulsante pausa e resta fermo sulla copertina per chi ha chiesto meno movimento. Senza indirizzo, la copertina compare come foto. I file video non si caricano dal pannello: chiedi al tecnico di metterli online.
+6. **Togliere**: "Rimuovi" sotto la foto, svuota gli altri campi e premi Salva. Se il tecnico aveva messo un file nella cartella del sito, torna a vedersi quello.
+7. Prima di pubblicare: diritti sulle foto, liberatorie per gli adulti riconoscibili, per i minori liberatoria dei genitori (meglio di spalle, da lontano o solo le mani), nessun ospite dell'accoglienza riconoscibile. L'elenco completo per il fotografo è in `docs/FOTO_DA_FORNIRE.md`.
+
 ## 6. Prodotti ABES
 Menu **Prodotti ABES**. Qui scegli quali prodotti reali di abes.bio compaiono in Home e nella pagina Shop. Ogni scheda del sito apre **la pagina di quel prodotto su ABES**: vendita, carrello e spedizione restano li'.
 - **Aggiungere da un link**: incolla il link del prodotto (es. `https://abes.bio/products/caponata-melanzane`) nella casella "Importa da un link ABES" e premi Importa: vengono letti nome e foto una sola volta; controlla e premi **Salva**. Oppure "Aggiungi prodotto" per compilare a mano (nome, link alla scheda, categoria, foto: indirizzo immagine di ABES oppure file caricato, descrizione della foto).

@@ -1,0 +1,13 @@
+/* /accoglienza: windows that light up one after the other, inside a live scene (kit Live): they wait until the scene is
+   in view, then roll up like a blind (a clip, never a semi-transparent tint). No JS / reduced motion: all lit, still. */
+.lv-cs-light { clip-path: inset(0 0 0 0); }
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .lv-cs-light { animation: wl-on 1.2s var(--ease-out-quint) both; animation-delay: calc(var(--k, 0) * 0.6s + var(--wl-start, 1.4s)); }
+}
+@keyframes wl-on { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+/* The day, as strips: each strip a full-width band with a soft cut-out scene. */
+.strip-a { border-radius: 2rem 9rem 2rem 2rem; }
+.strip-b { border-radius: 9rem 2rem 2rem 2rem; }
+.strip-c { border-radius: 2rem 2rem 9rem 2rem; }
+.strip-d { border-radius: 2rem 2rem 2rem 9rem; }
+.strip-e { border-radius: 999px 999px 2rem 2rem; }

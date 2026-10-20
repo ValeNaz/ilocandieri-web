@@ -1,0 +1,123 @@
+/* Pagina Storia: pannelli, percorso, prima/dopo. Solo transform / opacity / clip-path / stroke-dashoffset. */
+.scene-svg { display: block; width: 100%; height: 100%; }
+
+/* ---- Tappe ---- */
+.stop { padding-block: clamp(4rem, 9vw, 7rem); }
+@media (min-width: 1024px) { .stop { min-height: 100svh; display: flex; align-items: center; } .stop > div { width: 100%; } }
+.stop-grid { display: grid; gap: 2rem; padding-left: 2.75rem; align-items: center; }
+@media (min-width: 640px) { .stop-grid { padding-left: 3.5rem; } }
+@media (min-width: 1024px) {
+  .stop-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); padding-left: 0; gap: 0; }
+  .stop-scene, .stop-text { grid-row-start: 1; }
+  .stop[data-side="left"] .stop-scene, .stop[data-side="right"] .stop-text { grid-column: 1 / span 5; }
+  .stop[data-side="left"] .stop-text, .stop[data-side="right"] .stop-scene { grid-column: 8 / span 5; }
+}
+.stop-label { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; }
+.stop-n { font-size: 1.05rem; }
+/* Titoli delle tappe: più piccoli e ariosi del titolo d'apertura, così non pesano */
+.stop-text h2 { margin-bottom: 1.1rem; font-size: clamp(1.75rem, 2.9vw, 2.6rem); line-height: 1.12; max-width: 18ch; }
+.stop-text .t-body + .t-body { margin-top: 1rem; }
+.stop-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+.stop-note { margin-top: 1.1rem; font-size: 0.95rem; max-width: 52ch; }
+/* Foto reali accanto alla tappa: sotto la scena e sotto il testo, mai sopra il percorso (colonne 1-5 e 8-12) */
+.stop-real { margin-top: 0.5rem; }
+.stop-real figcaption { color: var(--fg); }
+@media (min-width: 1024px) {
+  .stop-real { grid-row-start: 2; margin-top: 3rem; }
+  .stop[data-side="left"] .stop-real-a, .stop[data-side="right"] .stop-real-b { grid-column: 1 / span 5; }
+  .stop[data-side="left"] .stop-real-b, .stop[data-side="right"] .stop-real-a { grid-column: 8 / span 5; }
+}
+/* Numero grande: un dato, non un secondo titolo (stesso peso, dimensione contenuta) */
+.num-big { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1; letter-spacing: -0.02em; font-size: clamp(2.4rem, 4.4vw, 3.8rem); display: block; margin-bottom: 0.5rem; }
+.room-green .num-big { color: var(--c-yellow); }
+.room-orange .num-big { color: var(--c-white); }
+
+/* ---- Pannelli arrotondati con la scena ---- */
+.panel { position: relative; border-radius: 2.25rem; overflow: hidden; aspect-ratio: var(--ar, 5/4); isolation: isolate; }
+.panel-white { background: var(--c-white); } .panel-yellow { background: var(--c-yellow); } .panel-orange { background: var(--c-orange); } .panel-green { background: var(--c-green); }
+.panel > svg { position: absolute; inset: 0; }
+@media (max-width: 639px) { .panel { border-radius: 1.75rem; } }
+
+/* ---- Il percorso ---- */
+.route-svg { position: absolute; inset: 0; pointer-events: none; z-index: 5; overflow: visible; }
+.route-ahead { fill: none; stroke: var(--c-ink); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 13; opacity: 0.55; }
+.route-halo { fill: none; stroke: var(--c-white); stroke-width: 14; stroke-linecap: round; stroke-dashoffset: 0; }
+.route-trail { fill: none; stroke: var(--c-ink); stroke-width: 4; stroke-linecap: round; }
+.route-node { fill: var(--c-white); stroke: var(--c-ink); stroke-width: 3; transition: fill 0.5s var(--ease-scroll); }
+/* tappa raggiunta: pieno ink, leggibile su ogni stanza (il giallo spariva sulle stanze gialle e si perdeva sul bianco) */
+.route-node[data-on="true"] { fill: var(--c-ink); }
+.route-walker { will-change: transform; }
+.route-walker-disc { fill: var(--c-white); stroke: var(--c-ink); stroke-width: 3; }
+
+/* ---- Scene vive (<Live className="st-live">, kit live.css). Il contenitore riempie il riquadro come prima faceva l'SVG ---- */
+.st-live { position: absolute; inset: 0; }
+.st-live > svg { position: absolute; inset: 0; }
+/* storie proprie della pagina: chi cammina sul viale fino alla porta (rimpicciolisce con la distanza ed entra), chi porta
+   la cassetta avanti e indietro, chi entra da destra. Il nome contiene "lv-": il kit le mette in pausa fuori vista. */
+.st-lv-walk, .st-lv-carry { transform-box: fill-box; transform-origin: 50% 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .live[data-live] .st-lv-walk-hero { animation: st-walk-hero 18s linear 2.2s infinite both; }
+  .live[data-live] .st-lv-walk-3 { animation: st-walk-3 16s linear 2s infinite both; }
+  .live[data-live] .st-lv-carry { animation: st-carry 12s var(--ease-in-out-sine) 2s infinite both; }
+  .live[data-live] .st-lv-enter { animation: st-enter 2.6s var(--ease-out-quint) 1.3s both; }
+  .live[data-live] .st-lv-march { animation: st-march 1.4s linear infinite; }
+}
+/* hero: dal fondo del sentiero alla porta, delta porta = (88, -119) */
+@keyframes st-walk-hero {
+  0% { transform: translate(-28px, 60px) scale(1.1); }
+  38% { transform: none; }
+  70% { transform: translate(62px, -80px) scale(0.7); }
+  86% { transform: translate(88px, -119px) scale(0.52); }
+  92%, 100% { transform: translate(88px, -119px) scale(0); }
+}
+/* tappa 3: dal fondo del viale alla porta, delta porta = (166, -101) */
+@keyframes st-walk-3 {
+  0% { transform: translate(-70px, 40px) scale(1.1); }
+  32% { transform: none; }
+  68% { transform: translate(118px, -64px) scale(0.68); }
+  86% { transform: translate(166px, -101px) scale(0.48); }
+  92%, 100% { transform: translate(166px, -101px) scale(0); }
+}
+/* ABES: dall'orto al sacco, si gira (scaleX passa per 0) e torna */
+@keyframes st-carry {
+  0%, 4% { transform: translateX(-22px); }
+  44% { transform: translateX(26px); }
+  50% { transform: translateX(26px) scaleX(-1); }
+  90% { transform: translateX(-22px) scaleX(-1); }
+  96%, 100% { transform: translateX(-22px); }
+}
+@keyframes st-enter { from { transform: translateX(150px); } to { transform: none; } }
+@keyframes st-march { to { stroke-dashoffset: -15; } }
+
+/* ---- Prima / dopo: bordo di taglio morbido (angoli arrotondati), maniglia a pillola ---- */
+@property --x { syntax: "<number>"; inherits: true; initial-value: 50; }
+.ba { --x: 50; position: absolute; inset: 0; container-type: inline-size; touch-action: pan-y; cursor: ew-resize; border-radius: inherit; overflow: hidden; }
+.ba-layer { position: absolute; inset: 0; }
+.ba-after { clip-path: inset(0 calc((100 - var(--x)) * 1%) 0 0 round 0 1.75rem 1.75rem 0); }
+.ba-handle { position: absolute; top: 0; bottom: 0; left: 0; width: 0; transform: translateX(calc(var(--x) * 1cqw)); pointer-events: none; }
+.ba-handle::before { content: ""; position: absolute; top: 1.25rem; bottom: 1.25rem; left: -5px; width: 10px; border-radius: 999px; background: var(--c-white); border: 2.5px solid var(--c-ink); }
+.ba-grip { position: absolute; top: 50%; left: 0; width: 3.25rem; height: 3.25rem; margin: -1.625rem 0 0 -1.625rem; border-radius: 999px; background: var(--c-white); border: 3px solid var(--c-ink); }
+.ba-grip::before, .ba-grip::after { content: ""; position: absolute; top: 50%; width: 0.6rem; height: 0.6rem; margin-top: -0.3rem; border-radius: 2px; border-top: 3px solid var(--c-ink); border-left: 3px solid var(--c-ink); }
+.ba-grip::before { left: 0.7rem; transform: rotate(-45deg); }
+.ba-grip::after { right: 0.7rem; transform: rotate(135deg); }
+.ba-tag { position: absolute; top: 1rem; padding: 0.45rem 0.85rem; border-radius: 999px; background: var(--c-ink); color: var(--c-white); pointer-events: none; }
+.ba-tag-l { left: 1rem; } .ba-tag-r { right: 1rem; }
+.ba-range { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: ew-resize; }
+.ba:focus-within { outline: 3px solid var(--c-ink); outline-offset: -3px; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ba[data-user="false"] { animation: ba-fill var(--ease-scroll-io) both; animation-timeline: view(); animation-range: entry 20% cover 60%; }
+  }
+}
+@keyframes ba-fill { from { --x: 4; } to { --x: 96; } }
+
+/* ---- Apertura ---- */
+.st-hero { position: relative; margin-inline: -3rem; width: auto; height: clamp(320px, min(58svh, 55vw), 640px); margin-top: auto; }
+.st-hero .stage-layer { overflow: visible; }
+.st-hero .stage-tilt { position: absolute; inset: 0; }
+/* il prato continua sotto i livelli inclinati: nessuno spicchio del colore della stanza sul bordo basso */
+.st-hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 14%; background: var(--c-green); z-index: -1; }
+/* Telefono: cornice fissa 10/9 senza sbordare, così si vede sempre la fascia x 461-1139 della scena (casa, aranci, persone interi) */
+@media (max-width: 639px) { .st-hero { margin-inline: 0; height: auto; aspect-ratio: 10 / 9; } }
+
+/* ---- Chiusura: il logo entra sempre intero (nessuna regola altrui può muoverne i pezzi) ---- */

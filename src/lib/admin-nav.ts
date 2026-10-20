@@ -12,6 +12,7 @@ export const adminNav: AdminNavGroup[] = [
       { label: "Home", href: adminPaths.home, hint: "Testi, immagini e sezioni della home" },
       { label: "Pagine", href: adminPaths.pages, hint: "Chi siamo, Shop, Contatti, Privacy e Cookie" },
       { label: "Media", href: adminPaths.media, hint: "Le immagini caricate" },
+      { label: "Foto e video reali", href: adminPaths.realMedia, hint: "Foto e video veri negli spazi delle pagine" },
       { label: "Prodotti ABES", href: adminPaths.products, hint: "La vetrina dei prodotti" },
       { label: "News", href: adminPaths.news, hint: "Articoli e novità" },
       { label: "Eventi", href: adminPaths.events, hint: "Eventi, moduli e iscrizioni" },

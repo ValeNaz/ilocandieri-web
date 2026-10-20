@@ -1,0 +1,139 @@
+/*
+ * HOME-B: "Cosa facciamo" pinned story + places teaser.
+ * <PinScene> exposes --p (0..1). --span (scenes - 0.5) turns it into --s (0..span): scene i is fully shown at s = i.
+ * Per scene (layer i): --r reveal (0..1, the colour spreads from the dot), --a story progress, --o recede.
+ */
+.hs-wrap { --span: 3.5; }
+.hs-pin { background: var(--c-white); }
+
+.hs-list { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+.hs-list > .hs-layer {
+  --s: calc(var(--p) * var(--span));
+  --r: clamp(0, calc((var(--s) - var(--i) + 0.5) * 2), 1);
+  --re: calc(var(--r) * var(--r) * (3 - 2 * var(--r)));          /* smoothstep: soft start, soft landing */
+  --a: clamp(0, calc((var(--s) - var(--i) + 0.3) / 0.75), 1);
+  --o: clamp(0, calc((var(--s) - var(--i) - 0.5) * 2), 1);
+  --cx: 68%; --cy: 56%;
+  position: absolute; inset: 0; z-index: var(--zi);
+  clip-path: circle(calc(var(--re) * 150%) at var(--cx) var(--cy));
+}
+/* The room underneath settles back a little while the next one opens over it (no 3D swing). */
+.hs-inner {
+  position: relative; height: 100%; width: 100%; max-width: 96rem; margin-inline: auto;
+  display: grid; grid-template-rows: minmax(0, 50%) minmax(0, 1fr); gap: 1.25rem;
+  padding: calc(var(--header-h) + 0.25rem) 1.25rem 5.25rem;
+  transform: scale(calc(1 - var(--o) * 0.035));
+  transform-origin: 50% 60%;
+}
+.hs-art { grid-row: 1; order: -1; position: relative; min-height: 0; border-radius: 2rem; overflow: hidden; background: var(--panel); isolation: isolate;
+  transform: translate3d(0, calc((1 - var(--re)) * 28px), 0) scale(calc(0.95 + var(--re) * 0.05)); }
+.hs-copy { grid-row: 2; min-height: 0; display: flex; flex-direction: column; justify-content: flex-start;
+  transform: translate3d(0, calc((1 - var(--re)) * 24px), 0); opacity: clamp(0, calc(min(1 - var(--o) * 2.5, (var(--re) - 0.3) * 2)), 1); }
+.hs-panel-green { --panel: var(--c-green); } .hs-panel-yellow { --panel: var(--c-yellow); } .hs-panel-white { --panel: var(--c-white); }
+.hs-panel-orange { --panel: var(--c-orange); }
+.hs-num { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1; letter-spacing: -0.02em; color: var(--fg); margin: 0 0 0.5rem; }
+.hs-title { font-size: clamp(1.7rem, 7vw, 2.2rem); margin: 0; }
+.hs-text { margin: 0.6rem 0 0; font-size: 1rem; line-height: 1.55; max-width: 44ch; }
+
+/* depth planes: small sideways drift with the story progress */
+.hs-d { position: absolute; inset: 0 -4%; transform: translate3d(calc((var(--a) - 0.5) * var(--z) * -0.5px), 0, 0); }
+
+@media (min-width: 1024px) {
+  .hs-list > .hs-layer { --cx: 70%; --cy: 52%; }
+  .hs-inner { grid-template-rows: none; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3.5rem; align-items: stretch; padding: calc(var(--header-h) + 1.25rem) 2.5rem 6rem; }
+  .hs-art { grid-row: auto; grid-column: 2; order: 0; }
+  .hs-copy { grid-row: auto; grid-column: 1; justify-content: center; }
+  .hs-num { font-size: clamp(3.4rem, 5.6vw, 5.2rem); margin-bottom: 1.1rem; }
+  .hs-title { font-size: clamp(2.1rem, 3.5vw, 3.3rem); }
+  .hs-text { font-size: 1.1875rem; line-height: 1.6; margin-top: 1.1rem; }
+}
+@media (max-height: 700px) and (max-width: 1023px) {
+  .hs-inner { padding-bottom: 4.5rem; grid-template-rows: minmax(0, 40%) minmax(0, 1fr); gap: 0.75rem; }
+  .hs-num { font-size: 2rem; margin-bottom: 0.25rem; }
+  .hs-title { font-size: 1.55rem; }
+  .hs-text { font-size: 0.9375rem; line-height: 1.45; margin-top: 0.4rem; }
+}
+
+/* ---- scripted pieces: --k = progress of one group (from --a, --t0, --dt), smoothstepped; short moves only ---- */
+.hs-k { --k0: clamp(0, calc((var(--a) - var(--t0, 0)) / var(--dt, 0.3)), 1); --k: calc(var(--k0) * var(--k0) * (3 - 2 * var(--k0))); }
+.hs-in { opacity: var(--k); }
+.hs-out { opacity: calc(1 - var(--k)); }
+.hs-grow { opacity: var(--k); transform: translate3d(0, calc((1 - var(--k)) * 14px), 0) scale(calc(0.9 + var(--k) * 0.1)); transform-box: fill-box; transform-origin: 50% 100%; }
+.hs-sprout { opacity: var(--k); transform: scale(1, calc(0.6 + var(--k) * 0.4)); transform-box: fill-box; transform-origin: 50% 100%; }
+.hs-move { transform: translate3d(calc((1 - var(--k)) * var(--mx, 0) * 1px), calc((1 - var(--k)) * var(--my, 0) * 1px), 0); }
+.hs-fall { transform: translate(0, calc(var(--k) * var(--my, 0) * 1px)) rotate(calc(var(--k) * var(--rot, 0) * 1deg)); transform-box: fill-box; transform-origin: 50% 50%; }
+.hs-draw { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--k)); }
+.hs-wipe { clip-path: inset(0 calc((1 - var(--k)) * 100%) 0 0 round 6px); }
+.hs-open-l { transform: scaleX(calc(1 - var(--k) * 0.75)); transform-box: fill-box; transform-origin: 0 50%; }
+.hs-open-r { transform: scaleX(calc(1 - var(--k) * 0.75)); transform-box: fill-box; transform-origin: 100% 50%; }
+.hs-ball { transform: translate(calc(var(--k0) * 470px), calc(var(--k0) * (1 - var(--k0)) * -1000px)) rotate(calc(var(--k0) * 360deg)); transform-box: fill-box; transform-origin: 50% 50%; }
+
+/* ---- the chip navigation ---- */
+.hs-nav { position: absolute; z-index: 30; left: 0; right: 0; bottom: 0.9rem; display: flex; justify-content: center; padding: 0 1rem; pointer-events: none; }
+.hs-nav ol { display: flex; gap: 0.5rem; margin: 0; padding: 0; list-style: none; pointer-events: auto; }
+.hs-chip { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 2.75rem; min-width: 2.75rem; justify-content: center; padding: 0.4rem 0.9rem; border-radius: 999px; border: 2px solid var(--c-ink); background: var(--c-white); color: var(--c-ink); font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 0.95rem; line-height: 1; transition: background-color 0.2s, color 0.2s, transform 0.35s var(--ease-out-expo); }
+.hs-chip:hover { transform: translateY(-2px); }
+.hs-chip[aria-current="step"] { background: var(--c-ink); color: var(--c-white); }
+.hs-chip:focus-visible { outline: 3px solid var(--c-ink); outline-offset: 2px; box-shadow: 0 0 0 6px var(--c-white); }
+.hs-chip .t { display: none; }
+@media (min-width: 1024px) { .hs-chip .t { display: inline; } .hs-chip { padding-inline: 1.1rem; } }
+
+/* only the room on screen animates */
+.hs-pin[data-active="0"] .hs-layer:not([data-n="0"]) *, .hs-pin[data-active="1"] .hs-layer:not([data-n="1"]) *,
+.hs-pin[data-active="2"] .hs-layer:not([data-n="2"]) *, .hs-pin[data-active="3"] .hs-layer:not([data-n="3"]) * { animation-play-state: paused !important; }
+
+/* ---- ambient pieces ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .hs-jump { animation: hs-jump 4.4s var(--ease-in-out-sine) infinite; animation-delay: calc(var(--d, 0) * -1s); transform-box: fill-box; }
+  .hs-lob { animation: hs-lob 5.6s linear infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+}
+@keyframes hs-jump { 0%, 55%, 100% { transform: translateY(0); } 77% { transform: translateY(-16px); } }
+@keyframes hs-lob {
+  0% { transform: translate(0, 0) rotate(0); opacity: 0; } 12% { transform: translate(32px, -62px) rotate(70deg); opacity: 1; } 25% { transform: translate(65px, -108px) rotate(150deg); }
+  37% { transform: translate(97px, -136px) rotate(230deg); } 50% { transform: translate(130px, -146px) rotate(300deg); } 62% { transform: translate(162px, -136px) rotate(380deg); }
+  75% { transform: translate(195px, -108px) rotate(450deg); } 87% { transform: translate(228px, -62px) rotate(520deg); } 95% { transform: translate(250px, -14px) rotate(570deg); opacity: 1; } 100% { transform: translate(260px, 0) rotate(600deg); opacity: 0; }
+}
+
+/* ---- reduced motion: four rooms stacked, still and complete ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hs-list { position: static; }
+  .hs-list > .hs-layer { position: relative; inset: auto; clip-path: none; --r: 1; --a: 1; --o: 0; }
+  .hs-inner { transform: none; height: auto; min-height: min(44rem, 100svh); padding-bottom: 3rem; }
+  .hs-art { transform: none; min-height: 18rem; }
+  .hs-copy { transform: none; opacity: 1; }
+  .hs-d { transform: none; }
+  .hs-nav { position: static; padding: 1rem 1.25rem; order: -1; justify-content: flex-start; overflow-x: auto; }
+  .hs-pin { display: flex; flex-direction: column; }
+  .hs-list { order: 1; }
+}
+@media (prefers-reduced-motion: reduce) and (min-width: 1024px) { .hs-art { min-height: 0; } }
+
+/* ---- the real video after the story (an empty slot renders nothing: the band disappears) ---- */
+.hs-real { padding-top: 1.5rem; padding-bottom: clamp(3rem, 7vw, 6rem); }
+.hs-real > * { max-width: 80rem; margin-inline: auto; }
+.hs-real:empty { display: none; }
+
+/* ---- places: drawing + real photo + text, one row per place ----
+ * Mobile: drawing, text, photo. Desktop: drawing on one side (6 cols), text and photo stacked on the other (5 cols).
+ * Without the photo (empty slot in production) the text centres beside the drawing: no hole. */
+.hs-place { display: grid; gap: 1.75rem; }
+.hs-place-photo:empty { display: none; }
+@media (min-width: 1024px) {
+  .hs-place { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 3rem; row-gap: 2rem; align-items: start; }
+  .hs-place-art { grid-column: 1 / span 6; grid-row: 1 / span 2; }
+  .hs-place-copy { grid-column: 8 / span 5; grid-row: 1; align-self: end; }
+  .hs-place-photo { grid-column: 8 / span 5; grid-row: 2; }
+  .hs-place-flip .hs-place-art { grid-column: 7 / span 6; }
+  .hs-place-flip .hs-place-copy, .hs-place-flip .hs-place-photo { grid-column: 1 / span 5; }
+  .hs-place:has(.hs-place-photo:empty) .hs-place-copy { grid-row: 1 / span 2; align-self: center; }
+}
+.hs-place-panel { position: relative; overflow: hidden; border-radius: 2rem; aspect-ratio: 10 / 11; isolation: isolate; }
+.hs-place-panel .stage { position: absolute; inset: 0; } .hs-place-panel .stage-tilt { position: absolute; inset: 0; }
+
+/* places panels: a soft rise as they scroll in (no 3D swing), the scene inside keeps its gentle parallax */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hs-place-rise { animation: hs-place-rise var(--ease-scroll) both; animation-timeline: view(); animation-range: entry 0% cover 45%; }
+  }
+}
+@keyframes hs-place-rise { from { opacity: 0; transform: translate3d(0, 32px, 0) scale(0.96); } to { opacity: 1; transform: none; } }
