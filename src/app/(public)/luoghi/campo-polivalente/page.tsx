@@ -34,7 +34,7 @@ export default function CampoPage() {
             <p className="t-body md:col-span-4">Le righe bianche sono del calcio, quelle gialle della pallavolo, con la rete nel mezzo. Scorri e si tracciano. Il campo è polivalente: serve a più giochi, quindi a più ragazzi.</p>
           </div>
           <div className="mt-10"><FieldPlan /></div>
-          <RealMedia id="campo-panoramica" className="mt-10" />
+          <RealMedia id="campo-panoramica" className="mt-10" deco={["sun", "ball"]} sizes="(min-width: 1536px) 1440px, 96vw" />
         </Wrap>
       </Room>
 
@@ -55,7 +55,7 @@ export default function CampoPage() {
             <p className="t-label">Per i ragazzi</p>
             <h2 className="t-scene mt-3">Poi arriva la rete</h2>
             <p className="t-body mt-5">Per i ragazzi c&apos;è la pallavolo. Ci sono anche attività pensate per i minori ospitati nelle comunità.</p>
-            <RealMedia id="campo-attivita" className="mt-8" />
+            <RealMedia id="campo-attivita" className="mt-8" shape="polaroid" tilt={1.5} />
           </div>
           <div className="md:order-1 md:col-span-7"><VolleyScene /></div>
         </Wrap>

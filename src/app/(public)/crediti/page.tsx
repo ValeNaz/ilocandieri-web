@@ -20,7 +20,8 @@ async function placeMedia() {
     id: slot.id,
     page: mediaSlotPageLabel(slot.page),
     kind: media.type === "video" ? "Video" : "Foto",
-    text: media.caption || media.alt,
+    text: media.origin === "stock" ? media.alt : media.caption || media.alt,
+    credit: media.origin === "stock" ? media.credit : null,
   }]));
 }
 
@@ -37,7 +38,7 @@ export default async function Page() {
               <div className="t-body space-y-4">
                 <p>Le foto dei prodotti sono di ABES, il progetto agricolo della cooperativa (abes.bio), e sono quelle che vedi nel negozio.</p>
                 <p>Le foto e i video dei luoghi (il Giardino delle Arance, il Campo Polivalente, la casa dell&apos;accoglienza) sono della cooperativa I Locandieri. Dove c&apos;è, la didascalia accanto all&apos;immagine dice cosa mostra.</p>
-                <p>Non usiamo foto né video di repertorio. Le illustrazioni, invece, sono disegni originali fatti per questo sito.</p>
+                {media.some((m) => m.credit) && <p>Alcune foto sono ancora indicative: vengono da Pexels (licenza Pexels, uso libero) e mostrano luoghi simili ai nostri, non i nostri. Le trovi segnate &quot;Foto indicativa&quot;, con il nome dell&apos;autore, e le sostituiremo con le nostre.</p>}
               </div>
               {media.length > 0 && (
                 <div>
@@ -46,7 +47,7 @@ export default async function Page() {
                     {media.map((m) => (
                       <li key={m.id} className="grid gap-1 border-t-2 border-[var(--c-ink)] py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
                         <span className="font-bold">{m.kind} · {m.page}</span>
-                        <span>{m.text}</span>
+                        <span>{m.text}{m.credit && <> · <a href={m.credit.url} target="_blank" rel="noopener noreferrer" className="underline">{m.credit.author} / Pexels</a></>}</span>
                       </li>
                     ))}
                   </ul>

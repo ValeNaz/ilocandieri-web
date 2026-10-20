@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { navGroups } from "@/lib/nav";
 import { paths } from "@/lib/paths";
 import { Wordmark } from "../../Wordmark";
+import { EmailText } from "@/components/public/EmailText";
 
 export type HeaderContacts = { phone: string; email: string; address: string };
 
@@ -130,8 +131,8 @@ export function HeaderBar({ contacts }: { contacts: HeaderContacts }) {
             </ul>
           </nav>
 
-          <Link href={paths.shop} className="pill pill-solid hdr-cta" aria-current={isActive(pathname, paths.shop) ? "page" : undefined}>
-            Shop ABES <span className="arrow" aria-hidden="true">→</span>
+          <Link href={paths.events} className="pill pill-solid hdr-cta" aria-current={isActive(pathname, paths.events) ? "page" : undefined}>
+            Partecipa <span className="arrow" aria-hidden="true">→</span>
           </Link>
 
           <button
@@ -154,12 +155,11 @@ export function HeaderBar({ contacts }: { contacts: HeaderContacts }) {
         <nav aria-label="Navigazione mobile" className="mm-nav">
           <ul className="mm-groups">
             {navGroups.filter((g) => g.children).map((g) => {
-              const subs = (g.children ?? []).filter((c) => c.href !== g.href);
+              // same entries as the desktop panels: the group name is a heading, every child is listed
+              const subs = g.children ?? [];
               return (
                 <li key={g.label} className="mm-group">
-                  <Link href={g.href} className="mm-big" aria-current={pathname === g.href ? "page" : undefined}>
-                    {g.label}
-                  </Link>
+                  <p className="mm-big">{g.label}</p>
                   {subs.length > 0 && (
                     <ul className="mm-subs">
                       {subs.map((c) => (
@@ -182,13 +182,13 @@ export function HeaderBar({ contacts }: { contacts: HeaderContacts }) {
               </ul>
             </li>
           </ul>
-          <Link href={paths.shop} className="pill pill-solid mm-cta">Shop ABES <span className="arrow" aria-hidden="true">→</span></Link>
+          <Link href={paths.events} className="pill pill-solid mm-cta">Partecipa <span className="arrow" aria-hidden="true">→</span></Link>
         </nav>
         {(tel || contacts.email || contacts.address) && (
           <div className="mm-contacts">
             <p className="mm-contacts-h">Contatti</p>
             {tel && <a href={`tel:${tel}`}>{contacts.phone}</a>}
-            {contacts.email && <a className="break-all" href={`mailto:${contacts.email}`}>{contacts.email}</a>}
+            {contacts.email && <a href={`mailto:${contacts.email}`}><EmailText email={contacts.email} /></a>}
             {contacts.address && <p>{contacts.address}</p>}
           </div>
         )}

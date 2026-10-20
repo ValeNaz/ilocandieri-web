@@ -15,6 +15,10 @@
   .hh-scene { position: absolute; left: 0; bottom: 0; width: 100%; margin: 0; }
 }
 @media (max-width: 767px) {
+  /* phones: the valley first, above the fold, cropped on the house and its hill, never taller than 45% of the screen */
+  .hh-hero { min-height: 0; }
+  .hh-wrap { order: -1; margin-top: 0; max-height: 45svh; overflow: hidden; }
+  .hh-copy { padding-top: 1.25rem; padding-bottom: 2.5rem; }
   .hh-hero .ha-title { font-size: 2.3rem; }
   .hh-hero .ha-lead { font-size: 1.05rem; line-height: 1.5; margin-top: 1rem; }
   .ha-pills { margin-top: 1.25rem; gap: 0.5rem; }
@@ -122,3 +126,10 @@
 
 /* Closing title: same calm display voice as the hero, one step smaller */
 .ic-title { font-size: clamp(2.2rem, 4.4vw, 4.1rem); line-height: 1.06; max-width: 12em; }
+
+/* Chi siamo / closing: without a photo the text takes the full width (no hole) */
+.ia-grid:has(.ia-photo:empty), .ic-grid:has(.ic-photo:empty) { grid-template-columns: minmax(0, 1fr); }
+.ia-photo:empty, .ic-photo:empty { display: none; }
+
+/* the hero's loops stop once it has scrolled away (kit <Live> sets data-live="off"), and resume when it comes back */
+.live[data-live="off"] [class*="hh-"] { animation-play-state: paused !important; }

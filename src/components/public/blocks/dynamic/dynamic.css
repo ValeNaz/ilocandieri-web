@@ -34,3 +34,23 @@
 .nw-first .nw-title { font-size: clamp(1.7rem, 3vw, 2.6rem); }
 .nw-title a { text-decoration: none; } .nw-title a::after { content: ""; position: absolute; inset: 0; border-radius: 2rem; } .nw-title a:focus-visible { outline: none; }
 .nw-ex { font-size: 1.0625rem; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Home "Eventi + News": one white section, two columns (events | news). Yellow only inside the tickets. */
+.en { display: grid; gap: 4rem; }
+@media (min-width: 1024px) { .en-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5rem; } }
+.en-list { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.en-tk { position: relative; border-radius: 28px; background: var(--c-yellow); color: var(--c-ink); overflow: hidden; transition: transform .4s var(--ease-out-expo); }
+.en-tk:hover { transform: translateY(-4px); }
+.en-strip { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 1.25rem; border-bottom: 3px dashed var(--c-ink); font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 1.0625rem; letter-spacing: .04em; }
+.en-strip span { font-family: var(--font-sans); letter-spacing: 0; font-size: .95rem; }
+.en-tk-body { padding: 1rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: .5rem; }
+.en-title { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1.12; letter-spacing: -0.015em; font-size: clamp(1.25rem, 2vw, 1.6rem); text-wrap: balance; }
+.en-title a { text-decoration: none; } .en-title a::after { content: ""; position: absolute; inset: 0; border-radius: 28px; } .en-title a:focus-visible { outline: none; }
+.en-tk:has(a:focus-visible), .en-nw:has(a:focus-visible) { outline: 3px solid var(--c-ink); outline-offset: 4px; }
+.en-sub { font-size: 1rem; line-height: 1.5; }
+.en-nw { position: relative; border-radius: 28px; padding: 1.15rem 1.25rem 1.3rem; box-shadow: inset 0 0 0 2px var(--c-ink); display: flex; flex-direction: column; gap: .45rem; transition: transform .4s var(--ease-out-expo); }
+.en-nw:hover { transform: translateY(-4px); }
+.en-cover { position: relative; aspect-ratio: 16 / 9; margin: -.4rem -.5rem .5rem; border-radius: 20px; overflow: hidden; background: var(--c-white); }
+.en-date { font-size: .9375rem; font-weight: 700; color: var(--c-green); }
+.en-ex { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .en-tk, .en-nw { transition: none; } .en-tk:hover, .en-nw:hover { transform: none; } }

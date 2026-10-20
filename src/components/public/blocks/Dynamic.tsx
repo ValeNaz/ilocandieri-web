@@ -13,7 +13,7 @@ import type { HeadingLevel } from "./shared";
 /** ABES showcase. Without products: pointer to the catalogue (never fake cards). `home` adds the link to /abes. */
 export async function AbesBlock({ data, level, home }: { data: BlockDataOf<"abes_showcase">; level: HeadingLevel; home?: boolean }) {
   const products = (await (data.source === "shop" ? getShopProducts() : getHomeProducts(data.limit))).slice(0, data.source === "shop" ? undefined : data.limit);
-  const props = home ? { ctaHref: paths.shop, moreCta: { label: "Dal seme al barattolo", href: paths.abes } } : {};
+  const props = home ? { ctaHref: paths.shop, moreCta: { label: "Dal seme al barattolo", href: paths.abes }, tone: "green" as const } : {};
   if (products.length === 0 && level === 1) {
     return <Room tone="white" className="py-20"><Wrap><h1 className="t-giant">{data.title}</h1><div className="mt-8"><PillLink href={paths.abesShop}>{data.ctaLabel}</PillLink></div></Wrap></Room>;
   }

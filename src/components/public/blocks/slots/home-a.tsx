@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Fragment, type CSSProperties } from "react";
 import "@/components/public/art/home/home-a.css";
-import { ClosingScene } from "@/components/public/art/home/closing-scene";
 import { HeroLive } from "@/components/public/art/home/hero-live";
-import { IdentityScene } from "@/components/public/art/home/identity-scene";
-import { LitWords } from "@/components/public/kit/Kinetic";
+import { Live } from "@/components/public/kit/Live";
 import { Room, Wrap } from "@/components/public/kit/Room";
+import { RealMedia } from "@/components/public/real/RealMedia";
 import type { Cta } from "@/lib/content/blocks";
 import { BlockHeading } from "../shared";
 import type { SlotMap, SlotProps } from "./types";
@@ -54,7 +53,7 @@ function HomeHero({ data, level }: SlotProps) {
         </div>
       </Wrap>
       <div className="hh-wrap" role="img" aria-label="Una valle di aranci con la casa de I Locandieri in cima al colle. Una persona sale il sentiero con una cassetta, un motocarro carico di arance attraversa la collina, due bambini si passano la palla, una ragazza coglie un'arancia, un uomo vanga.">
-        <HeroLive />
+        <Live threshold={0}><HeroLive /></Live>
       </div>
     </Room>
   );
@@ -63,23 +62,24 @@ function HomeHero({ data, level }: SlotProps) {
 type IntroData = { eyebrow: string; title: string; text: string; cta: Cta | null };
 type CtaData = { title: string; text: string; primaryCta: Cta | null; secondaryCta: Cta | null };
 
+/** Chi siamo on white: the words, and the people (group photo) with a drawn sun and orange branch breaking the frame. */
 function HomeIdentity({ data, level }: SlotProps) {
   const d = data as IntroData;
   return (
-    <Room tone="green" id="identita" className="py-20 md:py-32">
+    <Room tone="white" id="identita" className="py-16 sm:py-24">
       <Wrap>
-        <div className="grid items-start gap-14 md:grid-cols-[1.05fr_1fr] md:gap-16">
+        <div className="ia-grid grid items-center gap-12 md:grid-cols-[1fr_1fr] md:gap-16">
           <div>
-            {d.eyebrow && <p className="t-label rise mb-5" style={{ color: "var(--pop-text)" }}>{d.eyebrow}</p>}
-            <BlockHeading level={level} className="t-scene rise">{d.title}</BlockHeading>
-            <p className="t-lead mt-8 !max-w-[34rem]"><LitWords text={d.text} /></p>
-            <div className="rise mt-10"><Pill cta={d.cta} solid /></div>
+            {d.eyebrow && <p className="t-label mb-4" style={{ color: "var(--pop-text)" }}>{d.eyebrow}</p>}
+            <BlockHeading level={level} className="t-scene">{d.title}</BlockHeading>
+            <p className="t-lead mt-6 !max-w-[34rem]">{d.text}</p>
+            <div className="mt-8"><Pill cta={d.cta} solid /></div>
           </div>
-          <div className="ia-art relative aspect-[600/680] w-full overflow-hidden rounded-[2rem] bg-[var(--c-white)]"><IdentityScene /></div>
+          <div className="ia-photo"><RealMedia id="chi-siamo-squadra" aspect="4/3" deco={["sun", "branch"]} sizes="(min-width: 768px) 46vw, 92vw" /></div>
         </div>
-        <div className="mt-20 grid items-center gap-6 rounded-[2rem] bg-[var(--c-yellow)] p-7 text-[var(--c-ink)] md:mt-28 md:grid-cols-[auto_1fr] md:gap-14 md:p-12">
-          <p className="t-scene rise" lang="grc-Latn">kalòs kai agathòs</p>
-          <div className="rise">
+        <div className="mt-16 grid items-center gap-6 rounded-[28px] bg-[var(--c-yellow)] p-7 text-[var(--c-ink)] md:mt-20 md:grid-cols-[auto_1fr] md:gap-14 md:p-12">
+          <p className="t-scene" lang="grc-Latn">kalòs kai agathòs</p>
+          <div>
             <p className="t-head">Bello e buono</p>
             <p className="t-body mt-3">È il motto della cooperativa. Per noi la bellezza nasce da come ci si comporta: bello è ciò che è buono.</p>
           </div>
@@ -89,20 +89,21 @@ function HomeIdentity({ data, level }: SlotProps) {
   );
 }
 
+/** Closing on yellow: an arch window onto the real garden (photo), drawn sun and birds around it. */
 function HomeClosing({ data, level }: SlotProps) {
   const d = data as CtaData;
   return (
-    <Room tone="yellow" id="contatti">
-      <Wrap className="grid min-h-[100svh] items-center gap-10 py-20 md:grid-cols-[1.05fr_1fr] md:gap-12 md:py-24">
+    <Room tone="yellow" id="contatti" className="py-16 sm:py-24">
+      <Wrap className="ic-grid grid items-center gap-12 md:grid-cols-[1.1fr_1fr] md:gap-14">
         <div className="relative z-10">
-          <BlockHeading level={level} className="t-giant ic-title rise">{d.title}</BlockHeading>
-          <p className="t-lead rise mt-7 max-w-[34rem]">{d.text}</p>
-          <div className="rise mt-9 flex flex-wrap gap-3">
+          <BlockHeading level={level} className="t-giant ic-title">{d.title}</BlockHeading>
+          <p className="t-lead mt-6 max-w-[34rem]">{d.text}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
             <Pill cta={d.primaryCta} solid />
             <Pill cta={d.secondaryCta} />
           </div>
         </div>
-        <div className="mx-auto w-full max-w-[34rem] md:max-w-none"><ClosingScene /></div>
+        <div className="ic-photo mx-auto w-full max-w-[30rem]"><RealMedia id="giardino-agrumeto" shape="arch" aspect="4/5" deco={["sun", "birds"]} sizes="(min-width: 768px) 40vw, 92vw" /></div>
       </Wrap>
     </Room>
   );

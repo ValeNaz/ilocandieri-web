@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description,
     alternates: { canonical: paths.event(e.slug) },
     openGraph: { title, description, url, siteName: seo.siteName, locale: "it_IT", type: "article", images: image },
-    twitter: { card: image ? "summary_large_image" : "summary", title, description, images: image?.map((i) => i.url) },
+    twitter: { card: "summary_large_image", title, description, images: image?.map((i) => i.url) },
   };
 }
 

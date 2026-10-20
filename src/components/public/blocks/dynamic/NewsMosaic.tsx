@@ -34,9 +34,7 @@ export function NewsMosaic({ news, eyebrow, title, text, cta, emptyMessage, leve
               return (
                 <li key={n.id}>
                   <article className={`nw-card ${i === 0 ? "nw-first" : ""}`} style={{ ["--nb" as string]: c.b, ["--nf" as string]: c.f }}>
-                    <div className="nw-pic">
-                      {n.coverUrl ? <Image src={n.coverUrl} alt={n.coverAlt} fill sizes="(min-width:900px) 50vw, 90vw" className="object-cover" /> : <span className="nw-big" aria-hidden="true">{new Date(n.publishedAt).getDate()}</span>}
-                    </div>
+                    {n.coverUrl && <div className="nw-pic"><Image src={n.coverUrl} alt={n.coverAlt} fill sizes="(min-width:900px) 50vw, 90vw" className="object-cover" /></div>}
                     <div className="nw-txt">
                       <p className="nw-meta">{n.categoryName && <span>{n.categoryName} · </span>}<time dateTime={new Date(n.publishedAt).toISOString()}>{formatDate(n.publishedAt)}</time></p>
                       <h3 className="nw-title"><Link href={paths.newsItem(n.slug)}>{n.title}</Link></h3>

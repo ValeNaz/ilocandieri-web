@@ -28,6 +28,7 @@ export function EventCard({ event, headingLevel = 3, featured = false }: { event
           <span className="tk-wd">{weekday.format(event.startsAt).replace(".", "")}</span>
           <span className="tk-day">{day}</span>
           <span className="tk-mo">{month}</span>
+          <span className="tk-time">· {formatEventTime(event.startsAt)}</span>
         </div>
         <div className="tk-body">
           {event.coverUrl && (

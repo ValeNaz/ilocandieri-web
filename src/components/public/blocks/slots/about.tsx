@@ -59,7 +59,7 @@ function Missione({ data }: SlotProps) {
         </div>
         <div className="grid content-start gap-10 lg:col-span-7">
           <div className="aspect-[2/1] w-full"><MissioneScene /></div>
-          <RealMedia id="chi-siamo-squadra" className="w-full" />
+          <RealMedia id="chi-siamo-squadra" className="w-full" deco={["sun", "branch"]} />
         </div>
       </Wrap>
     </Room>
@@ -188,7 +188,7 @@ function Abes({ data }: SlotProps) {
             {d.cta && <Pill href={d.cta.href}>{d.cta.label}</Pill>}
             <Pill href={paths.abes} kind="line">Dal seme al vasetto</Pill>
           </div>
-          <RealMedia id="chi-siamo-lavoro" className="mt-12 w-full" />
+          <RealMedia id="chi-siamo-lavoro" className="mt-12 w-full" shape="polaroid" tilt={1.5} />
         </div>
       </Wrap>
     </Room>

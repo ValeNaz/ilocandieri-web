@@ -7,6 +7,7 @@ import { paths } from "@/lib/paths";
 import { getSetting } from "@/lib/settings";
 import { Wordmark } from "./Wordmark";
 import "./chrome.css";
+import { EmailText } from "@/components/public/EmailText";
 
 /** Column headings for the footer map: the header groups, plus one column for the single entries. */
 const HEADINGS: Record<string, string> = { "Chi siamo": "Cooperativa" };
@@ -51,7 +52,7 @@ export async function Footer() {
               <p className="ftr-org">{org.name}</p>
               {org.address && <p>{org.address}</p>}
               {tel && <p><a href={`tel:${tel}`}>{org.phone}</a></p>}
-              {org.email && <p><a className="break-all" href={`mailto:${org.email}`}>{org.email}</a></p>}
+              {org.email && <p><a href={`mailto:${org.email}`}><EmailText email={org.email} /></a></p>}
             </address>
             {social.length > 0 && (
               <ul className="ftr-social" aria-label="Social">

@@ -94,4 +94,10 @@ describe("media source resolution", () => {
     expect(resolveMediaSource({ slot: photo, showPlaceholder: true })).toEqual({ origin: "placeholder" });
     expect(resolveMediaSource({ slot: photo })).toBeNull();
   });
+  it("provisional stock photo only after real files, never on a video slot", () => {
+    const stock = { src: "/foto/provvisorie/x.webp", alt: "Stock", author: "A", url: "https://www.pexels.com/photo/1/" };
+    expect(resolveMediaSource({ slot: photo, stock })).toMatchObject({ origin: "stock", src: stock.src, credit: { author: "A" } });
+    expect(resolveMediaSource({ slot: photo, stock, files: { photo: "/reali/giardino-casolare.jpg" } })).toMatchObject({ origin: "file" });
+    expect(resolveMediaSource({ slot: video, stock })).toBeNull();
+  });
 });

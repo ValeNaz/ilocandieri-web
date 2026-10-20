@@ -100,7 +100,7 @@ export default function AbesPage() {
                     <p className="abes-num" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
                     <h3 className="t-head">{s.title}</h3>
                     <p>{s.text}</p>
-                    {s.name === "Raccolta" && <RealMedia id="abes-raccolta" className="abes-cap-media" caption="La raccolta, dal vero." />}
+                    {s.name === "Raccolta" && <RealMedia id="abes-raccolta" shape="arch" aspect="4/5" deco={["leaf"]} className="abes-cap-media" caption="La raccolta, dal vero." />}
                   </div>
                 </li>
               );
@@ -118,7 +118,7 @@ export default function AbesPage() {
             <p className="t-lead lg:col-span-5">Cassette, vasetti, pasta e ceci: le fotografie sono dei prodotti ABES, come arrivano sul banco.</p>
           </div>
           <RealMedia id="abes-video" className="mt-12 max-w-[64rem] sm:mt-16" caption="Dal campo al barattolo, dal vero." />
-          <RealMedia id="abes-raccolta" className="abes-raccolta-m mt-12" caption="La raccolta, una cassetta alla volta." />
+          <RealMedia id="abes-raccolta" shape="polaroid" tilt={-1.5} className="abes-raccolta-m mt-12" caption="La raccolta, una cassetta alla volta." />
           <div className="mt-12 grid gap-x-8 gap-y-14 sm:mt-16 lg:grid-cols-12">
             <figure className="relative lg:col-span-4 lg:row-span-2">
               <div className="ph ph-arch ph-tilt aspect-[3/4]">

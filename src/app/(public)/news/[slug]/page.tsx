@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       ...(a.categoryName ? { section: a.categoryName } : {}),
       ...(image ? { images: [{ url: image, alt: a.ogImageUrl ? title : a.coverAlt || title }] } : {}),
     },
-    twitter: { card: image ? "summary_large_image" : "summary", title, description, ...(image ? { images: [image] } : {}) },
+    twitter: { card: "summary_large_image", title, description, ...(image ? { images: [image] } : {}) },
   };
 }
 

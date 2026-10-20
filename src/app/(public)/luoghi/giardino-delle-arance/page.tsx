@@ -58,14 +58,13 @@ export default function GiardinoPage() {
         <Wrap className="grid items-center gap-10 md:grid-cols-12 md:gap-14">
           <div className="md:col-span-7">
             <CasolareScene />
-            <p className="t-body mt-4 text-[0.95rem]">Disegno illustrativo: non è il rilievo reale dell&apos;edificio.</p>
           </div>
           <div className="md:col-span-5">
             <p className="t-label">Il casolare</p>
             <h2 className="t-scene mt-3">Una casa di fine Settecento</h2>
             <p className="t-body mt-5">Il casolare è stato ristrutturato e oggi ospita una comunità alloggio per minori.</p>
             <p className="t-body mt-4">È una casa di campagna con più di due secoli. Intorno, i filari.</p>
-            <RealMedia id="giardino-casolare" className="mt-8" />
+            <RealMedia id="giardino-casolare" className="mt-8" deco={["sun"]} />
           </div>
         </Wrap>
       </Room>
@@ -88,7 +87,7 @@ export default function GiardinoPage() {
               <p className="t-body mt-6 text-[0.95rem]">Schema illustrativo dall&apos;alto: le proporzioni non sono in scala.</p>
             </div>
           </div>
-          <RealMedia id="giardino-agrumeto" className="mt-12" />
+          <RealMedia id="giardino-agrumeto" className="mt-12" deco={["branch", "birds"]} sizes="(min-width: 1536px) 1440px, 96vw" />
         </Wrap>
       </Room>
 
@@ -124,7 +123,7 @@ export default function GiardinoPage() {
           </div>
           <div className="mt-12 flex flex-col gap-8 md:flex-row md:items-center md:gap-10">
             <div className="md:flex-[2]"><LabScene /></div>
-            <RealMedia id="giardino-laboratorio" className="md:flex-1" />
+            <RealMedia id="giardino-laboratorio" className="md:flex-1" shape="polaroid" tilt={-1.5} />
           </div>
         </Wrap>
       </Room>

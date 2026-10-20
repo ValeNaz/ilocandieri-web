@@ -5,7 +5,7 @@ const copy: CopyPage = {
   "cosa-facciamo": {
     eyebrow: "Cosa facciamo",
     title: "Accogliere, restituire, giocare, coltivare.",
-    intro: "A Castelvetrano lavoriamo su quattro fronti. Ognuno ha un posto preciso e persone che ci lavorano ogni giorno. Scorri: si passa da una stanza all'altra.",
+    intro: "A Castelvetrano lavoriamo su quattro fronti. Ognuno ha un posto preciso e persone che ci lavorano ogni giorno.",
     items: [
       { title: "Accoglienza e inclusione", text: "Dal 2008 accogliamo persone migranti e, in una comunità dedicata, minori stranieri non accompagnati. Una stanza, un posto a tavola, poi il cammino verso l'autonomia." },
       { title: "Beni confiscati", text: "Un casolare di fine Settecento e i suoi terreni, tolti alla criminalità organizzata, tornano a servire la città. La legge 109 del 1996 lo permette. Noi apriamo il cancello e ci mettiamo al lavoro." },

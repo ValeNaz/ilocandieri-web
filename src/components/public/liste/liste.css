@@ -40,9 +40,10 @@
 .tk[data-state="open"] .tk-stub { background: var(--c-green); color: var(--c-white); border-right-color: var(--c-white); }
 .tk[data-state="full"] .tk-stub { background: var(--c-orange); }
 .tk[data-state="soon"] .tk-stub, .tk[data-state="closed"] .tk-stub, .tk[data-state="past"] .tk-stub { background: var(--c-white); }
-.tk-wd { font-family: var(--font-sans); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: capitalize; }
+.tk-wd { font-family: var(--font-sans); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.04em; text-transform: capitalize; }
 .tk-day { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: clamp(2.6rem, 3.6vw, 3.2rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .tk-mo { font-family: var(--font-sans); font-weight: 700; font-size: 0.92rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.tk-time { display: none; }
 .tk-body { display: flex; flex: 1; min-width: 0; flex-direction: column; }
 .tk-cover { width: 100%; aspect-ratio: 16 / 6; object-fit: cover; border-bottom: 2px solid var(--c-ink); }
 .tk-text { display: flex; flex: 1; flex-direction: column; gap: 0.7rem; padding: 1.1rem 1.3rem 1.2rem; }
@@ -61,7 +62,19 @@
 .tk-lg .tk-title { font-size: clamp(1.55rem, 2.4vw, 2.1rem); }
 .tk-lg .tk-in { min-height: 15rem; }
 @media (min-width: 48rem) { .tk-wide { grid-column: span 2; } }
-@media (max-width: 30rem) { .tk { --stub: 5.2rem; } .tk-lg { --stub: 6rem; } .tk-lg .tk-day { font-size: 3rem; } }
+/* phones: the stub becomes a horizontal strip on top ("14 NOV · 09:30"), the title gets the full width */
+@media (max-width: 30rem) {
+  .tk, .tk-lg { --stub: 0px; }
+  .tk-in { flex-direction: column; min-height: 0; }
+  .tk-lg .tk-in { min-height: 0; }
+  .tk-stub { width: auto; flex-direction: row; justify-content: flex-start; align-items: baseline; gap: 0.45rem; padding: 0.6rem 1.1rem; border-right: 0; border-bottom: 2px dashed var(--c-ink); }
+  .tk[data-state="open"] .tk-stub { border-bottom-color: var(--c-white); }
+  .tk-day, .tk-lg .tk-day { font-size: 1.25rem; letter-spacing: 0; }
+  .tk-mo { font-size: 1.05rem; }
+  .tk-time { display: inline; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .tk-wd { order: 3; margin-left: auto; }
+  .tk-n { display: none; }
+}
 
 /* ---------- Chips, panels, rooms of lists ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -89,7 +102,7 @@
 .nc[data-tone="white"] { --nc-bg: var(--c-white); --nc-media: var(--c-green); }
 .nc:hover { transform: translate3d(0, -3px, 0); }
 .nc:has(a:focus-visible) { outline: 3px solid var(--c-ink); outline-offset: 5px; }
-.nc-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 2px solid var(--c-ink); background: var(--nc-media); }
+.nc-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 2px solid var(--c-ink); background: var(--nc-media); }
 .nc-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .nc-media svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .nc-body { display: flex; flex: 1; flex-direction: column; gap: 0.8rem; padding: 1.4rem 1.5rem 1.5rem; }
@@ -109,6 +122,9 @@
   .nc-wide .nc-body { padding: 2rem 2.2rem; justify-content: center; }
   .nc-wide .nc-title { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
 }
+.nc-text .nc-body { padding-top: 1.6rem; }
+.nc-first.nc-text .nc-title { font-size: clamp(1.7rem, 2.8vw, 2.5rem); max-width: 30ch; }
+.nc-first.nc-text .nc-ex { -webkit-line-clamp: 4; max-width: 70ch; font-size: 1.0625rem; }
 .nc-grid { display: grid; gap: 1.6rem; }
 @media (min-width: 48rem) { .nc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nc-grid > .nc-first { grid-column: 1 / -1; } }
 @media (min-width: 64rem) { .nc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -162,7 +178,8 @@
 .bt-n1 { top: 3.55rem; border-left: 0; border-radius: 0 1rem 1rem 0; left: -2px; }
 .bt-n2 { top: 3.55rem; border-right: 0; border-radius: 1rem 0 0 1rem; left: auto; right: -2px; }
 @media (prefers-reduced-motion: no-preference) { .bt { animation: bt-in 1.1s var(--ease-out-quint) 0.3s both; } }
-@keyframes bt-in { from { opacity: 0; transform: translate3d(0, 20px, 0); } to { opacity: 1; transform: none; } }
+/* the ticket is opaque from the first frame: it only slides in */
+@keyframes bt-in { from { transform: translate3d(0, 20px, 0); } to { transform: none; } }
 
 /* ---------- News article ---------- */
 .na-hero { display: grid; gap: 2.5rem; padding-bottom: 3.5rem; }

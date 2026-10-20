@@ -54,13 +54,13 @@ export default function TradizionePage() {
         <p className="t-body">I rocchi delle colonne si tagliavano alle Cave di Cusa, a Campobello di Mazara. Il lavoro si fermò di colpo e molti rocchi sono rimasti lì, incompiuti: ancora oggi si vedono a ogni stadio, dal cerchio appena inciso al pezzo pronto da portare via.</p>
       </Ingrediente>
 
-      <Ingrediente id="tumminia" tone="yellow" side="right" ar="7/8" label="Il grano" scene={<ScenaTumminia />} real={<RealMedia id="tradizione-grano" className="ing-real" caption="Tumminia coltivata da ABES." />}>
+      <Ingrediente id="tumminia" tone="yellow" side="right" ar="7/8" label="Il grano" scene={<ScenaTumminia />} real={<RealMedia id="tradizione-grano" shape="arch" aspect="4/5" className="ing-real" caption="Tumminia coltivata da ABES." />}>
         <h2 id="tumminia-t" className="t-scene">Tumminia, un grano antico.</h2>
         <p className="t-body">La Tumminia, o Timilia, è un antico grano duro siciliano. Ha un ciclo breve e una farina scura. Tra i prodotti ABES c&apos;è il grano duro Tumminia, e con la sua farina si fa il pane nero di Castelvetrano.</p>
         <div className="ing-actions"><Pill href={paths.abes}>Da seme a barattolo</Pill></div>
       </Ingrediente>
 
-      <Ingrediente id="pane" tone="green" side="left" ar="1/1" label="Il pane" scene={<ScenaPane />} real={<RealMedia id="tradizione-pane" className="ing-real" caption="Pane nero di Castelvetrano." />}>
+      <Ingrediente id="pane" tone="green" side="left" ar="1/1" label="Il pane" scene={<ScenaPane />} real={<RealMedia id="tradizione-pane" shape="arch" aspect="4/5" className="ing-real" caption="Pane nero di Castelvetrano." />}>
         <h2 id="pane-t" className="t-scene">Il pane nero di Castelvetrano.</h2>
         <p className="t-body">Il pane nero di Castelvetrano si fa con la farina di Tumminia. È un prodotto tradizionale della città e un presidio Slow Food. Si riconosce subito, dal colore.</p>
         <p className="t-body">Si spezza, si mangia con l&apos;olio buono della valle.</p>

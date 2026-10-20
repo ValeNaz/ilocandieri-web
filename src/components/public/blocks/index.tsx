@@ -13,9 +13,9 @@ import { SLOT_VIEWS } from "./slots";
  * Render ONE block. `level` is the heading level of the block's main title (1 for the first block of a page, else 2).
  * `message` blocks are system microcopy and never render as sections.
  */
-export function BlockView({ block, images, level = 2, pageKey, index = 0 }: { block: ParsedBlock; images: ImageMap; level?: HeadingLevel; pageKey?: string; index?: number }): ReactNode {
+export function BlockView({ block, images, level = 2, pageKey, index = 0, siblings }: { block: ParsedBlock; images: ImageMap; level?: HeadingLevel; pageKey?: string; index?: number; siblings?: ParsedBlock[] }): ReactNode {
   const Custom = pageKey && block.data.slot ? SLOT_VIEWS[`${pageKey}:${block.data.slot}`] : undefined;
-  if (Custom) return <Custom data={block.data as never} images={images} level={level} block={block} />;
+  if (Custom) return <Custom data={block.data as never} images={images} level={level} block={block} siblings={siblings} />;
   switch (block.type) {
     case "hero": return <HeroBlock data={block.data} images={images} level={level} pageKey={pageKey} />;
     case "intro": return <IntroBlock data={block.data} images={images} level={level} />;
@@ -43,7 +43,7 @@ export function PageBlocks({ content, only, except, firstIsH1 = true }: { conten
   return (
     <>
       {blocks.map((b, i) => (
-        <BlockView key={b.id} block={b} images={content.images} level={firstIsH1 && i === 0 ? 1 : 2} pageKey={content.page?.key} index={i} />
+        <BlockView key={b.id} block={b} images={content.images} level={firstIsH1 && i === 0 ? 1 : 2} pageKey={content.page?.key} index={i} siblings={blocks} />
       ))}
     </>
   );

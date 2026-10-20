@@ -70,8 +70,8 @@ export default function StoriaPage() {
         </Stop>
 
         <Stop n={5} id="giardino" tone="yellow" panel="white" ar="8/5" side="left" label="Il giardino" real={<>
-          <RealMedia id="storia-prima" className="stop-real stop-real-a" caption="Prima: il casolare chiuso." />
-          <RealMedia id="storia-dopo" className="stop-real stop-real-b" caption="Adesso: stessa inquadratura, oggi." />
+          <RealMedia id="storia-prima" shape="polaroid" tilt={-2} className="stop-real stop-real-a" caption="Prima: il casolare chiuso." />
+          <RealMedia id="storia-dopo" shape="polaroid" tilt={2} className="stop-real stop-real-b" caption="Adesso: stessa inquadratura, oggi." />
         </>} scene={<BeforeAfter label="Prima e adesso: trascina per colorare il giardino" before={<GiardinoPrima />} after={<GiardinoDopo />} />}>
           <h2 id="giardino-t" className="t-scene">Il giardino torna a dare frutti.</h2>
           <p className="t-body">Due ettari di agrumeto recuperato. Sul resto, un orto biologico intensivo. Poi un laboratorio per trasformare e un centro per distribuire.</p>

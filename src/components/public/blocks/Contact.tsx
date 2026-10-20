@@ -8,6 +8,7 @@ import { FORM_TOKEN_FIELD } from "@/lib/security";
 import { issueContactToken } from "@/lib/content/contact";
 import { whatsappUrl } from "@/lib/content/contact-info";
 import type { HeadingLevel } from "./shared";
+import { EmailText } from "@/components/public/EmailText";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -35,7 +36,7 @@ export async function ContactBlock({ data, level }: { data: BlockDataOf<"contact
             <dl>
               <Row label="Cooperativa">{org.name}</Row>
               {org.phone && <Row label="Telefono"><a className={link} href={`tel:${org.phone.replace(/[^+\d]/g, "")}`}>{org.phone}</a></Row>}
-              {org.email && <Row label="Email"><a className={`${link} break-all`} href={`mailto:${org.email}`}>{org.email}</a></Row>}
+              {org.email && <Row label="Email"><a className={link} href={`mailto:${org.email}`}><EmailText email={org.email} /></a></Row>}
               {wa && <Row label="WhatsApp"><a className={link} href={wa} target="_blank" rel="noopener noreferrer">Scrivici su WhatsApp<span className="sr-only"> (si apre in una nuova scheda)</span></a></Row>}
               {org.address && (
                 <Row label="Sede">

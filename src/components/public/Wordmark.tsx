@@ -12,7 +12,7 @@ export function Wordmark({ className, tone, compact }: { className?: string; ton
       <LogoMark build className={cn("wm-mark w-auto", compact ? "h-[2.1rem]" : "h-[2.4rem]")} />
       <span className="wm-text flex flex-col gap-[0.3rem] whitespace-nowrap leading-none">
         <span className="wm-name font-display text-[1.1rem] font-bold">Locandieri</span>
-        <span className="wm-sub text-[0.72rem] font-medium text-brand-green">Cooperativa sociale</span>
+        <span className="wm-sub text-brand-green">Cooperativa sociale</span>
       </span>
     </span>
   );

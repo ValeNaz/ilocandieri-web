@@ -4,22 +4,24 @@ import { inArray } from "drizzle-orm";
 import { cache } from "react";
 import { imageSize } from "@/lib/content/media";
 import { db, schema } from "@/lib/db";
-import { mediaSlot, parseMediaSlotsSetting, resolveMediaSource, type LibraryImage, type MediaSlotId, type MediaSlotsSettings, type ResolvedMedia, type SlotFiles } from "@/lib/media-slots";
+import { mediaSlot, parseMediaSlotsSetting, resolveMediaSource, type LibraryImage, type MediaSlotId, type MediaSlotsSettings, type ResolvedMedia, type SlotFiles, type StockFile } from "@/lib/media-slots";
 import { getSetting } from "@/lib/settings";
+import { stockPhotos } from "@/content/stockPhotos";
 import { mediaUrl } from "@/lib/storage";
 
 const PUBLIC = path.join(process.cwd(), "public", "reali");
+const STOCK = path.join(process.cwd(), "public", "foto", "provvisorie");
 const find = (name: string, exts: string[]) => exts.map((e) => `${name}.${e}`).find((f) => existsSync(path.join(PUBLIC, f)));
 
 const sizes = new Map<string, { mtime: number; size: { width: number; height: number } | null }>();
-function fileSize(file: string) {
-  const full = path.join(PUBLIC, file);
+function fileSize(file: string, dir = PUBLIC) {
+  const full = path.join(dir, file);
   try {
     const mtime = statSync(full).mtimeMs;
-    const hit = sizes.get(file);
+    const hit = sizes.get(full);
     if (hit && hit.mtime === mtime) return hit.size;
     const size = imageSize(readFileSync(full));
-    sizes.set(file, { mtime, size });
+    sizes.set(full, { mtime, size });
     return size;
   } catch {
     return null;
@@ -52,7 +54,17 @@ export const getMediaSlotAssignments = cache(async (): Promise<{ entries: MediaS
   return { entries, images };
 });
 
-export const showMediaPlaceholders = () => process.env.NODE_ENV !== "production" || process.env.SHOW_MEDIA_SLOTS === "1";
+/** Provisional stock photo for a slot, if both the manifest entry and the file exist. */
+export function stockFile(id: MediaSlotId): StockFile | null {
+  const meta = stockPhotos[id];
+  if (!meta || !existsSync(path.join(STOCK, `${id}.webp`))) return null;
+  const size = fileSize(`${id}.webp`, STOCK);
+  const small = existsSync(path.join(STOCK, `${id}-1000.webp`)) ? `/foto/provvisorie/${id}-1000.webp` : undefined;
+  return { src: `/foto/provvisorie/${id}.webp`, small, ...meta, ...(size ?? {}) };
+}
+
+/** The dashed "photo needed" boxes are opt-in (SHOW_MEDIA_SLOTS=1): by default an empty slot renders nothing, also in development. */
+export const showMediaPlaceholders = () => process.env.SHOW_MEDIA_SLOTS === "1";
 
 export async function resolveSlot(id: MediaSlotId, opts: { caption?: string; showPlaceholder?: boolean } = {}): Promise<ResolvedMedia | null> {
   const { entries, images } = await getMediaSlotAssignments();
@@ -62,6 +74,7 @@ export async function resolveSlot(id: MediaSlotId, opts: { caption?: string; sho
     entry,
     image: entry?.mediaId ? images.get(entry.mediaId) ?? null : null,
     files: slotFiles(id),
+    stock: stockFile(id),
     caption: opts.caption,
     showPlaceholder: opts.showPlaceholder ?? showMediaPlaceholders(),
   });

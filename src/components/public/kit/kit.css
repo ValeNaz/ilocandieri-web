@@ -29,32 +29,31 @@
 .t-head  { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; line-height: 1.12; letter-spacing: -0.015em; font-size: clamp(1.45rem, 2.4vw, 2.1rem); text-wrap: balance; }
 .t-lead  { font-size: clamp(1.15rem, 1.5vw, 1.375rem); line-height: 1.55; max-width: 54ch; }
 .t-body  { font-size: 1.0938rem; line-height: 1.7; max-width: 62ch; }
-.t-label { font-family: var(--font-sans); font-weight: 700; font-stretch: 100%; font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3; }
+.t-label { font-family: var(--font-sans); font-weight: 700; font-stretch: 100%; font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.3; }
 /* Width plays are retired: kept as gentle no-ops so old markup stays calm */
 .t-wide  { font-stretch: 108%; }
 .t-tight { font-stretch: 96%; }
 .t-breathe { }
 /* Words / letters for kinetic type: --i set inline */
 .kw { display: inline-block; }
+/* Titles are readable at once: no word-by-word reveal, at most a 250ms fade of the whole heading. */
 @media (prefers-reduced-motion: no-preference) {
-  .kin .kw { animation: kw-in 1.1s var(--ease-out-quint) both; animation-delay: calc(var(--i, 0) * 70ms + var(--kin-delay, 0ms)); }
-  .kin .kc { display: inline-block; animation: kw-in 1.1s var(--ease-out-quint) both; animation-delay: calc(var(--i, 0) * 12ms + var(--kin-delay, 0ms)); }
+  .kin { animation: kin-in 250ms var(--ease-out-quint, ease-out) both; }
 }
-@keyframes kw-in { from { opacity: 0.001; transform: translateY(0.28em); } to { opacity: 1; transform: none; } }
+@keyframes kin-in { from { opacity: 0.6; } to { opacity: 1; } }
 
 /* ---------- Scroll-driven motion (view timeline) ----------
  * Smoothness rules: eased timing (the scroll position is linear, the visual response is not), wide ranges so a small
  * scroll never produces a big jump, short travel distances. Only transform / opacity / clip-path / stroke-dashoffset. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .rise, .rise-x, .pop, .grow-scroll, .draw-scroll, .wipe, .lit-word { animation-timing-function: var(--ease-scroll); animation-fill-mode: both; animation-timeline: view(); }
+    .rise, .rise-x, .pop, .grow-scroll, .draw-scroll, .wipe { animation-timing-function: var(--ease-scroll); animation-fill-mode: both; animation-timeline: view(); }
     .rise { animation-name: rise; animation-range: entry 0% cover 38%; }
     .rise-x { animation-name: rise-x; animation-range: entry 0% cover 38%; }
     .pop { animation-name: pop; animation-range: entry 0% cover 40%; transform-origin: 50% 100%; transform-box: fill-box; }
     .grow-scroll { animation-name: grow; animation-range: entry 0% cover 50%; transform-origin: 50% 100%; transform-box: fill-box; }
     .draw-scroll { animation-name: draw; animation-range: entry 0% cover 60%; }
     .wipe { animation-name: wipe; animation-range: entry 0% cover 50%; }
-    .lit-word { animation-name: lit; animation-range: entry 80% cover 45%; }
     /* Continuous drifts: linear is right here (they track the page 1:1, like real depth) but the amplitude is small */
     .depth { animation: depth linear both; animation-timeline: view(); animation-range: cover; }
     .depth-x { animation: depth-x linear both; animation-timeline: view(); animation-range: cover; }

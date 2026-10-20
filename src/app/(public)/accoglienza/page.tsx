@@ -68,7 +68,7 @@ export default function Page() {
               <h2 className="t-scene mt-8">Due servizi, un modo di accogliere.</h2>
               <p className="t-body mt-6">Accogliere non è dare un tetto e basta. È una casa con regole, orari, compiti e persone che ti accompagnano. Lo facciamo con due servizi.</p>
             </div>
-            <RealMedia id="accoglienza-casa" className="w-full lg:col-span-5" />
+            <RealMedia id="accoglienza-casa" className="w-full lg:col-span-5" shape="polaroid" tilt={-1.5} />
           </div>
           <div className="mt-14 grid gap-10 lg:grid-cols-12">
             {SERVICES.map((s, i) => (

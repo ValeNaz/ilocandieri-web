@@ -9,8 +9,15 @@ export function getAppSecret(): string {
   return "dev-only-insecure-secret-change-me";
 }
 
+let warnedSiteUrl = false;
+/** Public origin used for canonical, og:url, og:image, sitemap. MUST be the real domain in production (SITE_URL). */
 export function getSiteUrl(): string {
-  return (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  const url = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+  if (process.env.NODE_ENV === "production" && !warnedSiteUrl && /localhost|127\.0\.0\.1/.test(url)) {
+    warnedSiteUrl = true;
+    console.warn(`[config] SITE_URL is ${url}: set it to the real domain (https://...) or canonical and social previews point to localhost.`);
+  }
+  return url;
 }
 
 export const isProd = () => process.env.NODE_ENV === "production";

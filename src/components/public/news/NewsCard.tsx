@@ -1,7 +1,6 @@
 // INTERFACE CONTRACT (owner: ABES+NEWS agent). Props must stay stable (`tone` and `first` are optional additions).
 import Image from "next/image";
 import Link from "next/link";
-import { NewsTile } from "@/components/public/art/liste/news-tiles";
 import type { NewsCardData } from "@/lib/news/public";
 import { paths } from "@/lib/paths";
 import { cn, formatDate } from "@/lib/utils";
@@ -12,21 +11,21 @@ const TONES: NewsTone[] = ["yellow", "orange", "green", "white"];
 const hash = (key: string) => [...key].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
 /** Stable colour of a story, from its slug: the same article keeps the same colour everywhere. */
 export const toneFor = (slug: string): NewsTone => TONES[hash(slug) % TONES.length]!;
-const MEDIA: Record<NewsTone, "orange" | "yellow" | "green"> = { yellow: "orange", orange: "yellow", green: "yellow", white: "green" };
 
-/** A story as a cut-out panel in one logo colour: cover (photo or an illustration, never stock), date, title, excerpt. */
+/**
+ * A story as a card: 16:9 cover photo when there is one, else text only (date small on top, no empty box, no drawing
+ * standing in for a photo). White cards; the featured one (`first`) is yellow.
+ */
 export function NewsCard({ news, headingLevel = 3, wide = false, tone, first = false }: { news: NewsCardData; headingLevel?: 2 | 3; wide?: boolean; tone?: NewsTone; first?: boolean }) {
   const H = headingLevel === 2 ? "h2" : "h3";
-  const t = tone ?? toneFor(news.slug);
+  const t = tone ?? (first || wide ? "yellow" : "white");
   return (
-    <article className={cn("nc", wide && "nc-wide", first && "nc-first")} data-tone={t}>
-      <div className="nc-media">
-        {news.coverUrl ? (
+    <article className={cn("nc", wide && news.coverUrl && "nc-wide", !news.coverUrl && "nc-text", first && "nc-first")} data-tone={t}>
+      {news.coverUrl && (
+        <div className="nc-media">
           <Image src={news.coverUrl} alt={news.coverAlt} fill sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 92vw" />
-        ) : (
-          <NewsTile variant={hash(news.slug) >>> 3} media={MEDIA[t]} />
-        )}
-      </div>
+        </div>
+      )}
       <div className="nc-body">
         <p className="nc-meta">
           {news.categoryName && <span className="nc-cat">{news.categoryName}</span>}

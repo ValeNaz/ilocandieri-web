@@ -10,7 +10,7 @@
 .wm-compact .wm-mark { height: 2.1rem; }
 .wm-text { display: flex; flex-direction: column; gap: 0.3rem; line-height: 1; white-space: nowrap; }
 .wm-name { font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 1.1rem; letter-spacing: -0.01em; }
-.wm-sub { display: none; font-family: var(--font-sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.01em; color: var(--c-green); }
+.wm-sub { display: none; font-family: var(--font-sans); font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.04em; color: var(--c-green); }
 @media (min-width: 26rem) { .wm-sub { display: block; } }
 .wm-tag { background: var(--c-white); padding: 0.7rem 1.25rem 0.7rem 1rem; border-radius: 1.25rem; }
 

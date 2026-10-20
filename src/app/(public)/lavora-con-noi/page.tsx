@@ -95,7 +95,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
             <div className="lg:col-span-5">
               <h2 id="collaborazioni-titolo" className="t-scene">{collabTitle}</h2>
               {collabText && <p className="t-body mt-6">{collabText}</p>}
-              <RealMedia id="lavora-squadra" className="mt-10 w-full" />
+              <RealMedia id="lavora-squadra" className="mt-10 w-full" deco={["sun", "birds"]} />
             </div>
             <ul className="lg:col-span-7" aria-label="Ambiti di collaborazione">
               {APPLICATION_AREAS.map((a, i) => (

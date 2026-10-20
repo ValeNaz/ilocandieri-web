@@ -28,7 +28,7 @@ export async function pageMetadata(key: (typeof schema.pages.$inferSelect)["key"
     description,
     alternates: { canonical: path },
     openGraph: { title, description, url: `${getSiteUrl()}${path}`, siteName: seo.siteName, locale: "it_IT", type: "website", ...(img ? { images: [img] } : {}) },
-    twitter: { card: img ? "summary_large_image" : "summary", title, description, ...(img ? { images: [img.url] } : {}) },
+    twitter: { card: "summary_large_image", title, description, ...(img ? { images: [img.url] } : {}) },
   };
 }
 

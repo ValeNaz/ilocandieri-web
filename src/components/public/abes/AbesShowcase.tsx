@@ -1,6 +1,5 @@
 // INTERFACE CONTRACT (owner: ABES+NEWS agent). Props stay stable; new props are optional additions.
 import Image from "next/image";
-import type { CSSProperties } from "react";
 import { C, Wheat } from "@/components/public/art/parts";
 import { Jar, PastaPack } from "@/components/public/art/abes/parts";
 import { Room, type RoomTone, Wrap } from "@/components/public/kit/Room";
@@ -24,32 +23,20 @@ export type AbesShowcaseProps = {
   moreCta?: { label: string; href: string };
 };
 
-// Tile colour (logo colours only) + text colour, cycled; sizes follow a repeating rhythm.
-const TILES = [
-  { bg: "var(--c-yellow)", fg: "var(--c-ink)" },
-  { bg: "var(--c-green)", fg: "var(--c-white)" },
-  { bg: "var(--c-orange)", fg: "var(--c-ink)" },
-  { bg: "var(--c-white)", fg: "var(--c-ink)", ring: true },
-] as const;
-const SIZE = ["shw-xl", "", "", "shw-l", "", "", ""] as const;
+/** Shopify CDN: ask for 2x the largest rendered width (cards are ~520px wide at most), so photos stay sharp. */
+const sharp = (url: string) => (/cdn\.shopify\.com/.test(url) ? `${url}${url.includes("?") ? "&" : "?"}width=1040` : url);
 
+/** One product card: same 4:5 frame and the same arch mask for every product, photo on a 15% brand tint, one shadow. */
 function Tile({ p, i, cta, H }: { p: ShowcaseProduct; i: number; cta: string; H: "h3" | "h4" }) {
-  const t = TILES[(i * 3 + (i > 3 ? 1 : 0)) % 4]!;
-  const size = SIZE[i % SIZE.length]!;
   const contain = /\.png/i.test(p.imageUrl ?? "");
   return (
-    <li className={size}>
-      <TiltLink
-        href={p.url}
-        data-abes-product
-        className="shw-tile"
-        style={{ "--tile": t.bg, "--tfg": t.fg, ...("ring" in t ? { boxShadow: "inset 0 0 0 3px var(--c-ink)" } : {}) } as CSSProperties}
-      >
-        <div className={`shw-photo shw-s${i % 4}`}>
+    <li>
+      <TiltLink href={p.url} data-abes-product className="shw-tile">
+        <div className="shw-photo">
           {p.imageUrl ? (
-            <Image src={p.imageUrl} alt={p.imageAlt} fill loading={i < 4 ? "eager" : "lazy"} sizes="(min-width:1100px) 22vw, (min-width:768px) 30vw, 46vw" className={contain ? "object-contain p-3" : "object-cover"} />
+            <Image src={sharp(p.imageUrl)} alt={p.imageAlt} fill loading={i < 4 ? "eager" : "lazy"} sizes="(min-width:1100px) 22vw, 46vw" className={contain ? "object-contain p-4" : "object-cover"} />
           ) : (
-            <svg viewBox="0 0 100 100" className="size-full" style={{ background: "var(--c-yellow)" }} aria-hidden="true" focusable="false"><Jar x={50} y={92} s={0.55} label="green" content="orange" lid="orange" name={["ABES"]} /></svg>
+            <svg viewBox="0 0 100 100" className="size-full" aria-hidden="true" focusable="false"><Jar x={50} y={92} s={0.55} label="green" content="orange" lid="orange" name={["ABES"]} /></svg>
           )}
         </div>
         <div className="shw-body">
