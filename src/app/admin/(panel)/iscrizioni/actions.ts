@@ -15,9 +15,10 @@ const schemaIn = z.object({
   back: z.string().optional(),
 });
 
-/** Only ever bounce back to the registrations area (no open redirects). */
+/** Only ever bounce back to the registrations area or an event's page (no open redirects). */
 function safeBack(back: string | undefined, id: string) {
-  return back && back.startsWith(adminPaths.registrations) && !back.startsWith("//") ? back : adminPaths.registration(id);
+  const ok = back && !back.startsWith("//") && (back.startsWith(adminPaths.registrations) || back.startsWith(`${adminPaths.events}/`));
+  return ok ? back : adminPaths.registration(id);
 }
 
 async function decide(kind: "approve" | "reject" | "cancel", formData: FormData) {

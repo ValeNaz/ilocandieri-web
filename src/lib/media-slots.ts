@@ -124,17 +124,18 @@ export type LibraryImage = { url: string; alt: string; width: number | null; hei
 /** Public URLs of files found in public/reali for a slot. */
 export type SlotFiles = { photo?: string; video?: string; poster?: string; photoSize?: { width: number; height: number } | null };
 
-/** A provisional stock photo standing in for the real one (src/content/stockPhotos.ts). */
-export type StockFile = { src: string; small?: string; alt: string; author: string; url: string; width?: number; height?: number };
+/** A provisional stock photo (or clip, for video slots) standing in for the real one (src/content/stockPhotos.ts). */
+export type StockFile = { src: string; small?: string; video?: string; poster?: string; alt: string; author: string; url: string; width?: number; height?: number };
 
 export type ResolvedMedia =
   | { origin: "admin" | "file"; type: "photo"; src: string; alt: string; caption?: string; width?: number; height?: number }
   | { origin: "stock"; type: "photo"; src: string; small?: string; alt: string; credit: { author: string; url: string }; width?: number; height?: number }
   | { origin: "admin" | "file"; type: "video"; src: string; poster?: string; alt: string; caption?: string }
+  | { origin: "stock"; type: "video"; src: string; poster?: string; alt: string; credit: { author: string; url: string } }
   | { origin: "placeholder" };
 
 /**
- * Order: admin assignment -> file in public/reali -> provisional stock photo -> placeholder (only if `showPlaceholder`) -> null.
+ * Order: admin assignment -> file in public/reali -> provisional stock photo / clip -> placeholder (only if `showPlaceholder`) -> null.
  * Admin alt/caption also apply to a file found on disk. `image` = the library row of `entry.mediaId` (null if deleted).
  */
 export function resolveMediaSource(args: { slot: MediaSlot; entry?: MediaSlotEntry | null; image?: LibraryImage | null; files?: SlotFiles; stock?: StockFile | null; caption?: string; showPlaceholder?: boolean }): ResolvedMedia | null {
@@ -147,5 +148,6 @@ export function resolveMediaSource(args: { slot: MediaSlot; entry?: MediaSlotEnt
   if (slot.kind === "video" && files.video) return { origin: "file", type: "video", src: files.video, poster: files.poster, alt, caption };
   if (files.photo) return { origin: "file", type: "photo", src: files.photo, alt, caption, ...size(files.photoSize?.width, files.photoSize?.height) };
   if (stock && slot.kind === "photo") return { origin: "stock", type: "photo", src: stock.src, small: stock.small, alt: stock.alt, credit: { author: stock.author, url: stock.url }, ...size(stock.width, stock.height) };
+  if (stock?.video && slot.kind === "video") return { origin: "stock", type: "video", src: stock.video, poster: stock.poster, alt: stock.alt, credit: { author: stock.author, url: stock.url } };
   return showPlaceholder ? { origin: "placeholder" } : null;
 }

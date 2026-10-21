@@ -1,4 +1,4 @@
-import { LogoMark } from "@/components/brand/Logo";
+import { AbesLogo } from "@/components/brand/AbesLogo";
 import { PillLink } from "@/components/public/abes/PillLink";
 import { Crate, Jar, PastaPack } from "@/components/public/art/abes/parts";
 import { Kinetic } from "@/components/public/kit/Kinetic";
@@ -9,16 +9,17 @@ import { AbesBlock } from "../Dynamic";
 import { FOTO, pickImage } from "../shared";
 import type { SlotMap, SlotProps } from "./types";
 
-/* Scena: titolo a sinistra; a destra la foto vera dei vasetti ABES in un arco verde, con due prodotti disegnati fermi
+/* Scena: stanza bianca (il logo ABES sta sul bianco), titolo a sinistra; a destra la foto vera dei vasetti ABES in un arco verde, con due prodotti disegnati fermi
    agli angoli (fuori dal testo). Nessun loop: si muove solo il titolo all'ingresso. */
 function ShopHero({ data, images, level }: SlotProps) {
   const d = data as BlockDataOf<"hero">;
   const img = pickImage(images, d.imageId);
   const H = level === 1 ? "h1" : "h2";
   return (
-    <Room tone="yellow" className="py-10 sm:py-16">
+    <Room tone="white" className="py-10 sm:py-16">
       <Wrap className="grid items-center gap-10 lg:grid-cols-[1.15fr_1fr]">
         <div>
+          {level === 1 && <AbesLogo priority className="mb-6 w-40 sm:w-52" />}
           {d.eyebrow && <p className="t-label mb-5">{d.eyebrow}</p>}
           <Kinetic as={H} text={d.title} className="t-giant" />
           {d.text && <p className="t-lead mt-6">{d.text}</p>}
@@ -75,12 +76,12 @@ const Vetrina = ({ data, level }: SlotProps) => <AbesBlock data={data as BlockDa
 
 export const shopSlots: SlotMap = { "shop:hero": ShopHero, "shop:storia": ShopStoria, "shop:vetrina": Vetrina };
 
-/** Scena: chiusura di /shop, il marchio intero entra una volta; accanto il testo e due uscite. */
+/** Scena: chiusura di /shop, stanza bianca, il logo ABES entra una volta; accanto il testo e due uscite. */
 export function ShopClosing() {
   return (
-    <Room tone="orange" className="py-20 sm:py-32">
+    <Room tone="white" className="py-20 sm:py-32">
       <Wrap className="grid items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-20">
-        <div className="mx-auto w-36 sm:w-52"><LogoMark build="view" className="h-auto w-full" /></div>
+        <AbesLogo className="logo-build-view mx-auto w-60 sm:w-72 lg:w-80" />
         <div>
           <h2 className="t-giant">Ordini e spedizioni sono su abes.bio.</h2>
           <p className="t-lead mt-6">Da qui scegli. Il negozio ABES pensa a prezzi, disponibilità e consegna.</p>

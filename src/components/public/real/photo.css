@@ -28,6 +28,8 @@
 }
 .pf a.pf-credit:hover, .pf-compare a.pf-credit:hover { text-decoration: underline; }
 .pf-arch a.pf-credit, .pf-window a.pf-credit { right: 50%; translate: 50% 0; white-space: nowrap; }
+/* video: the pause button owns the bottom-right corner */
+.pf-box:has(> video) > a.pf-credit { right: auto; left: 12px; }
 .pf figcaption.pf-caption { margin-top: .75rem; font-size: .875rem; }
 
 /* drawn pieces breaking the frame */

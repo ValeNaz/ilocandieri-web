@@ -1,43 +1,35 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/admin/PageHeader";
-import { ButtonLink, Card } from "@/components/ui";
+import { Icon } from "@/components/admin/icons";
+import { ButtonLink } from "@/components/ui";
+import { adminPages } from "@/lib/admin-nav";
 import { requireAdmin } from "@/lib/auth/session";
-import { PAGE_URLS, type PageKey } from "@/lib/content/blocks";
+import { PAGE_URLS } from "@/lib/content/blocks";
 import { adminPaths } from "@/lib/paths";
 
 export const metadata = { title: "Pagine" };
-
-const LIST: { key: PageKey; title: string; text: string }[] = [
-  { key: "chi-siamo", title: "Chi siamo", text: "Storia, missione, valori e luoghi." },
-  { key: "shop", title: "Shop ABES", text: "Presentazione del progetto agricolo e vetrina prodotti." },
-  { key: "contatti", title: "Contatti", text: "Titolo e testo; i recapiti si modificano in Impostazioni." },
-  { key: "privacy", title: "Privacy", text: "Informativa sul trattamento dei dati (bozza da verificare)." },
-  { key: "cookie", title: "Cookie Policy", text: "Informativa sui cookie (bozza da verificare)." },
-  { key: "eventi", title: "Eventi (testi)", text: "Titolo e introduzioni della pagina eventi. Gli eventi si gestiscono in «Eventi»." },
-  { key: "news", title: "News (testi)", text: "Titolo e introduzioni della pagina news. Gli articoli si gestiscono in «News»." },
-  { key: "lavora-con-noi", title: "Lavora con noi (testi)", text: "Testi della pagina candidature." },
-];
 
 export default async function Page() {
   await requireAdmin();
   return (
     <>
-      <PageHeader title="Pagine" description="Scegli la pagina da modificare. La Home ha una sezione dedicata nel menu." actions={<ButtonLink href={adminPaths.home} variant="secondary">Modifica la Home</ButtonLink>} />
-      <ul className="grid gap-4 md:grid-cols-2">
-        {LIST.map((p) => (
-          <li key={p.key}>
-            <Card className="flex h-full flex-col p-6">
-              <h2 className="font-display text-2xl font-medium">{p.title}</h2>
-              <p className="mt-2 flex-1 text-ink-soft">{p.text}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <ButtonLink href={adminPaths.page(p.key)} size="sm">Modifica</ButtonLink>
-                <ButtonLink href={PAGE_URLS[p.key]} size="sm" variant="secondary" target="_blank" rel="noopener">Vedi pagina<span className="sr-only"> (nuova scheda)</span></ButtonLink>
-              </div>
-            </Card>
+      <PageHeader title="Pagine" description="Scegli la pagina da modificare. La Home ha una sezione dedicata nel menu." actions={<ButtonLink href={adminPaths.home} variant="secondary" size="sm"><Icon name="home" className="size-4" />Modifica la Home</ButtonLink>} />
+      <ul className="divide-y divide-line overflow-hidden rounded-card border border-line bg-card">
+        {adminPages.map((p) => (
+          <li key={p.key} className="group relative flex items-center gap-4 px-5 py-4 transition-colors hover:bg-paper">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-paper-deep text-ink-soft transition-colors group-hover:bg-terracotta-soft group-hover:text-terracotta-deep"><Icon name="pages" /></span>
+            <span className="min-w-0 flex-1">
+              <Link href={adminPaths.page(p.key)} className="font-semibold after:absolute after:inset-0 after:content-['']">{p.title}</Link>
+              <span className="block text-sm text-ink-soft">{p.text}</span>
+            </span>
+            <a href={PAGE_URLS[p.key]} target="_blank" rel="noopener" className="relative z-10 hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-ink-soft hover:bg-paper-deep hover:text-ink sm:inline-flex">
+              Vedi<Icon name="external" className="size-4" /><span className="sr-only"> la pagina {p.title} (nuova scheda)</span>
+            </a>
+            <Icon name="arrow" className="size-4 shrink-0 text-ink-soft transition-transform group-hover:translate-x-0.5" />
           </li>
         ))}
       </ul>
-      <p className="mt-8 text-sm text-ink-soft">Per le impostazioni SEO predefinite del sito vai in <Link className="underline" href={adminPaths.settings}>Impostazioni</Link>.</p>
+      <p className="mt-6 text-sm text-ink-soft">Per le impostazioni SEO predefinite del sito vai in <Link className="underline" href={adminPaths.settings}>Impostazioni</Link>.</p>
     </>
   );
 }

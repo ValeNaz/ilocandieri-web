@@ -43,12 +43,12 @@ export async function RealMedia({ id, className, caption, priority, sizes = DEFA
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- real photos from the media library / public, cropped by CSS
           <img src={media.src} alt={media.alt} width={media.width} height={media.height} sizes={sizes}
-            srcSet={media.origin === "stock" && media.small ? `${media.small} 1000w, ${media.src} ${media.width ?? 2000}w` : undefined}
+            srcSet={media.origin === "stock" && media.type === "photo" && media.small ? `${media.small} 1000w, ${media.src} ${media.width ?? 2000}w` : undefined}
             loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
         )}
         {children}
         {media.origin === "stock" && (
-          <a className="pf-credit" href={media.credit.url} target="_blank" rel="noopener noreferrer">Foto indicativa · {media.credit.author} / Pexels</a>
+          <a className="pf-credit" href={media.credit.url} target="_blank" rel="noopener noreferrer">{media.type === "video" ? "Video indicativo" : "Foto indicativa"} · {media.credit.author} / Pexels</a>
         )}
       </div>
       {deco.map((d) => <Deco key={d} name={d} />)}

@@ -1,12 +1,14 @@
 /**
  * PROVISIONAL stock photos (Pexels licence: free use, attribution appreciated), one per photo slot of src/lib/media-slots.ts.
  * They show places and people LIKE ours, not ours: the alt says what they really show and the frame credits the author.
- * Files: public/foto/provvisorie/<slot>.webp (+ <slot>-1000.webp), fetched by scripts/fetch-stock-photos.mjs.
+ * Files: public/foto/provvisorie/<slot>.webp (+ <slot>-1000.webp), fetched by scripts/fetch-stock-photos.mjs; video slots:
+ * <slot>.mp4 + <slot>-poster.jpg (home-video: Pexels 14086016, 720p 25fps, no audio, encoded with ffmpeg).
  * A real photo (admin "Foto e video reali" or public/reali/<slot>.*) always wins; delete the entry here once it is in.
  */
 export type StockPhoto = { alt: string; author: string; url: string };
 
 export const stockPhotos: Record<string, StockPhoto> = {
+  "home-video": { alt: "Un uomo raccoglie arance da un albero con un cesto, in un agrumeto", author: "Furio Busignani", url: "https://www.pexels.com/video/14086016/" },
   "home-giardino": { alt: "Rami di un arancio carico di frutti, in controluce al sole", author: "Нурлан", url: "https://www.pexels.com/photo/11606369/" },
   "home-campo": { alt: "Partita di pallavolo all'aperto su un prato", author: "Danny Sanz", url: "https://www.pexels.com/photo/10855503/" },
   "chi-siamo-squadra": { alt: "Gruppo di agricoltori in piedi in un campo", author: "Breno Coelho", url: "https://www.pexels.com/photo/12026165/" },

@@ -1,4 +1,4 @@
-import { and, asc, eq, gte, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, sql } from "drizzle-orm";
 import { db as defaultDb, schema, type Db } from "@/lib/db";
 import { smtpConfig } from "@/lib/env";
 import { isEmailConfigured } from "@/lib/email/sender";
@@ -37,6 +37,37 @@ export async function getDashboardStats(d: Db = defaultDb, now = Date.now()) {
     emailNotConfigured: o.not_configured ?? 0,
     topEvents,
   };
+}
+
+/** Counts for the sidebar badges: what is waiting for someone. Cheap (four counts), read on every admin page. */
+export async function getAdminBadges(d: Db = defaultDb) {
+  const n = sql<number>`count(*)`;
+  const [registrations, applications, messages, email] = await Promise.all([
+    count(d.select({ n }).from(schema.registrations).where(eq(schema.registrations.status, "pending"))),
+    count(d.select({ n }).from(schema.applications).where(eq(schema.applications.status, "new"))),
+    count(d.select({ n }).from(schema.contactMessages).where(eq(schema.contactMessages.status, "new"))),
+    count(d.select({ n }).from(schema.emailOutbox).where(sql`${schema.emailOutbox.status} in ('failed', 'not_configured')`)),
+  ]);
+  return { registrations, applications, messages, email };
+}
+
+export type ActivityItem = { kind: "registration" | "application" | "message"; id: string; who: string; what: string; at: number; fresh: boolean };
+
+/** The latest things that arrived from the site (registrations, applications, contact messages), newest first. */
+export async function getRecentActivity(d: Db = defaultDb, limit = 6): Promise<ActivityItem[]> {
+  const r = schema.registrations, a = schema.applications, m = schema.contactMessages;
+  const [regs, apps, msgs] = await Promise.all([
+    d.select({ id: r.id, who: r.name, what: schema.events.title, at: r.createdAt, status: r.status }).from(r).innerJoin(schema.events, eq(schema.events.id, r.eventId)).orderBy(desc(r.createdAt)).limit(limit),
+    d.select({ id: a.id, first: a.firstName, last: a.lastName, what: schema.jobOpenings.title, at: a.createdAt, status: a.status }).from(a).leftJoin(schema.jobOpenings, eq(schema.jobOpenings.id, a.openingId)).orderBy(desc(a.createdAt)).limit(limit),
+    d.select({ id: m.id, who: m.name, what: m.subject, at: m.createdAt, status: m.status }).from(m).orderBy(desc(m.createdAt)).limit(limit),
+  ]);
+  return [
+    ...regs.map((x) => ({ kind: "registration" as const, id: x.id, who: x.who, what: x.what, at: x.at, fresh: x.status === "pending" })),
+    ...apps.map((x) => ({ kind: "application" as const, id: x.id, who: `${x.first} ${x.last}`.trim(), what: x.what ?? "Candidatura spontanea", at: x.at, fresh: x.status === "new" })),
+    ...msgs.map((x) => ({ kind: "message" as const, id: x.id, who: x.who, what: x.what || "Messaggio senza oggetto", at: x.at, fresh: x.status === "new" })),
+  ]
+    .sort((x, y) => y.at - x.at)
+    .slice(0, limit);
 }
 
 export type IntegrationState = { key: string; label: string; configured: boolean; detail: string };

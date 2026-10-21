@@ -54,10 +54,16 @@ export const getMediaSlotAssignments = cache(async (): Promise<{ entries: MediaS
   return { entries, images };
 });
 
-/** Provisional stock photo for a slot, if both the manifest entry and the file exist. */
+/** Provisional stock photo (or clip + poster, for video slots) for a slot, if both the manifest entry and the file exist. */
 export function stockFile(id: MediaSlotId): StockFile | null {
   const meta = stockPhotos[id];
-  if (!meta || !existsSync(path.join(STOCK, `${id}.webp`))) return null;
+  if (!meta) return null;
+  if (mediaSlot(id).kind === "video") {
+    if (!existsSync(path.join(STOCK, `${id}.mp4`))) return null;
+    const poster = existsSync(path.join(STOCK, `${id}-poster.jpg`)) ? `/foto/provvisorie/${id}-poster.jpg` : undefined;
+    return { src: `/foto/provvisorie/${id}.mp4`, video: `/foto/provvisorie/${id}.mp4`, poster, ...meta };
+  }
+  if (!existsSync(path.join(STOCK, `${id}.webp`))) return null;
   const size = fileSize(`${id}.webp`, STOCK);
   const small = existsSync(path.join(STOCK, `${id}-1000.webp`)) ? `/foto/provvisorie/${id}-1000.webp` : undefined;
   return { src: `/foto/provvisorie/${id}.webp`, small, ...meta, ...(size ?? {}) };

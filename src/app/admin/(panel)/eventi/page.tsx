@@ -77,8 +77,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ s
                 {b && <Badge tone={b.tone}>{b.label}</Badge>}
                 <p className="mt-1.5">
                   <strong>{e.seatsConfirmed}</strong> confermati{e.capacity != null ? <> su <strong>{e.capacity}</strong></> : ""}
-                  {r.counts.pending > 0 && <> · <Link href={`${adminPaths.registrations}?evento=${e.id}&stato=pending`} className="font-semibold text-warning underline">{r.counts.pending} in attesa</Link></>}
+                  {r.counts.pending > 0 && <> · <Link href={`${adminPaths.event(e.id)}#partecipanti`} className="font-semibold text-warning underline">{r.counts.pending} in attesa</Link></>}
                 </p>
+                <Link href={`${adminPaths.event(e.id)}#partecipanti`} className="mt-1 inline-block font-medium text-terracotta-deep hover:underline">Vedi partecipanti<span className="sr-only"> di {e.title}</span></Link>
               </div>
             );
           } },

@@ -1,0 +1,118 @@
+/*
+ * Admin panel skin. Scoped to .adm (the AdminShell root): the shared UI primitives (Card, Button, Badge, Field…)
+ * read the theme tokens, so redefining them here restyles the whole panel without touching the public site.
+ * Calm working surface: a faintly green-tinted page, white sheets, the logo green as the one accent (active, links,
+ * focus), the logo orange only for "waiting for you" counts.
+ * In the components layer, so Tailwind utilities (lg:hidden…) still win over these classes.
+ */
+@layer components {
+  .adm {
+    --adm-bg: oklch(98.3% 0.006 165);
+    --adm-hover: oklch(96.4% 0.012 165);
+    --adm-accent: var(--color-brand-green);
+    --color-paper: var(--adm-bg);
+    --color-paper-deep: oklch(96.2% 0.013 165);
+    --color-line: oklch(92.4% 0.009 165);
+    --color-terracotta: var(--color-brand-green);
+    --color-terracotta-deep: oklch(44% 0.095 167);
+    --color-terracotta-soft: oklch(95.6% 0.03 166);
+    --radius-card: 1rem;
+    --radius-control: 0.7rem;
+    --shadow-card: 0 1px 2px oklch(25% 0.03 165 / 0.05);
+    --shadow-pop: 0 1px 2px oklch(25% 0.03 165 / 0.06), 0 16px 40px -18px oklch(25% 0.05 165 / 0.3);
+    background: var(--adm-bg);
+  }
+  .adm :focus-visible { outline-color: var(--adm-accent); }
+
+  /* ---------- sidebar ---------- */
+  .adm-aside { display: flex; flex-direction: column; height: 100%; background: var(--color-card); }
+  .adm-nav-link {
+    display: flex; align-items: center; gap: 0.7rem; min-height: 2.3rem; padding: 0.35rem 0.75rem; border-radius: 0.65rem;
+    font-size: 0.92rem; font-weight: 500; color: var(--color-ink);
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .adm-nav-link:hover { background: var(--adm-hover); }
+  .adm-nav-ic { width: 1.15rem; height: 1.15rem; flex-shrink: 0; color: var(--color-ink-soft); transition: color 0.15s; }
+  .adm-nav-link[aria-current="page"] { background: var(--color-terracotta-soft); color: var(--color-terracotta-deep); font-weight: 600; }
+  .adm-nav-link[aria-current="page"] .adm-nav-ic { color: var(--adm-accent); }
+  .adm-count {
+    min-width: 1.35rem; height: 1.35rem; padding: 0 0.4rem; border-radius: 99px; display: inline-grid; place-items: center;
+    background: var(--color-brand-orange); color: var(--color-ink); font-size: 0.72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .adm-avatar {
+    width: 2rem; height: 2rem; flex-shrink: 0; border-radius: 50%; display: grid; place-items: center;
+    background: var(--color-brand-yellow); color: var(--color-ink); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .adm-search {
+    display: flex; width: 100%; align-items: center; gap: 0.6rem; height: 2.5rem; padding: 0 0.5rem 0 0.75rem;
+    border: 1px solid var(--color-line); border-radius: 0.75rem; background: var(--adm-bg);
+    font-size: 0.9rem; color: var(--color-ink-soft); transition: border-color 0.15s, background-color 0.15s;
+  }
+  .adm-search:hover { border-color: oklch(85% 0.02 165); background: var(--color-card); }
+  .adm-kbd {
+    display: inline-flex; align-items: center; min-height: 1.35rem; padding: 0 0.4rem; border: 1px solid var(--color-line);
+    border-bottom-width: 2px; border-radius: 0.4rem; background: var(--color-card);
+    font: 600 0.7rem/1 var(--font-sans); color: var(--color-ink-soft);
+  }
+  .adm-iconbtn {
+    display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 0.7rem; color: var(--color-ink-soft);
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .adm-iconbtn:hover { background: var(--adm-hover); color: var(--color-ink); }
+  .adm-dot { position: absolute; top: 0.5rem; right: 0.5rem; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--color-brand-orange); box-shadow: 0 0 0 2px var(--color-card); }
+
+  /* ---------- mobile: top bar + drawer ---------- */
+  .adm-topbar {
+    position: sticky; top: 0; z-index: 40; display: flex; height: 3.75rem; align-items: center; justify-content: space-between;
+    padding: 0 0.75rem 0 1rem; border-bottom: 1px solid var(--color-line);
+    background: color-mix(in oklab, var(--color-card) 92%, transparent); backdrop-filter: blur(10px);
+  }
+  .adm-scrim {
+    position: fixed; inset: 0; z-index: 45; background: oklch(20% 0.03 165 / 0.42);
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .adm-scrim[data-open] { opacity: 1; pointer-events: auto; }
+  .adm-drawer {
+    position: fixed; inset: 0 auto 0 0; z-index: 50; width: min(18rem, 86vw); box-shadow: var(--shadow-pop);
+    translate: -105% 0; transition: translate 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .adm-drawer[data-open] { translate: 0 0; }
+
+  /* ---------- page ---------- */
+  .adm-page { animation: adm-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes adm-in { from { opacity: 0; translate: 0 6px; } }
+
+  .adm table thead tr { background: var(--adm-bg); }
+  .adm table tbody tr:hover { background: color-mix(in oklab, var(--adm-hover) 60%, transparent); }
+
+  /* ---------- command palette ---------- */
+  .adm-palette {
+    margin: 12vh auto auto; width: min(38rem, calc(100vw - 2rem)); max-width: none; padding: 0; border: 0; background: transparent;
+    color: var(--color-ink); overflow: visible;
+  }
+  .adm-palette::backdrop { background: oklch(20% 0.03 165 / 0.38); backdrop-filter: blur(2px); }
+  .adm-palette-box { border: 1px solid var(--color-line); border-radius: 1.1rem; background: var(--color-card); box-shadow: var(--shadow-pop); overflow: hidden; }
+  .adm-palette[open] .adm-palette-box { animation: adm-pop 0.22s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes adm-pop { from { opacity: 0; scale: 0.97; translate: 0 -6px; } }
+
+  /* ---------- dashboard ---------- */
+  .adm-tile {
+    position: relative; display: flex; flex-direction: column; height: 100%; padding: 1.15rem 1.2rem 1.1rem;
+    border: 1px solid var(--color-line); border-radius: var(--radius-card); background: var(--color-card);
+    transition: border-color 0.2s, box-shadow 0.2s, translate 0.2s;
+  }
+  a.adm-tile:hover { border-color: oklch(84% 0.03 165); box-shadow: var(--shadow-pop); translate: 0 -2px; }
+  .adm-tile[data-hot] { border-color: color-mix(in oklab, var(--color-brand-orange) 45%, var(--color-line)); background: color-mix(in oklab, var(--color-brand-orange) 7%, var(--color-card)); }
+  .adm-tile-ic { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 0.75rem; background: var(--adm-bg); color: var(--color-ink-soft); }
+  .adm-tile[data-hot] .adm-tile-ic { background: var(--color-brand-orange); color: var(--color-ink); }
+  .adm-num { font-family: var(--font-display); font-size: 2.4rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+  .adm-meter { height: 0.4rem; border-radius: 99px; background: var(--color-paper-deep); overflow: hidden; }
+  .adm-meter > span { display: block; height: 100%; border-radius: inherit; background: var(--adm-accent); transform-origin: left; animation: adm-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both 0.15s; }
+  @keyframes adm-grow { from { transform: scaleX(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adm-page, .adm-palette[open] .adm-palette-box, .adm-meter > span { animation: none; }
+    .adm-drawer, .adm-scrim, a.adm-tile { transition: none; }
+  }
+}

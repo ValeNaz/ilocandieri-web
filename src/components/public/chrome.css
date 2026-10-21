@@ -1,6 +1,6 @@
 /*
- * Chrome of the public site: header (white bar, plain dropdown lists, full-page white mobile menu), wordmark,
- * footer (green room), cookie banner. Calm by design: no illustrations, motion limited to short fades.
+ * Chrome of the public site: header (organic ivory bar, panels grown from it, full-page white mobile menu), wordmark,
+ * footer (green room), cookie banner. Calm by design: small drawn details only, motion limited to short fades.
  * Colours are only white + the logo colours; ink for text and lines. Reduced motion: still and complete.
  */
 
@@ -14,55 +14,191 @@
 @media (min-width: 26rem) { .wm-sub { display: block; } }
 .wm-tag { background: var(--c-white); padding: 0.7rem 1.25rem 0.7rem 1rem; border-radius: 1.25rem; }
 
-/* ---------- Header ---------- */
-.hdr { position: sticky; top: 0; z-index: 50; height: var(--header-h); padding: 0.75rem 0.75rem 0; pointer-events: none; }
+/* ---------- Behind the header: the hero's own colour ----------
+ * The header floats over a strip as tall as itself at the very top of the page. That strip takes the colour of the
+ * page's first block (always a .room), so an orange hero runs up to the top edge of the window. It belongs to the page
+ * background, not to the sticky header: it scrolls away with the hero. */
+html:has([data-site-header]) body {
+  background: linear-gradient(var(--hero-top, var(--c-white)), var(--hero-top, var(--c-white))) top / 100% calc(var(--header-h) + 2px) no-repeat, var(--c-white);
+}
+html:has(#contenuto > .room-orange:nth-child(1 of :not(script, style, template))) { --hero-top: var(--c-orange); }
+html:has(#contenuto > .room-yellow:nth-child(1 of :not(script, style, template))) { --hero-top: var(--c-yellow); }
+html:has(#contenuto > .room-green:nth-child(1 of :not(script, style, template))) { --hero-top: var(--c-green); }
+
+/* ---------- Header ----------
+ * One drawn object: an ivory bar whose outline is cut to measure (organic.ts, svg in .hdr-shape) with a thin forest
+ * line and an almost invisible shadow; panels grow out of its bottom line through a cusp under their trigger.
+ * Desktop (>= 73.75rem): the full symmetric silhouette, 104px tall: both end parts (logo, CTA) at y 10..104, the links
+ * part between them 12px lower (y 22..104), the same step curve on both sides. Below: a compact capsule + menu button.
+ * Before the outline is measured (first paint), .hdr-bar draws a plain pill so nothing jumps. */
+.hdr {
+  --hdr-fill: #fffdf7; --hdr-line: var(--c-ink); --hdr-active: #ffe8a1; --hdr-muted: color-mix(in oklab, var(--c-ink) 72%, var(--hdr-fill));
+  --hdr-shadow: drop-shadow(0 10px 24px oklch(19% 0.04 168 / 0.07)) drop-shadow(0 2px 4px oklch(19% 0.04 168 / 0.035));
+  --hdr-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: sticky; top: 0; z-index: 50; height: var(--header-h); padding: 0.75rem 0.75rem 0; pointer-events: none;
+}
 @media (min-width: 40rem) { .hdr { padding-inline: 1.25rem; } }
 .hdr-bar {
-  pointer-events: auto; position: relative; display: flex; align-items: center; gap: 1rem; height: 100%; max-width: 88rem; margin-inline: auto;
-  padding: 0 0.5rem 0 1rem; background: var(--c-white); color: var(--c-ink); border: 1.5px solid var(--c-ink); border-radius: 1.25rem;
+  pointer-events: auto; position: relative; isolation: isolate; display: flex; align-items: center; gap: 1rem; height: 100%; max-width: 100rem; margin-inline: auto;
+  padding: 0 0.55rem 0 1.15rem; color: var(--c-ink); border-radius: 999px; background: var(--hdr-fill); box-shadow: inset 0 0 0 1.5px var(--hdr-line);
 }
+.hdr-bar:has(.hdr-shape svg) { background: none; box-shadow: none; }
+.hdr-shape { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hdr-shape svg { position: absolute; inset: 0; overflow: visible; filter: var(--hdr-shadow); }
+.hdr-shape-body { fill: var(--hdr-fill); stroke: var(--hdr-line); stroke-width: 1.6; stroke-linejoin: round; }
+.hdr-bar > :not(.hdr-shape, .hdr-deco) { position: relative; z-index: 1; }
+
+.hdr .wm-text { gap: 0.15rem; }
 .hdr-logo { display: inline-flex; align-items: center; min-height: 2.75rem; border-radius: 0.75rem; padding-right: 0.25rem; }
 .hdr :focus-visible { outline: 2.5px solid var(--c-ink); outline-offset: 3px; border-radius: 0.75rem; }
+.hdr .hdr-top:focus-visible, .hdr .hdr-cta:focus-visible { border-radius: 999px; }
 .hdr-nav { display: none; margin-left: auto; }
-.hdr-nav > ul { display: flex; align-items: center; gap: 0.25rem; }
+.hdr-nav > ul { display: flex; align-items: stretch; gap: 0.35rem; height: 100%; }
+.hdr-nav > ul > li { display: flex; align-items: center; }
 .hdr-item { position: relative; }
 .hdr-top {
-  display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2.75rem; padding: 0 0.8rem; background: transparent; cursor: pointer;
-  font-family: var(--font-sans); font-weight: 600; font-size: 1rem; letter-spacing: 0; color: var(--c-ink);
-  text-decoration: underline 2px transparent; text-underline-offset: 0.45em; transition: text-decoration-color 0.2s;
+  position: relative; display: inline-flex; align-items: center; gap: 0.6rem; min-height: 3.125rem; padding: 0 1.05rem; border-radius: 999px; background: transparent; cursor: pointer;
+  font-family: var(--font-sans); font-weight: 600; font-size: 1.03rem; letter-spacing: 0; color: var(--c-ink);
+  transition: background-color 0.22s var(--hdr-ease), color 0.2s;
 }
-.hdr-top:hover, .hdr-top[aria-expanded="true"] { text-decoration-color: var(--c-ink); }
-.hdr-top[data-active] { text-decoration-color: var(--c-green); text-decoration-thickness: 3px; }
-.hdr-chev { width: 1rem; height: 1rem; transition: transform 0.25s var(--ease-out-quint); }
+/* hover: a short line drawn under the word, never on the open capsule */
+.hdr-top::after {
+  content: ""; position: absolute; left: 1.05rem; bottom: 0.62rem; height: 2px; width: calc(100% - 2.1rem); border-radius: 2px; background: currentColor;
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.24s var(--hdr-ease);
+}
+.hdr-top:hover::after { transform: scaleX(1); }
+.hdr-top:has(.hdr-chev)::after { width: calc(100% - 2.1rem - 1.5rem); }
+.hdr-top[aria-expanded="true"]::after, button.hdr-top[data-active]::after { transform: scaleX(0); }
+a.hdr-top[data-active]::after { transform: scaleX(1); background: var(--c-green); height: 2.5px; }
+/* the distinctive detail: the open (or current) group sits on a pale-yellow capsule */
+.hdr-top[aria-expanded="true"], button.hdr-top[data-active] { background: var(--hdr-active); }
+.hdr-chev { width: 0.95rem; height: 0.95rem; margin-top: 1px; transition: transform 0.24s var(--hdr-ease); }
 .hdr-top[aria-expanded="true"] .hdr-chev { transform: rotate(180deg); }
-.hdr-cta { display: none; min-height: 2.75rem; padding: 0 1.25rem; margin-left: 0.5rem; }
-.hdr-cta[aria-current="page"] { background: var(--c-green); border-color: var(--c-green); color: var(--c-white); }
+
+.hdr-cta {
+  display: none; min-height: 3.5rem; padding: 0 1.5rem 0 1.75rem; gap: 0.8rem; margin-left: 0.85rem; border: 0;
+  font-size: 1.08rem; font-weight: 650; transition: transform 0.3s var(--hdr-ease), background-color 0.22s;
+}
+.hdr-cta .arrow { display: inline-flex; }
+.hdr-cta-ar { width: 1.3rem; height: 1.3rem; }
+.hdr-cta:hover, .hdr-cta:focus-visible { transform: translateY(-1px); background: color-mix(in oklab, var(--c-ink) 86%, var(--c-green)); }
+.hdr-cta:focus-visible .arrow { transform: translateX(4px); }
+.hdr-cta[aria-current="page"] { background: var(--c-green); color: var(--c-white); }
 .hdr-burger {
   margin-left: auto; display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0 1rem 0 1.15rem; border-radius: 999px;
   background: var(--c-ink); color: var(--c-white); font-family: var(--font-sans); font-weight: 600; font-size: 1rem; cursor: pointer;
+  transition: scale 0.25s var(--hdr-ease), background-color 0.25s;
 }
-@media (min-width: 64rem) {
-  .hdr-nav { display: block; }
-  .hdr-cta { display: inline-flex; }
-  .hdr-burger { display: none; }
+.hdr-burger:active { scale: 0.95; }
+.hdr-burger[data-open] { background: var(--c-green); }
+/* the two words share one cell: the hidden one waits below (Menu) or above (Chiudi), clipped */
+.hdr-burger-w { display: grid; overflow: hidden; }
+.hdr-burger-w > span { grid-area: 1 / 1; text-align: right; transition: translate 0.36s var(--hdr-ease), opacity 0.25s; }
+.hdr-burger-w > span:last-child { translate: 0 110%; opacity: 0; }
+.hdr-burger[data-open] .hdr-burger-w > span:first-child { translate: 0 -110%; opacity: 0; }
+.hdr-burger[data-open] .hdr-burger-w > span:last-child { translate: none; opacity: 1; }
+/* the two lines meet in the middle and turn into an X */
+.hdr-burger-ic path { transform-box: fill-box; transform-origin: center; transition: translate 0.36s var(--hdr-ease), rotate 0.36s var(--hdr-ease); }
+.hdr-burger[data-open] .hdr-burger-ic path:first-child { translate: 0 3px; rotate: 45deg; }
+.hdr-burger[data-open] .hdr-burger-ic path:last-child { translate: 0 -3px; rotate: -45deg; }
+@media (prefers-reduced-motion: reduce) { .hdr-burger, .hdr-burger-w > span, .hdr-burger-ic path { transition: none; } }
+
+/* decorations: leaf + petal behind the left end, rays off the right end */
+.hdr-deco { display: none; position: absolute; pointer-events: none; overflow: visible; }
+.hdr-deco-petal { z-index: -2; left: -1.9rem; top: 3.9rem; width: 7.4rem; height: 4.2rem; transform-origin: 80% 20%; }
+.hdr-deco-leaf { z-index: -1; left: -2.05rem; top: -0.8rem; width: 5rem; height: 3.9rem; transform-origin: 85% 85%; }
+.hdr-deco-rays { left: calc(100% + 0.3rem); top: calc(10px + 47px - 2rem); width: 2.6rem; height: 4rem; transform-origin: 0 50%; }
+/* Hover: they stir. Leaving the hero they are pulled in behind the bar, no fading: the rays slide back into the right
+ * end one by one along their own direction, the leaf rolls over into the left end, the petal sweeps up under it.
+ * Back on the hero they spring out again in the reverse order (leaf, petal, then the rays fanning out), slower and
+ * decelerating. Individual translate / rotate / scale properties, so the hover transform composes with them. */
+.hdr-deco-rays { z-index: -1; }
+.hdr-deco {
+  --out: cubic-bezier(0.16, 1, 0.3, 1); --in: cubic-bezier(0.6, 0, 0.85, 0.3);
+  transition: transform 0.5s var(--hdr-ease), translate 0.95s var(--out), rotate 0.95s var(--out), scale 0.95s var(--out);
+  transition-delay: 0s, 0.05s, 0.05s, 0.05s;
+}
+.hdr-deco-petal { transition-delay: 0s, 0.16s, 0.16s, 0.16s; transition-duration: 0.5s, 1.05s, 1.05s, 1.05s; }
+.hdr-ray { transform-box: fill-box; transition: translate 0.8s var(--out), scale 0.8s var(--out); transition-delay: calc(0.36s + var(--i) * 0.09s); }
+.hdr-ray:nth-child(1) { --tx: -30px; --ty: 21px; }
+.hdr-ray:nth-child(2) { --tx: -42px; --ty: 0px; }
+.hdr-ray:nth-child(3) { --tx: -30px; --ty: -21px; }
+.hdr-bar[data-deco="away"] .hdr-deco { transition-timing-function: ease, var(--in), var(--in), var(--in); transition-duration: 0.5s, 0.55s, 0.55s, 0.55s; }
+.hdr-bar[data-deco="away"] .hdr-deco-leaf { translate: 54px 44px; rotate: 80deg; scale: 0.4; transition-delay: 0s, 0.22s, 0.22s, 0.22s; }
+.hdr-bar[data-deco="away"] .hdr-deco-petal { translate: 62px -44px; rotate: -28deg; scale: 0.45; transition-delay: 0s, 0.3s, 0.3s, 0.3s; }
+.hdr-bar[data-deco="away"] .hdr-ray { translate: var(--tx) var(--ty); scale: 0.7; transition: translate 0.42s var(--in), scale 0.42s var(--in); transition-delay: calc((2 - var(--i)) * 0.07s); }
+@media (prefers-reduced-motion: no-preference) {
+  .hdr-bar:hover .hdr-deco-leaf { transform: rotate(-4deg); }
+  .hdr-bar:hover .hdr-deco-petal { transform: rotate(3deg) translateX(-2px); }
+  .hdr-bar:hover .hdr-deco-rays { transform: translateX(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hdr-deco, .hdr-ray { transition: none; }
 }
 
-/* Group panels (desktop): a plain list, aligned under its trigger. Title + one line of note. */
+@media (min-width: 73.75rem) {
+  :root { --header-h: 7.375rem; }
+  .hdr { padding: 0.875rem 3rem 0; }
+  .hdr-bar { height: 104px; flex: none; align-items: stretch; gap: 0; padding: 0 0.75rem 0 2.35rem; }
+  .hdr-logo { align-self: center; margin-top: 10px; }
+  .hdr .wm { gap: 0.85rem; }
+  .hdr .wm-mark { height: 2.75rem; }
+  .hdr .wm-name { font-size: 1.5rem; }
+  .hdr .wm-sub { font-size: 0.9375rem; font-weight: 500; letter-spacing: 0.01em; }
+  .hdr .wm-text { gap: 0.1rem; }
+  .hdr-nav { display: block; padding-top: 22px; }
+  .hdr-cta { display: inline-flex; align-self: center; margin-top: 10px; }
+  .hdr-burger { display: none; }
+  .hdr-deco { display: block; }
+}
+@media (min-width: 73.75rem) and (max-width: 89.99rem) {
+  .hdr-top { padding: 0 0.8rem; font-size: 1rem; }
+  .hdr-top::after { left: 0.8rem; width: calc(100% - 1.6rem); }
+  .hdr-top:has(.hdr-chev)::after { width: calc(100% - 1.6rem - 1.55rem); }
+  .hdr-nav > ul { gap: 0.15rem; }
+  .hdr-cta { padding: 0 1.3rem 0 1.5rem; margin-left: 0.5rem; }
+  .hdr-deco-petal { width: 6.4rem; height: 3.6rem; left: -1.6rem; top: 4.1rem; }
+  .hdr-deco-leaf { width: 4.3rem; height: 3.4rem; left: -1.75rem; top: -0.7rem; }
+}
+
+/* Group panels (desktop): grown from the bar's bottom line, starting 28px left of the trigger (organic.ts PANEL).
+ * The li spans the links part down to the bar's bottom, so top: 100% is the bar's bottom line. */
 .hdr-panel {
-  position: absolute; z-index: 60; top: calc(100% + 0.85rem); left: -0.25rem; width: 21rem; padding: 0.6rem;
-  background: var(--c-white); border: 1.5px solid var(--c-ink); border-radius: 1.25rem;
+  position: absolute; z-index: 60; top: 100%; left: -28px; width: 25.5rem; padding: calc(14px + 1.25rem) 0.25rem 3.4rem;
+  transform-origin: 30% 0;
 }
 .hdr-panel[hidden] { display: none; }
-.hdr-panel ul { display: grid; gap: 0.1rem; }
-.hdr-link { display: block; padding: 0.8rem 1rem; border-radius: 0.85rem; }
-.hdr-link-t { display: block; font-family: var(--font-sans); font-weight: 700; font-size: 1.02rem; line-height: 1.25; text-decoration: underline 2px transparent; text-underline-offset: 0.3em; transition: text-decoration-color 0.2s; }
-.hdr-link-n { display: block; margin-top: 0.25rem; font-size: 0.92rem; line-height: 1.35; color: var(--c-ink); }
-.hdr-link:hover .hdr-link-t, .hdr-link:focus-visible .hdr-link-t { text-decoration-color: var(--c-ink); }
-.hdr-link[aria-current="page"] .hdr-link-t { color: var(--c-green); text-decoration-color: var(--c-green); }
-@media (prefers-reduced-motion: no-preference) {
-  .hdr-panel:not([hidden]) { animation: hdr-in 0.2s var(--ease-out-quint) both; }
+.hdr-pshape { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.hdr-pshape svg { position: absolute; inset: 0; overflow: visible; filter: var(--hdr-shadow); }
+.hdr-pshape-fill { fill: var(--hdr-fill); }
+.hdr-pshape-line { fill: none; stroke: var(--hdr-line); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hdr-hills { fill: var(--c-yellow); }
+.hdr-panel ul { position: relative; display: grid; }
+.hdr-panel li + li { border-top: 1px solid color-mix(in oklab, var(--c-ink) 10%, transparent); margin-inline: 1.5rem; }
+.hdr-panel li + li .hdr-link { margin-inline: -1.5rem; }
+.hdr-link {
+  display: grid; grid-template-columns: 3.25rem minmax(0, 1fr) auto; align-items: center; gap: 1.15rem; min-height: 5.75rem; padding: 0.75rem 1.5rem;
+  border-radius: 1.4rem; color: var(--c-ink); transition: background-color 0.18s var(--hdr-ease);
 }
-@keyframes hdr-in { from { opacity: 0; transform: translate3d(0, -4px, 0); } to { opacity: 1; transform: none; } }
+.hdr .hdr-link:focus-visible { border-radius: 1.4rem; outline-offset: -3px; }
+.hdr-link-ic { width: 3.25rem; height: 3.25rem; }
+.hdr-link-tx { display: grid; gap: 0.35rem; }
+.hdr-link-t { font-family: var(--font-sans); font-weight: 650; font-size: 1.09rem; line-height: 1.2; transition: color 0.18s; }
+.hdr-link-n { font-size: 0.92rem; line-height: 1.3; color: var(--hdr-muted); }
+.hdr-link-ar { width: 1.25rem; height: 1.25rem; transition: transform 0.2s var(--hdr-ease); }
+.hdr-link:hover, .hdr-link:focus-visible { background: color-mix(in oklab, var(--hdr-active) 32%, var(--hdr-fill)); }
+.hdr-link:hover .hdr-link-t, .hdr-link:focus-visible .hdr-link-t { color: color-mix(in oklab, var(--c-green) 70%, var(--c-ink)); }
+.hdr-link:hover .hdr-link-ar, .hdr-link:focus-visible .hdr-link-ar { transform: translateX(4px); }
+.hdr-link[aria-current="page"] .hdr-link-t { color: var(--c-green); }
+@media (prefers-reduced-motion: no-preference) {
+  .hdr-panel:not([hidden]) { animation: hdr-in 0.28s var(--hdr-ease) both; }
+  .hdr-panel:not([hidden]) li { animation: hdr-row 0.28s var(--hdr-ease) both; }
+  .hdr-panel:not([hidden]) li:nth-child(2) { animation-delay: 25ms; }
+  .hdr-panel:not([hidden]) li:nth-child(3) { animation-delay: 50ms; }
+  .hdr-panel:not([hidden]) li:nth-child(4) { animation-delay: 75ms; }
+}
+@keyframes hdr-in { from { opacity: 0; transform: translate3d(0, -6px, 0) scaleY(0.97); } to { opacity: 1; transform: none; } }
+@keyframes hdr-row { from { opacity: 0; } to { opacity: 1; } }
 
 /* Mobile menu: a full-page white sheet under the bar. Groups as headings, sub-pages as plain rows, one CTA, contacts. */
 .mm {
@@ -70,25 +206,80 @@
   padding: calc(var(--header-h) + 1.5rem) 1.5rem 2rem; background: var(--c-white); color: var(--c-ink);
 }
 .mm[hidden] { display: none; }
-@media (min-width: 64rem) { .mm, .mm:not([hidden]) { display: none; } }
+@media (min-width: 73.75rem) { .mm, .mm:not([hidden]) { display: none; } }
 .mm-groups { display: grid; }
 .mm-solo { display: grid; }
 .mm-group { padding-block: 0.5rem 0.6rem; border-top: 1px solid var(--c-ink); }
 .mm-group:first-child { border-top: 0; padding-top: 0; }
 .mm-big { display: flex; align-items: center; min-height: 2.75rem; font-family: var(--font-display); font-weight: 700; font-stretch: 100%; font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.015em; color: var(--c-ink); }
-.mm-subs { display: grid; margin-top: 0.1rem; }
-.mm-sub { display: flex; align-items: center; min-height: 2.75rem; font-family: var(--font-sans); font-weight: 500; font-size: 1.06rem; color: var(--c-ink); }
-.mm-big[aria-current="page"], .mm-sub[aria-current="page"] { color: var(--c-green); text-decoration: underline 2px; text-underline-offset: 0.3em; }
+.mm-toggle { width: 100%; justify-content: space-between; gap: 1rem; background: none; cursor: pointer; text-align: left; }
+.mm-toggle .hdr-chev { width: 1.25rem; height: 1.25rem; }
+.mm-toggle[aria-expanded="true"] .hdr-chev { transform: rotate(180deg); }
+.mm-toggle[data-active] { color: var(--c-green); }
+.mm-subs-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.34s var(--hdr-ease); }
+.mm-subs-wrap[data-open] { grid-template-rows: 1fr; }
+.mm-subs { display: grid; min-height: 0; overflow: hidden; margin-top: 0.1rem; }
+.mm-subs-wrap[data-open] .mm-subs { padding-bottom: 0.4rem; }
+.mm-sub {
+  display: flex; align-items: center; gap: 0.85rem; min-height: 3.4rem; padding: 0.3rem 0.6rem; margin-inline: -0.6rem; border-radius: 1rem;
+  font-family: var(--font-sans); font-weight: 600; font-size: 1.06rem; color: var(--c-ink); transition: background-color 0.2s, scale 0.2s var(--hdr-ease);
+}
+.mm-sub-ic { flex: none; width: 2.5rem; height: 2.5rem; }
+.mm-sub-tx { display: grid; gap: 0.1rem; }
+.mm-sub-n { font-weight: 400; font-size: 0.9rem; color: color-mix(in oklab, var(--c-ink) 74%, var(--c-white)); }
+/* tap feedback: a soft yellow wash and a tiny press */
+.mm-sub:active, .mm-toggle:active, .mm-solo .mm-big:active { background: color-mix(in oklab, var(--hdr-active) 70%, transparent); }
+.mm-toggle, .mm-solo .mm-big { margin-inline: -0.6rem; padding-inline: 0.6rem; border-radius: 1rem; transition: background-color 0.2s, scale 0.2s var(--hdr-ease); }
+.mm-toggle { width: calc(100% + 1.2rem); }
+.mm-sub-ic { transition: rotate 0.35s var(--hdr-ease), scale 0.35s var(--hdr-ease); }
+@media (prefers-reduced-motion: no-preference) {
+  .mm-sub:active, .mm-toggle:active, .mm-solo .mm-big:active { scale: 0.98; }
+  .mm-sub:active .mm-sub-ic { rotate: -8deg; scale: 1.08; }
+  /* sub-pages: each row rises in after the one above while the group opens */
+  .mm-subs-wrap li { transition: opacity 0.3s ease, translate 0.4s var(--hdr-ease); transition-delay: calc(0.06s + var(--j, 0) * 0.05s); }
+  .mm-subs-wrap:not([data-open]) li { opacity: 0; translate: 0 -8px; transition-delay: 0s; transition-duration: 0.15s; }
+}
+@media (prefers-reduced-motion: reduce) { .mm-subs-wrap { transition: none; } }
+.mm-big[aria-current="page"], .mm-sub[aria-current="page"] .mm-sub-tx > :first-child { color: var(--c-green); text-decoration: underline 2px; text-underline-offset: 0.3em; }
 .mm-cta { margin-top: 1.25rem; align-self: flex-start; }
 .mm-nav { display: flex; flex-direction: column; }
 .mm-contacts { display: grid; gap: 0.15rem; margin-top: auto; padding-top: 1.25rem; border-top: 1px solid var(--c-ink); font-size: 1rem; }
 .mm-contacts-h { font-weight: 700; margin-bottom: 0.25rem; }
 .mm-contacts a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: underline; text-underline-offset: 0.25em; }
 .mm :focus-visible { outline: 2.5px solid var(--c-ink); outline-offset: 3px; border-radius: 0.5rem; }
+/* Opening: the white sheet unrolls from under the bar, then the groups, the CTA and the contacts rise in one after the
+ * other. Closing: the sheet rolls back up (header-bar keeps it mounted 260ms with data-closing). */
 @media (prefers-reduced-motion: no-preference) {
-  .mm:not([hidden]) { animation: mm-in 0.22s var(--ease-out-quint) both; }
+  .mm:not([hidden]) { animation: mm-unroll 0.42s var(--hdr-ease) both; }
+  .mm:not([hidden]) :is(.mm-group, .mm-cta, .mm-contacts) { animation: mm-rise 0.5s var(--hdr-ease) both; animation-delay: calc(0.1s + var(--k, 0) * 0.05s); }
+  .mm[data-closing] { animation: mm-roll 0.26s cubic-bezier(0.6, 0, 0.85, 0.3) both; }
+  .mm[data-closing] :is(.mm-group, .mm-cta, .mm-contacts) { animation: mm-sink 0.2s ease both; }
 }
-@keyframes mm-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mm-unroll { from { clip-path: inset(0 0 100% 0 round 0 0 2rem 2rem); } to { clip-path: inset(0 0 0 0 round 0); } }
+@keyframes mm-roll { from { clip-path: inset(0 0 0 0 round 0); } to { clip-path: inset(0 0 100% 0 round 0 0 2rem 2rem); } }
+@keyframes mm-rise { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: none; } }
+@keyframes mm-sink { to { opacity: 0; translate: 0 -6px; } }
+
+/* ---------- Shop CTA (phones and tablets) ----------
+ * The main call to action below the desktop breakpoint: a deep pill fixed at the bottom, above the home indicator,
+ * always there except on the shop and while the menu is open. The page keeps room for it at its end. */
+.shop-cta {
+  position: fixed; z-index: 45; left: 50%; bottom: calc(0.9rem + env(safe-area-inset-bottom)); translate: -50% 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.65rem; width: min(calc(100% - 2rem), 22rem); min-height: 3.5rem; padding: 0 1.5rem;
+  border-radius: 999px; background: var(--c-ink); color: var(--c-white); font-family: var(--font-display); font-weight: 650; font-stretch: 100%; font-size: 1.08rem;
+  box-shadow: 0 14px 30px -12px oklch(19% 0.04 168 / 0.55), 0 0 0 3px var(--c-white);
+  transition: translate 0.45s var(--hdr-ease, ease), scale 0.2s ease, background-color 0.2s;
+}
+.shop-cta-ic { width: 1.3rem; height: 1.3rem; color: var(--c-yellow); }
+.shop-cta-ar { width: 1.25rem; height: 1.25rem; transition: translate 0.3s ease; }
+.shop-cta:active { scale: 0.97; background: color-mix(in oklab, var(--c-ink) 86%, var(--c-green)); }
+.shop-cta:active .shop-cta-ar { translate: 4px 0; }
+.shop-cta:focus-visible { outline: 3px solid var(--c-yellow); outline-offset: 3px; }
+.shop-cta[data-hidden] { translate: -50% calc(100% + 2rem); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { .shop-cta { animation: shop-in 0.6s var(--ease-out-quint) 0.5s backwards; } }
+@keyframes shop-in { from { translate: -50% calc(100% + 2rem); } }
+@media (min-width: 73.75rem) { .shop-cta { display: none; } }
+@media (max-width: 73.74rem) { html:has(.shop-cta) .ftr { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); } }
 
 /* ---------- Footer ---------- */
 .ftr { color: var(--c-white); }

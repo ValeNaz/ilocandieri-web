@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { LogoMark } from "@/components/brand/Logo";
+import { AbesLogo } from "@/components/brand/AbesLogo";
 import { PillLink } from "@/components/public/abes/PillLink";
 import { C } from "@/components/public/art/parts";
 import { HeroScene } from "@/components/public/art/abes/hero";
-import { Jar } from "@/components/public/art/abes/parts";
 import { STATIONS, STATION_TONES } from "@/components/public/art/abes/stations";
 import { Kinetic, LitWords } from "@/components/public/kit/Kinetic";
 import { Marquee } from "@/components/public/kit/Marquee";
@@ -37,6 +36,14 @@ const VALUES = [
   { label: "Visione", phrase: "Un'economia che si misura in persone.", text: "Coesione e inclusione. Il valore si conta in persone, relazioni e risorse del territorio." },
 ] as const;
 
+/** The bench of real photos (public/foto): one slot each in the .abes-bench mosaic (abes.css). */
+const BENCH = [
+  { slot: "jars", src: "/foto/vasetti-abes.jpg", alt: "Vasetti ABES con l'etichetta, chiusi con tela di juta", caption: "Vasetti con l'etichetta ABES", sizes: "(min-width:1024px) 40vw, 92vw", pos: "50% 45%" },
+  { slot: "crates", src: "/foto/cassette-verdure.jpg", alt: "Cassette di verdure davanti al muro ABES", caption: "Verdura di stagione, in cassetta", sizes: "(min-width:1024px) 58vw, 92vw", pos: "50% 72%" },
+  { slot: "pasta", src: "/foto/abbracci-banco.jpg", alt: "Confezione di pasta Abbracci ABES su un tavolo di legno", caption: "Abbracci di Tumminia", sizes: "(min-width:1024px) 32vw, 46vw", pos: "52% 55%" },
+  { slot: "ceci", src: "/foto/ceci-juta.jpg", alt: "Ceci in un sacco di juta", caption: "Ceci, in sacco di juta", sizes: "(min-width:1024px) 26vw, 46vw", pos: "50% 60%" },
+] as const;
+
 function Grains() {
   return (
     <svg viewBox="0 0 40 24" className="inline-block h-5 w-8" aria-hidden="true" focusable="false">
@@ -54,7 +61,8 @@ export default function AbesPage() {
       <Room tone="yellow" className="min-h-[calc(100svh-var(--header-h))] py-10 sm:py-14">
         <Wrap className="grid items-center gap-8 lg:grid-cols-[1.12fr_1fr] lg:gap-6">
           <div className="relative z-10">
-            <p className="t-label mb-5">ABES, il progetto agricolo de I Locandieri</p>
+            <AbesLogo priority className="mb-6 w-44 sm:w-56" />
+            <p className="t-label mb-5">Il progetto agricolo de I Locandieri</p>
             <Kinetic as="h1" text="Dal seme al barattolo." className="t-mega" />
             <p className="t-lead mt-6">Coltiviamo biologico su terreni confiscati a Castelvetrano. Qui trovi tutta la strada, dal chicco di grano al vasetto che arriva a casa tua.</p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -109,45 +117,24 @@ export default function AbesPage() {
         </PinScene>
       </section>
 
-      {/* 4. Scena: dal vero, subito dopo la scena fissa: il video della filiera, poi le foto dei prodotti ABES in pannelli
-          ritagliati. Un solo disegno fermo (il vasetto), nessuna animazione decorativa; nessun disegno sopra le didascalie. */}
-      <Room tone="orange" className="py-16 sm:py-28">
+      {/* 4. Scena: dal vero, subito dopo la scena fissa. Il banco: le foto vere dei prodotti ABES in un mosaico regolare,
+          stessa cornice per tutte, la didascalia come etichetta sulla foto. Nessun disegno qui (il titolo lo promette).
+          Il video della filiera, quando c'è, chiude la stanza. */}
+      <Room tone="orange" className="py-16 sm:py-24">
         <Wrap>
           <div className="grid gap-5 lg:grid-cols-12 lg:items-end">
             <h2 className="t-giant lg:col-span-7">Questi non sono disegni.</h2>
             <p className="t-lead lg:col-span-5">Cassette, vasetti, pasta e ceci: le fotografie sono dei prodotti ABES, come arrivano sul banco.</p>
           </div>
-          <RealMedia id="abes-video" className="mt-12 max-w-[64rem] sm:mt-16" caption="Dal campo al barattolo, dal vero." />
-          <RealMedia id="abes-raccolta" shape="polaroid" tilt={-1.5} className="abes-raccolta-m mt-12" caption="La raccolta, una cassetta alla volta." />
-          <div className="mt-12 grid gap-x-8 gap-y-14 sm:mt-16 lg:grid-cols-12">
-            <figure className="relative lg:col-span-4 lg:row-span-2">
-              <div className="ph ph-arch ph-tilt aspect-[3/4]">
-                <Image src="/foto/vasetti-abes.jpg" alt="Vasetti ABES con l'etichetta, chiusi con tela di juta" width={1000} height={1333} sizes="(min-width:1024px) 30vw, 90vw" className="size-full object-cover" />
-              </div>
-              <svg viewBox="0 0 120 170" className="pointer-events-none absolute -right-3 -top-8 w-24 rotate-3 sm:-right-8 sm:w-32" aria-hidden="true" focusable="false">
-                <Jar x={60} y={160} s={0.95} label="yellow" content="green" lid="green" name={["Ceci"]} />
-              </svg>
-              <figcaption className="ph-cap">Vasetti con l&apos;etichetta ABES.</figcaption>
-            </figure>
-            <figure className="lg:col-span-8">
-              <div className="ph ph-soft ph-tilt aspect-[16/10]">
-                <Image src="/foto/cassette-verdure.jpg" alt="Cassette di verdure davanti al muro ABES" width={1000} height={1000} sizes="(min-width:1024px) 60vw, 90vw" className="size-full object-cover" />
-              </div>
-              <figcaption className="ph-cap">Cassette di verdura di stagione, davanti al muro ABES.</figcaption>
-            </figure>
-            <figure className="relative lg:col-span-4 lg:col-start-6">
-              <div className="ph ph-leaf ph-tilt aspect-square">
-                <Image src="/foto/abbracci-banco.jpg" alt="Confezione di pasta Abbracci ABES su un tavolo di legno" width={1000} height={1000} sizes="(min-width:1024px) 30vw, 90vw" className="size-full object-cover" />
-              </div>
-              <figcaption className="ph-cap">Pasta Abbracci, varietà Tumminia.</figcaption>
-            </figure>
-            <figure className="lg:col-span-3">
-              <div className="ph ph-arch ph-tilt aspect-[4/5]">
-                <Image src="/foto/ceci-juta.jpg" alt="Ceci in un sacco di juta" width={1600} height={900} sizes="(min-width:1024px) 24vw, 90vw" className="size-full object-cover" />
-              </div>
-              <figcaption className="ph-cap">Ceci, in sacco di juta.</figcaption>
-            </figure>
+          <div className="abes-bench mt-10 sm:mt-14">
+            {BENCH.map((ph) => (
+              <figure key={ph.src} className={`abes-ph abes-ph-${ph.slot}`}>
+                <Image src={ph.src} alt={ph.alt} fill sizes={ph.sizes} className="object-cover" style={{ objectPosition: ph.pos }} />
+                <figcaption className="abes-ph-tag">{ph.caption}</figcaption>
+              </figure>
+            ))}
           </div>
+          <RealMedia id="abes-video" className="mt-12 max-w-[64rem] sm:mt-16" caption="Dal campo al barattolo, dal vero." />
         </Wrap>
       </Room>
 
@@ -167,12 +154,10 @@ export default function AbesPage() {
         </Wrap>
       </Room>
 
-      {/* 6. Scena: chiusura, il marchio intero entra una volta (logo-build-view), accanto il testo e le due uscite. */}
+      {/* 6. Scena: chiusura, il logo ABES entra una volta (logo-build-view), accanto il testo e le due uscite. */}
       <Room tone="white" className="py-20 sm:py-32">
         <Wrap className="grid items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-20">
-          <div className="mx-auto w-40 sm:w-56 lg:w-72">
-            <LogoMark build="view" className="h-auto w-full" />
-          </div>
+          <AbesLogo className="logo-build-view mx-auto w-60 sm:w-72 lg:w-80" />
           <div>
             <h2 className="t-giant">Dal campo alla tua tavola.</h2>
             <p className="t-lead mt-6">Guarda i prodotti, poi ordina su abes.bio: prezzi, disponibilità e spedizioni li gestisce il negozio ABES.</p>

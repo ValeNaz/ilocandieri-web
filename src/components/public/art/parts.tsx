@@ -1,8 +1,9 @@
 /**
  * Shared SVG parts for the illustrations. Style law (DESIGN.md): flat shapes, only the four fills
  * (--c-orange / --c-yellow / --c-green / --c-white) plus --c-ink for fine line art; no gradients, no filters, no shadows.
- * People are always drawn like the logo: a round head and an angular, house-like body. Parts take `x`,`y` (their ground point)
- * and `s` (scale, 1 = about 100 units tall) so scenes can place them in any viewBox.
+ * People are soft silhouettes: an oval head, sloping shoulders, a pebble of a torso, tapered limbs with mitten hands and
+ * real shoes. Parts take `x`,`y` (their ground point) and `s` (scale, 1 = about 100 units tall) so scenes can place
+ * them in any viewBox.
  */
 import type { CSSProperties, ReactNode } from "react";
 
@@ -87,32 +88,47 @@ function HairShape({ hair }: { hair: Hair }) {
   const f = C.ink;
   switch (hair) {
     case "short":
-      return <path d="M-9.4 1 C-10.2 -6 -4.5 -10.6 1.5 -10 C6 -9.6 9 -6.5 9.2 -3.4 C6.5 -5.4 3.2 -5.8 0.6 -4.6 C-1.4 -2.2 -3.4 -0.6 -5.2 0.4 C-5.6 2.8 -5.4 4.6 -4.8 6.4 C-7.6 5.6 -9.2 3.6 -9.4 1 Z" fill={f} />;
+      // a cap of hair hugging the skull, the fringe sweeping across to a soft tip at the temple
+      return <path d="M-9.8 1.4 C-10.6 -5.8 -5.6 -11.6 0.6 -11.3 C6 -11 9.8 -7.4 9.8 -3 C8.6 -5 6.6 -6.2 4.6 -5.8 C5.8 -4.2 5 -2.2 3.4 -2.5 C1.6 -3.2 -0.4 -4.4 -2.4 -3.8 C-4.4 -3.2 -5.4 -1.2 -5.8 1.2 C-6.2 3.6 -5.8 5.6 -4.8 7.4 C-7.8 6.6 -9.6 4.4 -9.8 1.4 Z" fill={f} />;
     case "bun":
       return (
         <>
-          <circle cx="-6.8" cy="-8.6" r="4.4" fill={f} />
-          <path d="M-9.4 2 C-10.4 -5.8 -4.8 -10.4 1 -10 C5.8 -9.6 9 -6.6 9.3 -3 C5.6 -5.8 1.4 -5.6 -1.6 -3.4 C-3.6 -1.4 -4.6 1.4 -4.4 5 C-7.6 4.6 -9.2 3.6 -9.4 2 Z" fill={f} />
+          <circle cx="-8.8" cy="-4.6" r="4.9" fill={f} />
+          <path d="M-9.8 1.2 C-10.6 -5.8 -5.6 -11.4 0.6 -11.2 C6 -11 9.6 -7.6 9.8 -3.2 C6.2 -6.2 1.6 -6.2 -1.4 -3.8 C-3.6 -2 -4.8 0.8 -4.8 4.2 C-7.8 4 -9.6 3 -9.8 1.2 Z" fill={f} />
         </>
       );
     case "long":
-      return <path d="M-9.4 0 C-10 -6.6 -4.6 -10.6 1.2 -10 C6.2 -9.6 9.2 -6.4 9.3 -3 C5.6 -5.6 1.8 -5.6 -0.8 -3.8 C-3.4 0 -3.8 5 -2.6 10.4 C-1.8 13 -0.6 15 0.6 16.4 C-5.4 17.4 -10.4 14.4 -11.6 9 C-12.2 5.6 -10.2 3.4 -9.4 0 Z" fill={f} />;
+      // over the skull, then down the back in one soft S, ending behind the shoulder
+      return <path d="M-9.8 0.6 C-10.4 -6.6 -5.2 -11.4 1 -11.2 C6.2 -11 9.6 -7.4 9.8 -3 C6.2 -6 2.2 -6 -0.8 -3.8 C-3.8 -1.6 -4.4 2.8 -3.4 7.6 C-2.6 11.8 -1 15.2 2 18 C-4.6 19.6 -11 16.8 -12.8 11.2 C-14 7.2 -12.2 3.4 -9.8 0.6 Z" fill={f} />;
     case "curly":
-      return <path d="M-11.4 2.2a3.8 3.8 0 1 0 7.6 0a3.8 3.8 0 1 0 -7.6 0M-10.6 -4.4a4.4 4.4 0 1 0 8.8 0a4.4 4.4 0 1 0 -8.8 0M-6.6 -8.2a4.6 4.6 0 1 0 9.2 0a4.6 4.6 0 1 0 -9.2 0M-0.6 -8.4a4.2 4.2 0 1 0 8.4 0a4.2 4.2 0 1 0 -8.4 0M4.2 -5a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0" fill={f} />;
+      // a halo of curls round the skull, two of them tucked down the nape
+      return <path d="M-13.6 -1.6a4.2 4.2 0 1 0 8.4 0a4.2 4.2 0 1 0 -8.4 0M-11.2 -7.2a4.6 4.6 0 1 0 9.2 0a4.6 4.6 0 1 0 -9.2 0M-5.8 -10a4.8 4.8 0 1 0 9.6 0a4.8 4.8 0 1 0 -9.6 0M0.4 -9.2a4.4 4.4 0 1 0 8.8 0a4.4 4.4 0 1 0 -8.8 0M5.4 -5.2a3.4 3.4 0 1 0 6.8 0a3.4 3.4 0 1 0 -6.8 0M-14 4.2a3.6 3.6 0 1 0 7.2 0a3.6 3.6 0 1 0 -7.2 0M-10.6 8.4a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0" fill={f} />;
     case "cap":
-      return <path d="M-9.6 -1.2 C-9.8 -7.4 -5 -11 0.4 -11 C5.6 -11 9.4 -7.4 9.6 -2.6 L15.4 -2.2 C16.8 -2.1 16.8 0.4 15.4 0.5 L-8.4 1.4 C-9.2 1.4 -9.6 0.4 -9.6 -1.2 Z" fill={f} />;
+      // round crown, a visor that curves gently down over the eyes
+      return <path d="M-9.8 -1.6 C-10 -8 -5 -11.6 0.6 -11.6 C6 -11.6 9.8 -8 9.8 -2.8 L16.8 -1.8 C18.2 -1.6 18.2 1 16.6 1.1 L-8.4 1.4 C-9.4 1.4 -9.8 0.4 -9.8 -1.6 Z" fill={f} />;
     default:
       return null;
   }
 }
 
-/** One leg: two straight segments with a round knee, and a shoe at the ankle (toe towards +x). */
+/** A limb segment that bows a little (k units, to its right-hand side), so legs and arms read as flesh, not pipes. */
+function bone([ax, ay]: P2, [bx, by]: P2, k: number) {
+  const dx = bx - ax, dy = by - ay, l = Math.hypot(dx, dy) || 1;
+  return `M${ax} ${ay} Q${((ax + bx) / 2 - (dy / l) * k).toFixed(2)} ${((ay + by) / 2 + (dx / l) * k).toFixed(2)} ${bx} ${by}`;
+}
+/** A mitten at the end of a forearm: an oval along the arm, a little longer than it is wide. */
+function mitten([ex, ey]: P2, [hx, hy]: P2, color: string, key: string) {
+  const a = (Math.atan2(hy - ey, hx - ex) * 180) / Math.PI, l = Math.hypot(hx - ex, hy - ey) || 1;
+  const cx = hx + ((hx - ex) / l) * 1.3, cy = hy + ((hy - ey) / l) * 1.3;
+  return <ellipse key={key} cx={cx.toFixed(2)} cy={cy.toFixed(2)} rx="5.3" ry="4.2" fill={color} transform={`rotate(${a.toFixed(1)} ${cx.toFixed(2)} ${cy.toFixed(2)})`} />;
+}
+/** One leg: a fuller thigh, a calf that bows back a touch, and a proper shoe at the ankle (rounded toe towards +x). */
 function leg(hip: P2, [knee, ankle]: Pair<P2>, foot: number, w: number, color: string, key: number) {
   return (
     <g key={key}>
-      <path d={`M${hip[0]} ${hip[1]} L${knee[0]} ${knee[1]}`} stroke={color} strokeWidth={w * 1.22} {...ROUND} />
-      <path d={`M${knee[0]} ${knee[1]} L${ankle[0]} ${ankle[1]}`} stroke={color} strokeWidth={w} {...ROUND} />
-      <rect x={ankle[0] - 3.4} y={ankle[1] - 1.6} width="11" height="5.2" rx="2.6" fill={C.ink} transform={foot ? `rotate(${foot} ${ankle[0]} ${ankle[1]})` : undefined} />
+      <path d={bone(hip, knee, -1)} stroke={color} strokeWidth={w * 1.34} {...ROUND} />
+      <path d={bone(knee, ankle, 1.3)} stroke={color} strokeWidth={w} {...ROUND} />
+      <path d="M-4.4 -1.8 C-4.4 -3.4 -3.4 -4.4 -1.8 -4.4 H1.8 C4.8 -4.4 7.4 -2.8 9.4 -0.6 C10.6 0.8 10.4 2.8 9 3.4 C8.2 3.6 7.2 3.7 6.2 3.7 H-2.4 C-3.7 3.7 -4.4 2.9 -4.4 1.7 Z" fill={C.ink} transform={`translate(${ankle[0]} ${ankle[1]})${foot ? ` rotate(${foot})` : ""}`} />
     </g>
   );
 }
@@ -176,8 +192,9 @@ function Carried({ what, box, fruit, pose, build }: { what: Item; box: Fill; fru
 
 /**
  * A person, the only way people are drawn on the site. One body colour from head to sleeves (heads are ALWAYS the body
- * colour); ink only for hair, trousers and shoes. Three-quarter view facing +x, `flip` turns them round. Proportions:
- * about 5.5 heads, elbows and knees, hands that close over what they hold, both feet on the ground (feet at 0,0).
+ * colour); ink only for hair, trousers, shoes, the eye and the smile. Three-quarter view facing +x, `flip` turns them
+ * round. Proportions: about 5.5 heads, sloping shoulders, a soft torso narrowing to the hips, arms thicker above the
+ * elbow, mitten hands that close over what they hold, both feet on the ground (feet at 0,0).
  * Variety comes from `hair`, `build`, `outfit`; when not given they are derived from the figure's place, so every
  * figure in a crowd is a different person. `item`: crate / basket (held in front with both hands), suitcase, book,
  * spade (in the near hand). `hold` draws any custom object at the near hand, under the fingers.
@@ -201,14 +218,23 @@ export function Person({ color = "orange", pose = "stand", kid, item, itemColor 
   const headY = kid ? -87 : -88.5;
     const legW = o === "dress" ? 5.6 : 7.4;
   const foot = p.foot ?? [0, 0];
-  const shoulders: Pair<P2> = [[-sw + 1.6, -72.5], [sw - 1.6, -72.5]];
+  const shoulders: Pair<P2> = [[-sw + 2.6, -70.5], [sw - 2.6, -70.5]];
   const dx = sw - 12;
 
+  // upper arm fuller than the forearm; the far arm (i = 0) bows the other way, like the near one seen from behind
   const arm = ([[ex, ey], [hx, hy]]: Pair<P2>, i: number, root: P2) => {
     const s = i ? dx : -dx;
-    return <path key={`arm${i}`} d={`M${root[0]} ${root[1]} L${ex + s} ${ey} L${hx + s} ${hy}`} stroke={f} strokeWidth="6.6" {...ROUND} />;
+    return (
+      <g key={`arm${i}`}>
+        <path d={bone(root, [ex + s, ey], i ? 0.8 : -0.8)} stroke={f} strokeWidth="7.6" {...ROUND} />
+        <path d={bone([ex + s, ey], [hx + s, hy], i ? -0.8 : 0.8)} stroke={f} strokeWidth="6.1" {...ROUND} />
+      </g>
+    );
   };
-  const hand = ([, [hx, hy]]: Pair<P2>, i: number) => <circle key={`hand${i}`} cx={hx + (i ? dx : -dx)} cy={hy} r="4" fill={f} />;
+  const hand = ([[ex, ey], [hx, hy]]: Pair<P2>, i: number) => {
+    const s = i ? dx : -dx;
+    return mitten([ex + s, ey], [hx + s, hy], f, `hand${i}`);
+  };
 
   const upper = (
     <g transform={p.lean ? `rotate(${p.lean} 0 -42)` : undefined}>
@@ -216,20 +242,21 @@ export function Person({ color = "orange", pose = "stand", kid, item, itemColor 
       {!p.hang && arm(p.arms[0], 0, shoulders[0])}
       {!p.hang && holdBack && <g transform={`translate(${p.arms[0][1][0] - dx} ${p.arms[0][1][1]})`}>{holdBack}</g>}
       {!p.hang && hand(p.arms[0], 0)}
-      <rect x="-3.2" y={headY + headR - 3} width="6.4" height="8" rx="3" fill={f} />
-      {/* shirt: rounded shoulders, narrower waist */}
-      <path d={`M${-sw} -67 C${-sw} -73.6 ${-sw + 3} -76.6 ${-sw + 8} -76.6 H${sw - 8} C${sw - 3} -76.6 ${sw} -73.6 ${sw} -67 L${hw} -43.4 C${hw} -41.4 ${hw - 1.4} -40.4 ${hw - 3.4} -40.4 H${-hw + 3.4} C${-hw + 1.4} -40.4 ${-hw} -41.4 ${-hw} -43.4 Z`} fill={f} />
+      <rect x="-3.6" y={headY + headR - 3} width="7.2" height="9" rx="3.4" fill={f} />
+      {/* torso: shoulders that slope from the neck, sides that swell a little, then narrow to the hips */}
+      <path d={`M${-sw} -66 C${-sw} -72.2 ${-sw * 0.55} -78.6 0 -78.6 C${sw * 0.55} -78.6 ${sw} -72.2 ${sw} -66 C${sw + 0.5} -58 ${hw + 0.9} -50 ${hw} -43 C${hw} -41.2 ${hw - 1.6} -40.2 ${hw - 3.6} -40.2 H${-hw + 3.6} C${-hw + 1.6} -40.2 ${-hw} -41.2 ${-hw} -43 C${-hw - 0.9} -50 ${-sw - 0.5} -58 ${-sw} -66 Z`} fill={f} />
       {o === "apron" && color !== "white" && (
         <g>
-          <path d="M-5 -74 C-4 -78 4 -78 5 -74" stroke={C.white} strokeWidth={INK.bold} {...ROUND} />
-          <path d={`M-7.6 -72 H7.6 C8.6 -72 9.2 -71.4 9.2 -70.4 L${hw + 1.6} -28 C${hw + 1.6} -26.6 ${hw + 0.6} -25.6 ${hw - 0.8} -25.6 H${-hw + 0.8} C${-hw - 0.6} -25.6 ${-hw - 1.6} -26.6 ${-hw - 1.6} -28 L-9.2 -70.4 C-9.2 -71.4 -8.6 -72 -7.6 -72 Z`} fill={C.white} />
+          <path d="M-5.2 -73.4 C-4 -77.8 4 -77.8 5.2 -73.4" stroke={C.white} strokeWidth={INK.bold} {...ROUND} />
+          <path d={`M-7.2 -72 H7.2 C8.2 -72 8.8 -71.4 8.8 -70.4 L${hw + 0.8} -30 C${hw + 0.8} -27.2 ${hw - 1.8} -25.2 ${hw - 4.6} -25.2 H${-hw + 4.6} C${-hw + 1.8} -25.2 ${-hw - 0.8} -27.2 ${-hw - 0.8} -30 L-8.8 -70.4 C-8.8 -71.4 -8.2 -72 -7.2 -72 Z`} fill={C.white} />
         </g>
       )}
       <g transform={`translate(0 ${headY})`}>
-        <circle r={headR} fill={f} />
-        {/* the nose turns the head the way the body faces */}
-        <circle cx={headR * 0.93} cy={headR * 0.18} r={headR * 0.24} fill={f} />
-        <circle cx={headR * 0.42} cy={-headR * 0.02} r={headR * 0.12} fill={C.ink} />
+        {/* an oval head, a small nose that turns it the way the body faces, one eye, a smile */}
+        <ellipse rx={headR * 0.95} ry={headR * 1.05} fill={f} />
+        <circle cx={headR * 0.9} cy={headR * 0.24} r={headR * 0.2} fill={f} />
+        <circle cx={headR * 0.4} cy={-headR * 0.06} r={headR * 0.13} fill={C.ink} />
+        <path d={`M${headR * 0.46} ${headR * 0.5} Q${headR * 0.62} ${headR * 0.64} ${headR * 0.78} ${headR * 0.54}`} stroke={C.ink} strokeWidth={headR * 0.1} {...ROUND} />
         <g transform={`scale(${headR / 9})`}><HairShape hair={h} /></g>
       </g>
       {(what === "crate" || what === "basket") && <Carried what={what} box={box} fruit={fruit} pose={pose} build={b} />}
@@ -248,16 +275,19 @@ export function Person({ color = "orange", pose = "stand", kid, item, itemColor 
     <Placed {...at} s={(at.s ?? 1) * (kid ? 0.64 : 1)}>
       {p.legs.map((l, i) => leg(hips[i]!, l, foot[i]!, legW, C.ink, i))}
       {o === "dress" ? (
-        <path d={`M${-hw + 0.6} -48 H${hw - 0.6} L${hw + 5.4} -25.8 C${hw + 5.8} -24.4 ${hw + 4.8} -23.2 ${hw + 3.4} -23.2 H${-hw - 3.4} C${-hw - 4.8} -23.2 ${-hw - 5.8} -24.4 ${-hw - 5.4} -25.8 Z`} fill={f} />
+        // the skirt flares in a soft curve and hangs on a gently rounded hem
+        <path d={`M${-hw + 0.6} -48 H${hw - 0.6} C${hw + 0.6} -40 ${hw + 3.6} -32 ${hw + 6} -25.4 C${hw + 6.6} -24 ${hw + 5.6} -23 ${hw + 4.2} -23 H${-hw - 4.2} C${-hw - 5.6} -23 ${-hw - 6.6} -24 ${-hw - 6} -25.4 C${-hw - 3.6} -32 ${-hw - 0.6} -40 ${-hw + 0.6} -48 Z`} fill={f} />
       ) : (
-        <rect x={-hw + 0.4} y="-46" width={hw * 2 - 0.8} height="10" rx="4" fill={C.ink} />
+        // trousers: a rounded hip block the thighs grow out of
+        <path d={`M${-hw + 0.4} -47 H${hw - 0.4} C${hw + 1} -47 ${hw + 1.6} -45.6 ${hw + 1.6} -44.2 V-38 C${hw + 1.6} -35.2 ${hw - 0.8} -33.8 ${hw - 3} -33.8 H${-hw + 3} C${-hw + 0.8} -33.8 ${-hw - 1.6} -35.2 ${-hw - 1.6} -38 V-44.2 C${-hw - 1.6} -45.6 ${-hw - 1} -47 ${-hw + 0.4} -47 Z`} fill={C.ink} />
       )}
       {upper}
       {p.hang?.map(([sh, el, hd], i) => (
         <g key={i}>
-          <path d={`M${sh[0]} ${sh[1]} L${el[0]} ${el[1]} L${hd[0]} ${hd[1]}`} stroke={f} strokeWidth="6.6" {...ROUND} />
+          <path d={bone(sh, el, 0.8)} stroke={f} strokeWidth="7.6" {...ROUND} />
+          <path d={bone(el, hd, -0.8)} stroke={f} strokeWidth="6.1" {...ROUND} />
           {i === 1 && hold && <g transform={`translate(${hd[0]} ${hd[1]})`}>{hold}</g>}
-          <circle cx={hd[0]} cy={hd[1]} r="4" fill={f} />
+          {mitten(el, hd, f, `hang${i}`)}
         </g>
       ))}
     </Placed>

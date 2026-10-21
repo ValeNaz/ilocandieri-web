@@ -2,17 +2,26 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Wordmark } from "@/components/public/Wordmark";
-import { adminNav } from "@/lib/admin-nav";
+import { adminNav, type AdminBadges } from "@/lib/admin-nav";
 import { adminPaths } from "@/lib/paths";
-import { cn } from "@/lib/utils";
+import { CommandPalette, openPalette } from "./CommandPalette";
+import { Icon } from "./icons";
 
-/** Responsive admin shell: fixed sidebar on desktop, slide-over drawer on mobile. `footer` = profile/logout slot. */
-export function AdminShell({ children, footer, userLabel }: { children: ReactNode; footer: ReactNode; userLabel: string }) {
+const noop = () => () => {};
+const isMac = () => /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+const initials = (s: string) => s.split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("");
+
+/**
+ * Responsive admin shell: fixed sidebar on desktop, slide-over drawer on mobile, command palette (⌘K) everywhere.
+ * `footer` = the logout control; `badges` = live counts of what is waiting (shown next to their section).
+ */
+export function AdminShell({ children, footer, userLabel, badges }: { children: ReactNode; footer: ReactNode; userLabel: string; badges: AdminBadges }) {
   const pathname = usePathname();
   const [openFor, setOpenFor] = useState<string | null>(null);
   const open = openFor === pathname;
+  const mac = useSyncExternalStore(noop, isMac, () => true);
 
   useEffect(() => {
     if (!open) return;
@@ -21,62 +30,85 @@ export function AdminShell({ children, footer, userLabel }: { children: ReactNod
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const nav = (
-    <nav aria-label="Navigazione pannello" className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
-      {adminNav.map((g) => (
-        <div key={g.title}>
-          <p className="px-3 pb-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-ink-soft">{g.title}</p>
-          <ul className="space-y-0.5">
-            {g.items.map((it) => {
-              const active = it.exact ? pathname === it.href : pathname === it.href || pathname.startsWith(`${it.href}/`);
-              return (
-                <li key={it.href}>
-                  <Link href={it.href} title={it.hint} aria-current={active ? "page" : undefined}
-                    className={cn("flex min-h-10 items-center rounded-xl px-3 text-[0.95rem] font-medium transition-colors hover:bg-paper-deep",
-                      active && "bg-terracotta-soft text-terracotta-deep hover:bg-terracotta-soft")}>
-                    {it.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
-    </nav>
+  const search = (
+    <button type="button" onClick={() => { setOpenFor(null); openPalette(); }} className="adm-search">
+      <Icon name="search" className="size-[1.05rem]" />
+      <span className="flex-1 text-left">Cerca o vai a…</span>
+      <kbd className="adm-kbd">{mac ? "⌘" : "Ctrl"} K</kbd>
+    </button>
   );
 
   const aside = (
-    <div className="flex h-full flex-col bg-card">
-      <div className="flex h-16 shrink-0 items-center border-b border-line px-5"><Wordmark compact /></div>
-      {nav}
+    <div className="adm-aside">
+      <div className="flex h-[4.25rem] shrink-0 items-center justify-between gap-2 px-5">
+        <Link href={adminPaths.dashboard} aria-label="Dashboard del pannello" className="rounded-lg"><Wordmark compact /></Link>
+        <button type="button" onClick={() => setOpenFor(null)} aria-label="Chiudi il menu" className="adm-iconbtn lg:hidden"><Icon name="close" /></button>
+      </div>
+      <div className="px-3 pb-2">{search}</div>
+      <nav aria-label="Navigazione pannello" className="flex-1 overflow-y-auto px-3 pb-4">
+        {adminNav.map((g) => (
+          <div key={g.title} className="pt-4">
+            <p className="px-3 pb-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-ink-soft/80">{g.title}</p>
+            <ul className="space-y-px">
+              {g.items.map((it) => {
+                const active = it.exact ? pathname === it.href : pathname === it.href || pathname.startsWith(`${it.href}/`);
+                const n = it.badge ? badges[it.badge] : 0;
+                return (
+                  <li key={it.href}>
+                    <Link href={it.href} title={it.hint} aria-current={active ? "page" : undefined} className="adm-nav-link">
+                      <Icon name={it.icon} className="adm-nav-ic" />
+                      <span className="flex-1 truncate">{it.label}</span>
+                      {n > 0 && <span className="adm-count" aria-label={`${n} da guardare`}>{n > 99 ? "99+" : n}</span>}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </nav>
       <div className="shrink-0 space-y-1 border-t border-line p-3">
-        <a href="/" target="_blank" rel="noopener noreferrer" className="flex min-h-10 items-center rounded-xl px-3 text-[0.95rem] hover:bg-paper-deep">
-          Vedi il sito<span className="sr-only"> (nuova scheda)</span><span aria-hidden="true" className="ml-1.5 text-ink-soft">↗</span>
+        <a href="/" target="_blank" rel="noopener noreferrer" className="adm-nav-link">
+          <Icon name="external" className="adm-nav-ic" />
+          <span className="flex-1">Vedi il sito</span>
+          <span className="sr-only"> (nuova scheda)</span>
         </a>
-        <Link href={adminPaths.profile} className={cn("flex min-h-10 items-center rounded-xl px-3 text-[0.95rem] hover:bg-paper-deep", pathname.startsWith(adminPaths.profile) && "bg-terracotta-soft text-terracotta-deep")}>
-          Profilo <span className="ml-auto max-w-[8rem] truncate text-xs text-ink-soft">{userLabel}</span>
-        </Link>
-        {footer}
+        <div className="flex items-center gap-1">
+          <Link href={adminPaths.profile} aria-current={pathname.startsWith(adminPaths.profile) ? "page" : undefined} className="adm-nav-link min-w-0 flex-1 !py-2">
+            <span className="adm-avatar" aria-hidden="true">{initials(userLabel) || "?"}</span>
+            <span className="min-w-0 flex-1 leading-tight">
+              <span className="block truncate text-[0.9rem] font-semibold">{userLabel}</span>
+              <span className="block text-xs text-ink-soft">Profilo</span>
+            </span>
+          </Link>
+          {footer}
+        </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-dvh bg-paper lg:grid lg:grid-cols-[17rem_1fr]">
+    <div className="adm min-h-dvh lg:grid lg:grid-cols-[16.5rem_1fr]">
       <a href="#contenuto-admin" className="sr-only-focusable fixed left-4 top-4 z-[200] rounded-full bg-ink px-5 py-3 text-paper">Vai al contenuto</a>
       <aside className="sticky top-0 hidden h-dvh border-r border-line lg:block">{aside}</aside>
 
-      <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-line bg-card/95 px-4 backdrop-blur lg:hidden">
-        <Wordmark compact />
-        <button type="button" aria-expanded={open} aria-controls="admin-drawer" onClick={() => setOpenFor(open ? null : pathname)}
-          className="inline-flex min-h-10 items-center rounded-full border border-line-strong px-4 text-sm font-medium">Menu</button>
+      <div className="adm-topbar lg:hidden">
+        <Link href={adminPaths.dashboard} aria-label="Dashboard del pannello"><Wordmark compact /></Link>
+        <div className="flex items-center gap-1.5">
+          <button type="button" onClick={openPalette} aria-label="Cerca nel pannello" className="adm-iconbtn"><Icon name="search" /></button>
+          <button type="button" aria-expanded={open} aria-controls="admin-drawer" onClick={() => setOpenFor(open ? null : pathname)} className="adm-iconbtn relative">
+            <Icon name="menu" /><span className="sr-only">Menu</span>
+            {badges.registrations + badges.applications + badges.messages + badges.email > 0 && <span className="adm-dot" aria-hidden="true" />}
+          </button>
+        </div>
       </div>
-      {open && <button type="button" aria-label="Chiudi il menu" className="fixed inset-0 z-40 bg-ink/50 lg:hidden" onClick={() => setOpenFor(null)} />}
-      <div id="admin-drawer" hidden={!open} className="fixed inset-y-0 left-0 z-50 w-[18rem] max-w-[85vw] shadow-pop lg:hidden">{aside}</div>
+      <div className="adm-scrim lg:hidden" data-open={open || undefined} onClick={() => setOpenFor(null)} aria-hidden="true" />
+      <div id="admin-drawer" className="adm-drawer lg:hidden" data-open={open || undefined} inert={!open}>{aside}</div>
 
-      <main id="contenuto-admin" tabIndex={-1} className="min-w-0 px-4 py-8 outline-none sm:px-8 lg:px-12 lg:py-12">
-        <div className="mx-auto max-w-5xl">{children}</div>
+      <main id="contenuto-admin" tabIndex={-1} className="min-w-0 px-4 pb-16 pt-6 outline-none sm:px-8 lg:px-12 lg:pt-10">
+        <div className="adm-page mx-auto max-w-6xl" key={pathname}>{children}</div>
       </main>
+      <CommandPalette />
     </div>
   );
 }
